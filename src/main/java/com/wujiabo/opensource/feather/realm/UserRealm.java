@@ -1,0 +1,93 @@
+package com.wujiabo.opensource.feather.realm;
+
+import com.wujiabo.opensource.feather.enums.State;
+import com.wujiabo.opensource.feather.model.TUser;
+import com.wujiabo.opensource.feather.service.RbacService;
+
+import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * <p>
+ * User: Zhang Kaitao
+ * <p>
+ * Date: 14-1-28
+ * <p>
+ * Version: 1.0
+ */
+public class UserRealm extends AuthorizingRealm {
+
+	@Autowired
+	private RbacService rbacService;
+
+	@Override
+	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+		String username = (String) principals.getPrimaryPrincipal();
+
+		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+		rbacService.setAuthorizationInfo(authorizationInfo, username);
+		return authorizationInfo;
+	}
+
+	@Override
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+
+		String username = (String) token.getPrincipal();
+
+		TUser user = rbacService.findByUsername(username);
+
+		if (user == null) {
+			throw new UnknownAccountException();// 没找到帐号
+		}
+
+		if (State.INACTIVE.getValue().equals(user.getState())) {
+			throw new UnknownAccountException(); // 无效的账号
+		}
+
+		if ("3".equals(user.getState())) {
+			throw new LockedAccountException(); // 帐号锁定
+		}
+
+		// 交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配，如果觉得人家的不好可以自定义实现
+		SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user.getUserName(), // 用户名
+				user.getPassword(), // 密码
+				ByteSource.Util.bytes(user.getUserName() + user.getSalt()), // salt=username+salt
+				getName() // realm name
+		);
+		return authenticationInfo;
+	}
+
+	@Override
+	public void clearCachedAuthorizationInfo(PrincipalCollection principals) {
+		super.clearCachedAuthorizationInfo(principals);
+	}
+
+	@Override
+	public void clearCachedAuthenticationInfo(PrincipalCollection principals) {
+		super.clearCachedAuthenticationInfo(principals);
+	}
+
+	@Override
+	public void clearCache(PrincipalCollection principals) {
+		super.clearCache(principals);
+	}
+
+	public void clearAllCachedAuthorizationInfo() {
+		getAuthorizationCache().clear();
+	}
+
+	public void clearAllCachedAuthenticationInfo() {
+		getAuthenticationCache().clear();
+	}
+
+	public void clearAllCache() {
+		clearAllCachedAuthenticationInfo();
+		clearAllCachedAuthorizationInfo();
+	}
+
+}

@@ -150,13 +150,19 @@
 			<version>1.2</version>
 		</dependency>
 
-		<!-- fastjson  -->
+		<!-- fastjson -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.2.7</version>
 		</dependency>
 
+		<!-- log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.9</version>
+		</dependency>
 
 	</dependencies>
 

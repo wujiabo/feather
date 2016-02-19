@@ -49,6 +49,7 @@
         <table tableName="t_user_group" />
         <table tableName="t_group_role" />
         <table tableName="t_role_permission" />
+        <table tableName="t_role_menu" />
 
     </context>
 </generatorConfiguration>

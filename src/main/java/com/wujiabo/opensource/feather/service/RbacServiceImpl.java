@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 
 import com.wujiabo.opensource.feather.dao.TGroupMapper;
 import com.wujiabo.opensource.feather.dao.TGroupRoleMapper;
+import com.wujiabo.opensource.feather.dao.TMenuMapper;
 import com.wujiabo.opensource.feather.dao.TPermissionMapper;
 import com.wujiabo.opensource.feather.dao.TRoleMapper;
+import com.wujiabo.opensource.feather.dao.TRoleMenuMapper;
 import com.wujiabo.opensource.feather.dao.TRolePermissionMapper;
 import com.wujiabo.opensource.feather.dao.TUserGroupMapper;
 import com.wujiabo.opensource.feather.dao.TUserMapper;
@@ -23,9 +25,12 @@ import com.wujiabo.opensource.feather.model.TGroup;
 import com.wujiabo.opensource.feather.model.TGroupExample;
 import com.wujiabo.opensource.feather.model.TGroupRoleExample;
 import com.wujiabo.opensource.feather.model.TGroupRoleKey;
+import com.wujiabo.opensource.feather.model.TMenu;
 import com.wujiabo.opensource.feather.model.TPermission;
 import com.wujiabo.opensource.feather.model.TPermissionExample;
 import com.wujiabo.opensource.feather.model.TRole;
+import com.wujiabo.opensource.feather.model.TRoleMenuExample;
+import com.wujiabo.opensource.feather.model.TRoleMenuKey;
 import com.wujiabo.opensource.feather.model.TRolePermissionExample;
 import com.wujiabo.opensource.feather.model.TRolePermissionKey;
 import com.wujiabo.opensource.feather.model.TUser;
@@ -62,6 +67,12 @@ public class RbacServiceImpl implements RbacService {
 	@Resource
 	private TRolePermissionMapper tRolePermissionMapper;
 
+	@Resource
+	private TMenuMapper tMenuMapper;
+
+	@Resource
+	private TRoleMenuMapper tRoleMenuMapper;
+
 	@Autowired
 	private PasswordHelper passwordHelper;
 
@@ -70,44 +81,7 @@ public class RbacServiceImpl implements RbacService {
 
 		TUser user = findByUsername(username);
 
-		List<Integer> roleIds = new ArrayList<Integer>();
-
-		TUserRoleExample tUserRoleExample = new TUserRoleExample();
-		tUserRoleExample.createCriteria().andUserIdEqualTo(user.getUserId());
-		List<TUserRoleKey> tUserRoles = tUserRoleMapper.selectByExample(tUserRoleExample);
-		for (TUserRoleKey tUserRole : tUserRoles) {
-			if (!roleIds.contains(tUserRole.getRoleId())) {
-				roleIds.add(tUserRole.getRoleId());
-			}
-		}
-
-		TUserGroupExample tUserGroupExample = new TUserGroupExample();
-		tUserGroupExample.createCriteria().andUserIdEqualTo(user.getUserId());
-		List<TUserGroupKey> tUserGroups = tUserGroupMapper.selectByExample(tUserGroupExample);
-		for (TUserGroupKey tUserGroup : tUserGroups) {
-			Integer groupId = tUserGroup.getGroupId();
-
-			TGroupRoleExample tGroupRoleExample = new TGroupRoleExample();
-			tGroupRoleExample.createCriteria().andGroupIdEqualTo(groupId);
-			List<TGroupRoleKey> tGroupRoles = tGroupRoleMapper.selectByExample(tGroupRoleExample);
-			for (TGroupRoleKey tGroupRole : tGroupRoles) {
-				if (!roleIds.contains(tGroupRole.getRoleId())) {
-					roleIds.add(tGroupRole.getRoleId());
-				}
-			}
-			List<Integer> groupCids = new ArrayList<Integer>();
-			getGroupCidsByGroupPid(groupCids, groupId);
-			for (Integer groupCid : groupCids) {
-				TGroupRoleExample tGroupRoleExample_ = new TGroupRoleExample();
-				tGroupRoleExample_.createCriteria().andGroupIdEqualTo(groupCid);
-				List<TGroupRoleKey> tGroupRoles_ = tGroupRoleMapper.selectByExample(tGroupRoleExample_);
-				for (TGroupRoleKey tGroupRole : tGroupRoles_) {
-					if (!roleIds.contains(tGroupRole.getRoleId())) {
-						roleIds.add(tGroupRole.getRoleId());
-					}
-				}
-			}
-		}
+		List<Integer> roleIds = getAllRoleIdsByUserId(user.getUserId());
 
 		List<Integer> permissionIds = new ArrayList<Integer>();
 
@@ -145,6 +119,49 @@ public class RbacServiceImpl implements RbacService {
 
 		authorizationInfo.setRoles(tRoles);
 		authorizationInfo.setStringPermissions(tPermissions);
+	}
+
+	private List<Integer> getAllRoleIdsByUserId(Integer userId) {
+
+		List<Integer> roleIds = new ArrayList<Integer>();
+
+		TUserRoleExample tUserRoleExample = new TUserRoleExample();
+		tUserRoleExample.createCriteria().andUserIdEqualTo(userId);
+		List<TUserRoleKey> tUserRoles = tUserRoleMapper.selectByExample(tUserRoleExample);
+		for (TUserRoleKey tUserRole : tUserRoles) {
+			if (!roleIds.contains(tUserRole.getRoleId())) {
+				roleIds.add(tUserRole.getRoleId());
+			}
+		}
+
+		TUserGroupExample tUserGroupExample = new TUserGroupExample();
+		tUserGroupExample.createCriteria().andUserIdEqualTo(userId);
+		List<TUserGroupKey> tUserGroups = tUserGroupMapper.selectByExample(tUserGroupExample);
+		for (TUserGroupKey tUserGroup : tUserGroups) {
+			Integer groupId = tUserGroup.getGroupId();
+
+			TGroupRoleExample tGroupRoleExample = new TGroupRoleExample();
+			tGroupRoleExample.createCriteria().andGroupIdEqualTo(groupId);
+			List<TGroupRoleKey> tGroupRoles = tGroupRoleMapper.selectByExample(tGroupRoleExample);
+			for (TGroupRoleKey tGroupRole : tGroupRoles) {
+				if (!roleIds.contains(tGroupRole.getRoleId())) {
+					roleIds.add(tGroupRole.getRoleId());
+				}
+			}
+			List<Integer> groupCids = new ArrayList<Integer>();
+			getGroupCidsByGroupPid(groupCids, groupId);
+			for (Integer groupCid : groupCids) {
+				TGroupRoleExample tGroupRoleExample_ = new TGroupRoleExample();
+				tGroupRoleExample_.createCriteria().andGroupIdEqualTo(groupCid);
+				List<TGroupRoleKey> tGroupRoles_ = tGroupRoleMapper.selectByExample(tGroupRoleExample_);
+				for (TGroupRoleKey tGroupRole : tGroupRoles_) {
+					if (!roleIds.contains(tGroupRole.getRoleId())) {
+						roleIds.add(tGroupRole.getRoleId());
+					}
+				}
+			}
+		}
+		return roleIds;
 	}
 
 	private void getGroupCidsByGroupPid(List<Integer> groupCids, Integer groupId) {
@@ -193,5 +210,31 @@ public class RbacServiceImpl implements RbacService {
 		user.setPassword(newPassword);
 		passwordHelper.encryptPassword(user);
 		tUserMapper.updateByPrimaryKeySelective(user);
+	}
+
+	@Override
+	public String getCurrentMenuJson(Integer userId) {
+		
+		List<Integer> menuIds = new ArrayList<Integer>();
+
+		List<Integer> roleIds = getAllRoleIdsByUserId(userId);
+		for (Integer roleId : roleIds) {
+			TRoleMenuExample example = new TRoleMenuExample();
+			example.createCriteria().andRoleIdEqualTo(roleId);
+			List<TRoleMenuKey> tRoleMenuList = tRoleMenuMapper.selectByExample(example);
+			for(TRoleMenuKey tRoleMenu:tRoleMenuList){
+				if(!menuIds.contains(tRoleMenu.getMenuId())){
+					menuIds.add(tRoleMenu.getMenuId());
+				}
+			}
+		}
+
+		List<TMenu> menus = new ArrayList<TMenu>();
+		for(Integer menuId:menuIds){
+			TMenu tMenu = tMenuMapper.selectByPrimaryKey(menuId);
+			menus.add(tMenu);
+		}
+		
+		return null;
 	}
 }

@@ -13,4 +13,6 @@ public interface RbacService {
 	void createUser(TUser user);
 
 	void changePassword(Integer userId, String newPassword);
+
+	String getCurrentMenuJson(Integer userId);
 }

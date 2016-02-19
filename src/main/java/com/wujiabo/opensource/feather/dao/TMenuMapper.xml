@@ -6,6 +6,7 @@
     <result column="menu_pid" property="menuPid" jdbcType="INTEGER" />
     <result column="menu_url" property="menuUrl" jdbcType="VARCHAR" />
     <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+    <result column="seq" property="seq" jdbcType="INTEGER" />
     <result column="state" property="state" jdbcType="CHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -67,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    menu_id, menu_pid, menu_url, menu_name, state
+    menu_id, menu_pid, menu_url, menu_name, seq, state
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wujiabo.opensource.feather.model.TMenuExample" >
     select
@@ -101,9 +102,9 @@
   </delete>
   <insert id="insert" parameterType="com.wujiabo.opensource.feather.model.TMenu" >
     insert into t_menu (menu_id, menu_pid, menu_url, 
-      menu_name, state)
+      menu_name, seq, state)
     values (#{menuId,jdbcType=INTEGER}, #{menuPid,jdbcType=INTEGER}, #{menuUrl,jdbcType=VARCHAR}, 
-      #{menuName,jdbcType=VARCHAR}, #{state,jdbcType=CHAR})
+      #{menuName,jdbcType=VARCHAR}, #{seq,jdbcType=INTEGER}, #{state,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.wujiabo.opensource.feather.model.TMenu" >
     insert into t_menu
@@ -119,6 +120,9 @@
       </if>
       <if test="menuName != null" >
         menu_name,
+      </if>
+      <if test="seq != null" >
+        seq,
       </if>
       <if test="state != null" >
         state,
@@ -136,6 +140,9 @@
       </if>
       <if test="menuName != null" >
         #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null" >
+        #{seq,jdbcType=INTEGER},
       </if>
       <if test="state != null" >
         #{state,jdbcType=CHAR},
@@ -163,6 +170,9 @@
       <if test="record.menuName != null" >
         menu_name = #{record.menuName,jdbcType=VARCHAR},
       </if>
+      <if test="record.seq != null" >
+        seq = #{record.seq,jdbcType=INTEGER},
+      </if>
       <if test="record.state != null" >
         state = #{record.state,jdbcType=CHAR},
       </if>
@@ -177,6 +187,7 @@
       menu_pid = #{record.menuPid,jdbcType=INTEGER},
       menu_url = #{record.menuUrl,jdbcType=VARCHAR},
       menu_name = #{record.menuName,jdbcType=VARCHAR},
+      seq = #{record.seq,jdbcType=INTEGER},
       state = #{record.state,jdbcType=CHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -194,6 +205,9 @@
       <if test="menuName != null" >
         menu_name = #{menuName,jdbcType=VARCHAR},
       </if>
+      <if test="seq != null" >
+        seq = #{seq,jdbcType=INTEGER},
+      </if>
       <if test="state != null" >
         state = #{state,jdbcType=CHAR},
       </if>
@@ -205,6 +219,7 @@
     set menu_pid = #{menuPid,jdbcType=INTEGER},
       menu_url = #{menuUrl,jdbcType=VARCHAR},
       menu_name = #{menuName,jdbcType=VARCHAR},
+      seq = #{seq,jdbcType=INTEGER},
       state = #{state,jdbcType=CHAR}
     where menu_id = #{menuId,jdbcType=INTEGER}
   </update>

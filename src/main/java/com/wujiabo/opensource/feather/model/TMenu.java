@@ -9,6 +9,8 @@ public class TMenu {
 
     private String menuName;
 
+    private Integer seq;
+
     private String state;
 
     public Integer getMenuId() {
@@ -41,6 +43,14 @@ public class TMenu {
 
     public void setMenuName(String menuName) {
         this.menuName = menuName == null ? null : menuName.trim();
+    }
+
+    public Integer getSeq() {
+        return seq;
+    }
+
+    public void setSeq(Integer seq) {
+        this.seq = seq;
     }
 
     public String getState() {

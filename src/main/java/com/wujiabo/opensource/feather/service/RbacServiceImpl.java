@@ -1,8 +1,12 @@
 package com.wujiabo.opensource.feather.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -11,6 +15,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.wujiabo.opensource.feather.dao.TGroupMapper;
 import com.wujiabo.opensource.feather.dao.TGroupRoleMapper;
 import com.wujiabo.opensource.feather.dao.TMenuMapper;
@@ -21,6 +26,7 @@ import com.wujiabo.opensource.feather.dao.TRolePermissionMapper;
 import com.wujiabo.opensource.feather.dao.TUserGroupMapper;
 import com.wujiabo.opensource.feather.dao.TUserMapper;
 import com.wujiabo.opensource.feather.dao.TUserRoleMapper;
+import com.wujiabo.opensource.feather.enums.State;
 import com.wujiabo.opensource.feather.model.TGroup;
 import com.wujiabo.opensource.feather.model.TGroupExample;
 import com.wujiabo.opensource.feather.model.TGroupRoleExample;
@@ -214,7 +220,7 @@ public class RbacServiceImpl implements RbacService {
 
 	@Override
 	public String getCurrentMenuJson(Integer userId) {
-		
+
 		List<Integer> menuIds = new ArrayList<Integer>();
 
 		List<Integer> roleIds = getAllRoleIdsByUserId(userId);
@@ -222,19 +228,42 @@ public class RbacServiceImpl implements RbacService {
 			TRoleMenuExample example = new TRoleMenuExample();
 			example.createCriteria().andRoleIdEqualTo(roleId);
 			List<TRoleMenuKey> tRoleMenuList = tRoleMenuMapper.selectByExample(example);
-			for(TRoleMenuKey tRoleMenu:tRoleMenuList){
-				if(!menuIds.contains(tRoleMenu.getMenuId())){
+			for (TRoleMenuKey tRoleMenu : tRoleMenuList) {
+				if (!menuIds.contains(tRoleMenu.getMenuId())) {
 					menuIds.add(tRoleMenu.getMenuId());
 				}
 			}
 		}
 
 		List<TMenu> menus = new ArrayList<TMenu>();
-		for(Integer menuId:menuIds){
+		for (Integer menuId : menuIds) {
 			TMenu tMenu = tMenuMapper.selectByPrimaryKey(menuId);
 			menus.add(tMenu);
 		}
-		
-		return null;
+
+		Collections.sort(menus, new Comparator<TMenu>() {
+			public int compare(TMenu arg0, TMenu arg1) {
+				return arg0.getSeq().compareTo(arg1.getSeq());
+			}
+		});
+
+		List<Map<String, Object>> currentMenus = new ArrayList<Map<String, Object>>();
+		for (TMenu menu : menus) {
+			if (State.ACTIVE.getValue().equals(menu.getState())) {
+				Map<String, Object> currentMenu = new HashMap<String, Object>();
+				currentMenu.put("id", menu.getMenuId());
+				currentMenu.put("pId", menu.getMenuPid());
+				currentMenu.put("name", menu.getMenuName());
+				if (menu.getMenuPid() == null) {
+					currentMenu.put("open", true);
+				} else {
+					currentMenu.put("file", menu.getMenuUrl());
+				}
+				currentMenus.add(currentMenu);
+			}
+		}
+
+		String currentMenuJson = JSON.toJSONString(currentMenus);
+		return currentMenuJson;
 	}
 }

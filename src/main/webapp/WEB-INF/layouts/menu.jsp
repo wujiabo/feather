@@ -6,48 +6,22 @@
 			simpleData : {
 				enable : true
 			}
+		},
+		callback: {
+			beforeClick: function(treeId, treeNode) {
+				var zTree = $.fn.zTree.getZTreeObj("treeMenu");
+				if (treeNode.isParent) {
+					zTree.expandNode(treeNode);
+					return false;
+				} else {
+					window.location.href = '${ctx}' + treeNode.file;
+					return true;
+				}
+			}
 		}
 	};
 
-	var zNodes = [ {
-		id : 1,
-		pId : 0,
-		name : "系统管理",
-		open : true
-	}, {
-		id : 11,
-		pId : 1,
-		name : "用户管理"
-	}, {
-		id : 12,
-		pId : 1,
-		name : "角色管理"
-	}, {
-		id : 13,
-		pId : 1,
-		name : "用户组管理"
-	}, {
-		id : 14,
-		pId : 1,
-		name : "权限管理"
-	}, {
-		id : 15,
-		pId : 1,
-		name : "菜单管理"
-	}, {
-		id : 2,
-		pId : 0,
-		name : "测试",
-		open : true
-	}, {
-		id : 21,
-		pId : 2,
-		name : "测试1"
-	}, {
-		id : 22,
-		pId : 2,
-		name : "测试2"
-	}];
+	var zNodes = eval('<%= session.getAttribute(com.wujiabo.opensource.feather.constants.Constants.CURRENT_MENU) %>');
 
 	$(document).ready(function() {
 		$.fn.zTree.init($("#treeMenu"), setting, zNodes);

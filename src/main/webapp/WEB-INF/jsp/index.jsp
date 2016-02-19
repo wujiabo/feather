@@ -6,6 +6,5 @@
 <title>欢迎</title>
 </head>
 <body>
-	<%= session.getAttribute("CURRENT_MENU") %>
 </body>
 </html>

@@ -2,7 +2,7 @@ package com.wujiabo.opensource.feather.service;
 
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 
-import com.wujiabo.opensource.feather.model.TUser;
+import com.wujiabo.opensource.feather.mybatis.model.TUser;
 
 public interface RbacService {
 

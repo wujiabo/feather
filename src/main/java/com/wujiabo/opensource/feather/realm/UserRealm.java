@@ -14,7 +14,7 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.wujiabo.opensource.feather.enums.State;
-import com.wujiabo.opensource.feather.model.TUser;
+import com.wujiabo.opensource.feather.mybatis.model.TUser;
 import com.wujiabo.opensource.feather.service.RbacService;
 
 /**

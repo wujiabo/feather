@@ -7,7 +7,7 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.wujiabo.opensource.feather.model.TUser;
+import com.wujiabo.opensource.feather.mybatis.model.TUser;
 
 /**
  * <p>

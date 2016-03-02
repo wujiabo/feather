@@ -9,7 +9,7 @@ import org.apache.shiro.web.filter.PathMatchingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.wujiabo.opensource.feather.constants.Constants;
-import com.wujiabo.opensource.feather.model.TUser;
+import com.wujiabo.opensource.feather.mybatis.model.TUser;
 import com.wujiabo.opensource.feather.service.RbacService;
 
 /**

@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.wujiabo.opensource.feather.model.TUser;
+import com.wujiabo.opensource.feather.mybatis.model.TUser;
 import com.wujiabo.opensource.feather.service.RbacService;
 import com.wujiabo.opensource.feather.web.bind.annotation.CurrentUser;
 

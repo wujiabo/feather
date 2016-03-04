@@ -17,11 +17,13 @@
 
 <link type="image/x-icon" href="${ctx}/static/images/favicon.ico"
 	rel="shortcut icon">
-<link href="${ctx}/static/css/default.css" type="text/css"
+<link href="${ctx}/static/css/bootstrap.min.css" type="text/css"
 	rel="stylesheet" />
 <link href="${ctx}/static/zTree/css/zTreeStyle/zTreeStyle.css"
 	type="text/css" rel="stylesheet" />
 <script src="${ctx}/static/js/jquery-1.11.0.min.js"
+	type="text/javascript"></script>
+<script src="${ctx}/static/js/bootstrap.min.js"
 	type="text/javascript"></script>
 <script src="${ctx}/static/zTree/js/jquery.ztree.core-3.5.min.js"
 	type="text/javascript"></script>

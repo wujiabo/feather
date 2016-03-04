@@ -1,9 +1,8 @@
 package com.wujiabo.opensource.feather.service;
 
-import java.util.List;
-import java.util.Map;
+import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 
 public interface UserMgmtService {
 
-	List<Map<String,Object>> getUsers(String userName);
+	PageBean getUsers(String userName,Integer currentPage);
 }

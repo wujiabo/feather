@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.service.UserMgmtService;
 import com.wujiabo.opensource.feather.util.RequestUtil;
 
@@ -26,8 +27,11 @@ public class UserMgmtController {
 	@RequestMapping(value = "/view", method = RequestMethod.GET)
 	public String view(HttpServletRequest request, HttpServletResponse response) {
 		String userName = RequestUtil.getString(request, "userName", "");
-		List<Map<String, Object>> userList = userMgmtService.getUsers(userName);
-		request.setAttribute("userList", userList);
+		String currentPage = RequestUtil.getString(request, "currentPage", "1");
+		PageBean pageBean = userMgmtService.getUsers(userName, Integer.valueOf(currentPage));
+		request.setAttribute("userName", userName);
+		request.setAttribute("currentPage", currentPage);
+		request.setAttribute("pageBean", pageBean);
 		return "user/view";
 	}
 

@@ -1,4 +1,7 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
-<div id="footer">
-	Copyright &copy; 2016-2016 Feather
-</div>
+
+<footer class="footer">
+	<div class="container">
+		<p class="text-muted">Copyright &copy; 2016-2016 Feather</p>
+	</div>
+</footer>

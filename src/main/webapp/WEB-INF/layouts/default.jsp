@@ -23,34 +23,64 @@
 	type="text/css" rel="stylesheet" />
 <script src="${ctx}/static/js/jquery-1.11.0.min.js"
 	type="text/javascript"></script>
-<script src="${ctx}/static/js/bootstrap.min.js"
-	type="text/javascript"></script>
+<script src="${ctx}/static/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="${ctx}/static/zTree/js/jquery.ztree.core-3.5.min.js"
 	type="text/javascript"></script>
+<style type="text/css">
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+	position: relative;
+	min-height: 100%;
+}
 
+body {
+	/* Margin bottom by footer height */
+	margin-bottom: 60px;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	/* Set the fixed height of the footer here */
+	height: 60px;
+	background-color: #f5f5f5;
+}
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+body>.container {
+	padding: 60px 15px 0;
+}
+
+.container .text-muted {
+	margin: 20px 0;
+}
+
+.footer>.container {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+code {
+	font-size: 80%;
+}
+</style>
 <sitemesh:head />
 </head>
 
 <body>
-	<table
-		style="width: 100%; height: 100%; border-style: dashed; border-width: 1px;">
-		<tr>
-			<td colspan="2" align="center"><%@ include
-					file="/WEB-INF/layouts/header.jsp"%></td>
-		</tr>
-		<tr>
-			<td width="10%" style="border-style: dashed; border-width: 1px;">
-				<shiro:user><%@ include
-						file="/WEB-INF/layouts/menu.jsp"%></shiro:user>
-			</td>
-			<td style="border-style: dashed; border-width: 1px;"><shiro:user>
-					<sitemesh:body />
-				</shiro:user></td>
-		</tr>
-		<tr>
-			<td colspan="2" align="center"><%@ include
-					file="/WEB-INF/layouts/footer.jsp"%></td>
-		</tr>
-	</table>
+	<%@ include file="/WEB-INF/layouts/header.jsp"%>
+
+	<!-- Begin page content -->
+	<div class="container">
+		<shiro:user>
+			<sitemesh:body />
+		</shiro:user>
+	</div>
+
+	<%@ include file="/WEB-INF/layouts/footer.jsp"%>
 </body>
 </html>

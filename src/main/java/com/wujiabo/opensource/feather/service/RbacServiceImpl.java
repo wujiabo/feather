@@ -3,10 +3,8 @@ package com.wujiabo.opensource.feather.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -15,7 +13,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
 import com.wujiabo.opensource.feather.mybatis.dao.TGroupMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TGroupRoleMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TMenuMapper;
@@ -26,7 +23,6 @@ import com.wujiabo.opensource.feather.mybatis.dao.TRolePermissionMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TUserGroupMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TUserMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TUserRoleMapper;
-import com.wujiabo.opensource.feather.enums.State;
 import com.wujiabo.opensource.feather.mybatis.model.TGroup;
 import com.wujiabo.opensource.feather.mybatis.model.TGroupExample;
 import com.wujiabo.opensource.feather.mybatis.model.TGroupRoleExample;
@@ -219,7 +215,7 @@ public class RbacServiceImpl implements RbacService {
 	}
 
 	@Override
-	public String getCurrentMenuJson(Integer userId) {
+	public List<TMenu> getCurrentMenu(Integer userId) {
 
 		List<Integer> menuIds = new ArrayList<Integer>();
 
@@ -246,24 +242,7 @@ public class RbacServiceImpl implements RbacService {
 				return arg0.getSeq().compareTo(arg1.getSeq());
 			}
 		});
-
-		List<Map<String, Object>> currentMenus = new ArrayList<Map<String, Object>>();
-		for (TMenu menu : menus) {
-			if (State.ACTIVE.getValue().equals(menu.getState())) {
-				Map<String, Object> currentMenu = new HashMap<String, Object>();
-				currentMenu.put("id", menu.getMenuId());
-				currentMenu.put("pId", menu.getMenuPid());
-				currentMenu.put("name", menu.getMenuName());
-				if (menu.getMenuPid() == null) {
-					currentMenu.put("open", true);
-				} else {
-					currentMenu.put("file", menu.getMenuUrl());
-				}
-				currentMenus.add(currentMenu);
-			}
-		}
-
-		String currentMenuJson = JSON.toJSONString(currentMenus);
-		return currentMenuJson;
+		
+		return menus;
 	}
 }

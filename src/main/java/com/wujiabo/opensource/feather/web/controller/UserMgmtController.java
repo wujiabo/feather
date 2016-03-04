@@ -24,14 +24,12 @@ public class UserMgmtController {
 	private UserMgmtService userMgmtService;
 
 	@RequestMapping(value = "/view", method = RequestMethod.GET)
-	public String view(HttpServletRequest request,HttpServletResponse response) {
-		String a = RequestUtil.getString(request,"");
-		String b = RequestUtil.getString(request,"");
-		List<Map<String,Object>> list = userMgmtService.getUsers("a");
-		
+	public String view(HttpServletRequest request, HttpServletResponse response) {
+		String userName = RequestUtil.getString(request, "userName", "");
+		List<Map<String, Object>> userList = userMgmtService.getUsers(userName);
+		request.setAttribute("userList", userList);
 		return "user/view";
 	}
-	
 
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	public String updateForm(@PathVariable("id") Integer id) {
@@ -45,7 +43,7 @@ public class UserMgmtController {
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.POST)
-	public String delete(@PathVariable("id") Integer id,RedirectAttributes redirectAttributes) {
+	public String delete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
 		redirectAttributes.addFlashAttribute("message", "删除用户成功");
 		return "redirect:/userMgmt/list";
 	}

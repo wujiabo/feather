@@ -5,6 +5,8 @@ import java.util.Map;
 
 public interface CustomizedDao {
 
-	List<Map<String, Object>> getUsers(String userName);
+	List<Map<String, Object>> queryForList(String sql, Object[] args);
+
+	Map<String, Object> queryForMap(String sql, Object[] args);
 
 }

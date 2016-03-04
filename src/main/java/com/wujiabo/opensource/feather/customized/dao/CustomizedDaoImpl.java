@@ -14,8 +14,15 @@ public class CustomizedDaoImpl implements CustomizedDao {
 	private JdbcTemplate jdbcTemplate;
 	
 	@Override
-	public List<Map<String, Object>> getUsers(String userName) {
+	public List<Map<String, Object>> queryForList(String sql,Object... args) {
 		// TODO Auto-generated method stub
-		return null;
+		return jdbcTemplate.queryForList(sql, args);
+	}
+	
+
+	@Override
+	public Map<String, Object> queryForMap(String sql,Object... args) {
+		// TODO Auto-generated method stub
+		return jdbcTemplate.queryForMap(sql, args);
 	}
 }

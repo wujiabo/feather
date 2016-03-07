@@ -78,7 +78,7 @@ body {
 			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
 				in</button>
 		</form>
-		<div class="error">${error}</div>
+		<c:if test="${error!='' && error!=null}"><div class="alert alert-danger" role="alert">${error}</div></c:if>
 	</div>
 </body>
 </html>

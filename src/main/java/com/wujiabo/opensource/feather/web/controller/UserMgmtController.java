@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
+import com.wujiabo.opensource.feather.mybatis.model.TUser;
 import com.wujiabo.opensource.feather.service.UserMgmtService;
 import com.wujiabo.opensource.feather.util.RequestUtil;
 
@@ -21,7 +22,7 @@ public class UserMgmtController {
 	@Autowired
 	private UserMgmtService userMgmtService;
 
-	@RequestMapping(value = "/view", method = {RequestMethod.POST,RequestMethod.GET})
+	@RequestMapping(value = "/view", method = { RequestMethod.POST, RequestMethod.GET })
 	public String view(HttpServletRequest request, Model model) {
 		String currentPage = RequestUtil.getParamString(request, "currentPage", "1");
 		String userName = RequestUtil.getParamString(request, "userName", "");
@@ -34,20 +35,23 @@ public class UserMgmtController {
 		return "user/view";
 	}
 
-	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
-	public String updateForm(@PathVariable("id") Integer id) {
+	@RequestMapping(value = "edit/{userId}", method = RequestMethod.GET)
+	public String editForm(@PathVariable("userId") String userId, Model model) {
+		TUser user = userMgmtService.getUserById(Integer.valueOf(userId));
+		model.addAttribute("user", user);
+		model.addAttribute("updateType", "edit");
+		return "user/edit";
+	}
+
+	@RequestMapping(value = "add", method = RequestMethod.GET)
+	public String addForm(Model model) {
+		model.addAttribute("updateType", "add");
 		return "user/edit";
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(RedirectAttributes redirectAttributes) {
 		redirectAttributes.addFlashAttribute("message", "更新用户成功");
-		return "redirect:/userMgmt/list";
-	}
-
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.POST)
-	public String delete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("message", "删除用户成功");
-		return "redirect:/userMgmt/list";
+		return "redirect:/userMgmt/view";
 	}
 }

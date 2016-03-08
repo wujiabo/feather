@@ -17,6 +17,12 @@
 			$("input[name='currentPage']").val('${pageBean.totalPage}');
 		}
 	}
+	function toEdit(userId) {
+		window.location.href = "edit/" + userId;
+	}
+	function toAdd() {
+		window.location.href = "add";
+	}
 </script>
 </head>
 <body>
@@ -40,11 +46,12 @@
 					</div>
 					<div class="navbar-form navbar-right">
 						<button type="submit" class="btn btn-primary">Search</button>
+						<button type="button" class="btn btn-default"
+							onclick="toAdd()">Add</button>
 					</div>
 				</div>
 			</div>
 		</nav>
-
 		<table class="table table-bordered">
 			<thead>
 				<tr>
@@ -61,8 +68,11 @@
 						<th scope="row">1</th>
 						<td>${bean.user_name}</td>
 						<td>${bean.screen_name}</td>
-						<td>${bean.state}</td>
-						<td></td>
+						<td>${bean.state=='0'?'有效':'无效'}</td>
+						<td>
+							<button type="button" class="btn btn-default btn-xs"
+								onclick="toEdit('${bean.user_id}')">Edit</button>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>

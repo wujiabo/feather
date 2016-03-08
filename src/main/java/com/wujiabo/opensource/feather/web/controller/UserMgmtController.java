@@ -1,19 +1,17 @@
 package com.wujiabo.opensource.feather.web.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.mybatis.model.TUser;
 import com.wujiabo.opensource.feather.service.UserMgmtService;
-import com.wujiabo.opensource.feather.util.RequestUtil;
 
 @Controller
 @RequestMapping("/userMgmt")
@@ -23,11 +21,10 @@ public class UserMgmtController {
 	private UserMgmtService userMgmtService;
 
 	@RequestMapping(value = "/view", method = { RequestMethod.POST, RequestMethod.GET })
-	public String view(HttpServletRequest request, Model model) {
-		String currentPage = RequestUtil.getParamString(request, "currentPage", "1");
-		String userName = RequestUtil.getParamString(request, "userName", "");
-		String screenName = RequestUtil.getParamString(request, "screenName", "");
-		PageBean pageBean = userMgmtService.getUsers(userName, screenName, Integer.valueOf(currentPage));
+	public String view(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
+			@RequestParam(value = "userName", defaultValue = "") String userName,
+			@RequestParam(value = "screenName", defaultValue = "") String screenName, Model model) {
+		PageBean pageBean = userMgmtService.getUsers(userName, screenName, currentPage);
 		model.addAttribute("pageBean", pageBean);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("userName", userName);
@@ -50,8 +47,26 @@ public class UserMgmtController {
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
-	public String update(RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("message", "更新用户成功");
+	public String update(@RequestParam(value = "userId", defaultValue = "") String userId,
+			@RequestParam(value = "userName", defaultValue = "") String userName,
+			@RequestParam(value = "screenName", defaultValue = "") String screenName,
+			@RequestParam(value = "state", defaultValue = "") String state,
+			@RequestParam(value = "updateType", defaultValue = "") String updateType,
+			RedirectAttributes redirectAttributes) {
+
+		try{
+
+			if ("add".equals(updateType)) {
+				userMgmtService.addUser(userName, screenName, state);
+			} else if ("edit".equals(updateType)) {
+				userMgmtService.editUser(userId,  screenName, state);
+			}
+			redirectAttributes.addFlashAttribute("message", "操作成功");
+		}catch(Exception e){
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("error", "操作失败");
+		}
+
 		return "redirect:/userMgmt/view";
 	}
 }

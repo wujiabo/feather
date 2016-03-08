@@ -18,10 +18,10 @@
 		}
 	}
 	function toEdit(userId) {
-		window.location.href = "edit/" + userId;
+		window.location.href = "${CONTEXT_PATH}/userMgmt/edit/" + userId;
 	}
 	function toAdd() {
-		window.location.href = "add";
+		window.location.href = "${CONTEXT_PATH}/userMgmt/add";
 	}
 </script>
 </head>

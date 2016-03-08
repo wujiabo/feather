@@ -10,12 +10,13 @@
 		if (pageValue == 'F') {
 			$("input[name='currentPage']").val('1');
 		} else if (pageValue == 'P') {
-			$("input[name='currentPage']").val(currentPage - 1);
+			$("input[name='currentPage']").val(parseInt(currentPage) - 1);
 		} else if (pageValue == 'N') {
-			$("input[name='currentPage']").val(currentPage + 1);
+			$("input[name='currentPage']").val(parseInt(currentPage) + 1);
 		} else if (pageValue == 'L') {
 			$("input[name='currentPage']").val('${pageBean.totalPage}');
 		}
+		$("#form").submit();
 	}
 	function toEdit(userId) {
 		window.location.href = "${CONTEXT_PATH}/userMgmt/edit/" + userId;
@@ -27,7 +28,7 @@
 </head>
 <body>
 
-	<form action="${CONTEXT_PATH}/userMgmt/view" method="post">
+	<form action="${CONTEXT_PATH}/userMgmt/view" method="post" id="form">
 		<input type="hidden" name="currentPage" value="${currentPage}" />
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
@@ -62,9 +63,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${pageBean.pageList}" var="bean">
+				<c:forEach items="${pageBean.pageList}" var="bean"
+					varStatus="status">
 					<tr>
-						<th scope="row">1</th>
+						<th scope="row">${status.index + 1}</th>
 						<td>${bean.user_name}</td>
 						<td>${bean.screen_name}</td>
 						<td>${bean.state=='0'?'有效':'无效'}</td>
@@ -80,12 +82,18 @@
 		<div class="collapse navbar-collapse">
 			<div class="navbar-right">
 				<ul class="pagination">
-					<li><a href="#" ${pageBean.isFirst?'':'pagination("F")'}
+					<li><a href="javascript:void(0)"
+						${pageBean.isFirst?'':'onclick=pagination("F")'}
 						aria-label="Previous"><span aria-hidden="true">««</span></a></li>
-					<li><a href="#" ${pageBean.isFirst?'':'pagination("P")'}>«</a></li>
-					<li><a href="#" ${pageBean.isLast?'':'pagination("N")'}>»</a></li>
-					<li><a href="#" ${pageBean.isLast?'':'pagination("L")'}
-						aria-label="Next"><span aria-hidden="true">»»</span></a></li>
+					<li><a href="javascript:void(0)"
+						${pageBean.isFirst?'':'onclick=pagination("P")'}>«</a></li>
+					<li><a href="javascript:void(0)">共${pageBean.totalCount}条
+							${currentPage} / ${pageBean.totalPage}</a></li>
+					<li><a href="javascript:void(0)"
+						${pageBean.isLast?'':'onclick=pagination("N")'}>»</a></li>
+					<li><a href="javascript:void(0)"
+						${pageBean.isLast?'':'onclick=pagination("L")'} aria-label="Next"><span
+							aria-hidden="true">»»</span></a></li>
 				</ul>
 			</div>
 		</div>

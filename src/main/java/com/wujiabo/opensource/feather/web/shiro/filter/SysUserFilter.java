@@ -42,10 +42,12 @@ public class SysUserFilter extends PathMatchingFilter {
 		TUser user = rbacService.findByUsername(username);
 		request.setAttribute(Constants.CURRENT_USER, user);
 
+		String contextPath = request.getServletContext().getContextPath();
+		request.setAttribute(Constants.CONTEXT_PATH, contextPath);
+
 		Session shiroSession = SecurityUtils.getSubject().getSession();
 
 		if (shiroSession.getAttribute(Constants.CURRENT_MENU) == null) {
-			String contextPath = request.getServletContext().getContextPath();
 
 			List<TMenu> menus = rbacService.getCurrentMenu(user.getUserId());
 

@@ -9,7 +9,9 @@
 </script>
 </head>
 <body>
-	<form action="">
+	<form action="${CONTEXT_PATH}/userMgmt/update" method="post">
+		<input type="hidden" name="userId" value="${user.userId}" />
+		<input type="hidden" name="updateType" value="${updateType}" />
 		<div class="form-horizontal">
 			<div class="form-group">
 				<label for="userName" class="col-sm-2 control-label">User

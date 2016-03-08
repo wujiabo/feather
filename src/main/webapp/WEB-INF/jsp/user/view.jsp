@@ -27,7 +27,7 @@
 </head>
 <body>
 
-	<form action="" method="post">
+	<form action="${CONTEXT_PATH}/userMgmt/view" method="post">
 		<input type="hidden" name="currentPage" value="${currentPage}" />
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
@@ -46,8 +46,7 @@
 					</div>
 					<div class="navbar-form navbar-right">
 						<button type="submit" class="btn btn-primary">Search</button>
-						<button type="button" class="btn btn-default"
-							onclick="toAdd()">Add</button>
+						<button type="button" class="btn btn-default" onclick="toAdd()">Add</button>
 					</div>
 				</div>
 			</div>
@@ -90,6 +89,10 @@
 				</ul>
 			</div>
 		</div>
+		<c:if test="${not empty message}">
+			<div class="alert alert-success">
+				<button data-dismiss="alert" class="close">×</button>${message}</div>
+		</c:if>
 	</form>
 </body>
 </html>

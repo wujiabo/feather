@@ -14,7 +14,8 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 	private CustomizedDao customizedDao;
 
 	@Override
-	public PageBean getUsers(String userName,Integer currentPage) {
-		return customizedDao.queryForListPage(Sql.GET_USERS_BY_USERNAME, new Object[] { "%" + userName + "%" },currentPage);
+	public PageBean getUsers(String userName, String screenName, Integer currentPage) {
+		return customizedDao.queryForListPage(Sql.GET_USERS_BY_USERNAME,
+				new Object[] { "%" + userName + "%", "%" + screenName + "%" }, currentPage);
 	}
 }

@@ -38,9 +38,11 @@ public class CustomizedDaoImpl implements CustomizedDao {
 		if (currentPage == 1) {
 			pageBean.setIsFirst(true);
 			pageBean.setIsLast(false);
-		} else if (pageBean.getTotalCount() <= currentPage * 10 && pageBean.getTotalCount() > (currentPage - 1) * 10) {
+		}
+		if (pageBean.getTotalCount() <= currentPage * 10 && pageBean.getTotalCount() > (currentPage - 1) * 10) {
 			pageBean.setIsLast(true);
 		}
+		pageBean.setTotalPage(pageBean.getTotalCount() / 10 + (pageBean.getTotalCount() % 10 > 0 ? 1 : 0));
 		return pageBean;
 	}
 
@@ -55,6 +57,7 @@ public class CustomizedDaoImpl implements CustomizedDao {
 		private Integer totalCount;
 		private Boolean isFirst;
 		private Boolean isLast;
+		private Integer totalPage;
 
 		public List<Map<String, Object>> getPageList() {
 			return pageList;
@@ -86,6 +89,14 @@ public class CustomizedDaoImpl implements CustomizedDao {
 
 		public void setIsLast(Boolean isLast) {
 			this.isLast = isLast;
+		}
+
+		public Integer getTotalPage() {
+			return totalPage;
+		}
+
+		public void setTotalPage(Integer totalPage) {
+			this.totalPage = totalPage;
 		}
 
 	}

@@ -4,5 +4,5 @@ import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 
 public interface UserMgmtService {
 
-	PageBean getUsers(String userName,Integer currentPage);
+	PageBean getUsers(String userName, String screenName, Integer currentPage);
 }

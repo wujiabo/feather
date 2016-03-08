@@ -64,7 +64,7 @@ body {
 	<div class="container">
 		<form class="form-signin" action="" method="post">
 			<h2 class="form-signin-heading">Please sign in</h2>
-			<label for="inputEmail" class="sr-only">Email address</label> <input
+			<label for="inputUsername" class="sr-only">User Name</label> <input
 				type="text" id="username" name="username" class="form-control"
 				placeholder="User Name" required autofocus> <label
 				for="inputPassword" class="sr-only">Password</label> <input

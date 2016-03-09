@@ -6,5 +6,6 @@
 <title>欢迎</title>
 </head>
 <body>
+	<div class="well well-lg">Welcome <shiro:principal /> !!!</div>
 </body>
 </html>

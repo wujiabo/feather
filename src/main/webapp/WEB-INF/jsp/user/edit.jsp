@@ -8,10 +8,36 @@
 	function back(){
 		window.location.href = "${CONTEXT_PATH}/userMgmt/view";
 	}
+	$().ready(function() {
+		$("#form").validate({
+			rules: {
+				userName: {
+					required: true,
+					minlength: 2
+				},
+				screenName: {
+					required: true,
+					minlength: 2
+				},
+				state: "required"
+			},
+			messages: {
+				userName: {
+					required: "Please enter a user name",
+					minlength: "Your user name must consist of at least 2 characters"
+				},
+				screenName: {
+					required: "Please provide a screen name",
+					minlength: "Your screen name must be at least 2 characters long"
+				},
+				state: "Please select at least 1 state"
+			}
+		});
+	});
 </script>
 </head>
 <body>
-	<form action="${CONTEXT_PATH}/userMgmt/update" method="post">
+	<form action="${CONTEXT_PATH}/userMgmt/update" method="post" id="form">
 		<input type="hidden" name="userId" value="${user.userId}" />
 		<input type="hidden" name="updateType" value="${updateType}" />
 		<div class="form-horizontal">

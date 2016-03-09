@@ -2,10 +2,8 @@
 <html>
 <head>
     <title>没有权限</title>
-    <style>.error{color:red;}</style>
 </head>
 <body>
-
-<div class="error">您没有权限[${exception.message}]</div>
+<div class="alert alert-danger" role="alert">您没有权限[${exception.message}]</div>
 </body>
 </html>

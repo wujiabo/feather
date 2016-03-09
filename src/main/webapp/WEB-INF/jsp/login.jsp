@@ -64,10 +64,10 @@ body {
 	<div class="container">
 		<form class="form-signin" action="" method="post">
 			<h2 class="form-signin-heading">Please sign in</h2>
-			<label for="inputUsername" class="sr-only">User Name</label> <input
+			<label for="username" class="sr-only">User Name</label> <input
 				type="text" id="username" name="username" class="form-control"
 				placeholder="User Name" required autofocus> <label
-				for="inputPassword" class="sr-only">Password</label> <input
+				for="password" class="sr-only">Password</label> <input
 				type="password" id="password" name="password" class="form-control"
 				placeholder="Password" required>
 			<div class="checkbox">

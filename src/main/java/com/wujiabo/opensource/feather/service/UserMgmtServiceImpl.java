@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wujiabo.opensource.feather.constants.SqlConstants;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.customized.sql.Sql;
@@ -27,7 +28,7 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 	@Override
 	public PageBean getUsers(String userName, String screenName, Integer currentPage) {
-		return customizedDao.queryForListPage(Sql.GET_USERS_BY_USERNAME,
+		return customizedDao.queryForListPage(SqlConstants.GET_USERS_BY_USERNAME,
 				new Object[] { "%" + userName + "%", "%" + screenName + "%" }, currentPage);
 	}
 

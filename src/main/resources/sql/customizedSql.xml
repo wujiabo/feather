@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<custom-sql>
+	<sql id="GET_USERS_BY_USERNAME">
+    <![CDATA[
+    	select * from t_user where user_name like ? and screen_name like ? order by user_id
+    ]]>
+	</sql>
+
+</custom-sql>

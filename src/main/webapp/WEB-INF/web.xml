@@ -18,7 +18,7 @@
         </param-value>
 	</context-param>
 	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+		<listener-class>com.wujiabo.opensource.feather.listener.ContextLoaderExtListener</listener-class>
 	</listener>
 	<!-- Spring配置文件结束 -->
 

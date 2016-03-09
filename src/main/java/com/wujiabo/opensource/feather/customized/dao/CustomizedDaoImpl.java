@@ -8,19 +8,24 @@ import javax.annotation.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.wujiabo.opensource.feather.customized.sql.Sql;
+
 @Repository
 public class CustomizedDaoImpl implements CustomizedDao {
 	@Resource
 	private JdbcTemplate jdbcTemplate;
 
-	@Override
-	public List<Map<String, Object>> queryForList(String sql, Object[] args) {
-		// TODO Auto-generated method stub
-		return jdbcTemplate.queryForList(sql, args);
+	private Sql getSqlInstance() {
+		return Sql.getInstance();
 	}
 
 	@Override
-	public PageBean queryForListPage(String sql, Object[] args, int currentPage) {
+	public List<Map<String, Object>> queryForList(String sqlId, Object[] args) {
+		return jdbcTemplate.queryForList(getSqlInstance().getSqlConfig(sqlId), args);
+	}
+
+	@Override
+	public PageBean queryForListPage(String sqlId, Object[] args, int currentPage) {
 		Object[] objs = new Object[args.length + 2];
 		for (int i = 0; i < args.length; i++) {
 			objs[i] = args[i];
@@ -28,13 +33,14 @@ public class CustomizedDaoImpl implements CustomizedDao {
 		objs[args.length] = (currentPage - 1) * 10;
 		objs[args.length + 1] = 10;
 
-		String countSql = "select count(*) cnt from (" + sql + ") page_table_temp";
+		String countSql = "select count(*) cnt from (" + getSqlInstance().getSqlConfig(sqlId) + ") page_table_temp";
 
-		String pageSql = "select page_table_temp.* from (" + sql + ") page_table_temp limit ?,?";
+		String pageSql = "select page_table_temp.* from (" + getSqlInstance().getSqlConfig(sqlId)
+				+ ") page_table_temp limit ?,?";
 
 		PageBean pageBean = new PageBean();
-		pageBean.setPageList(queryForList(pageSql, objs));
-		pageBean.setTotalCount(Integer.valueOf(queryForMap(countSql, args).get("cnt").toString()));
+		pageBean.setPageList(jdbcTemplate.queryForList(pageSql, objs));
+		pageBean.setTotalCount(Integer.valueOf(jdbcTemplate.queryForMap(countSql, args).get("cnt").toString()));
 		if (currentPage == 1) {
 			pageBean.setIsFirst(true);
 			pageBean.setIsLast(false);
@@ -47,9 +53,9 @@ public class CustomizedDaoImpl implements CustomizedDao {
 	}
 
 	@Override
-	public Map<String, Object> queryForMap(String sql, Object[] args) {
+	public Map<String, Object> queryForMap(String sqlId, Object[] args) {
 		// TODO Auto-generated method stub
-		return jdbcTemplate.queryForMap(sql, args);
+		return jdbcTemplate.queryForMap(getSqlInstance().getSqlConfig(sqlId), args);
 	}
 
 	public class PageBean {

@@ -36,7 +36,7 @@
 					<div class="navbar-form navbar-left">
 						<div class="input-group">
 							<span class="input-group-addon">Role Code</span> <input
-								name="roleName" value="${roleName}" type="text"
+								name="roleCode" value="${roleCode}" type="text"
 								class="form-control" placeholder="Role Code">
 						</div>
 						<div class="input-group">

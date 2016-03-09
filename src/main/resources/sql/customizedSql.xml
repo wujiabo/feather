@@ -5,5 +5,10 @@
     	select * from t_user where user_name like ? and screen_name like ? order by user_id
     ]]>
 	</sql>
+	<sql id="GET_ROLES_BY_ROLENAME">
+    <![CDATA[
+    	select * from t_role where role_code like ? and role_name like ? order by role_id
+    ]]>
+	</sql>
 
 </custom-sql>

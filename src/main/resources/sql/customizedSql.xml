@@ -12,7 +12,7 @@
 	</sql>
 	<sql id="GET_PERMISSIONS_BY_LIKE_COND">
     <![CDATA[
-    	select * from t_permission where (permission_pid=? or ? is null) and permission_code like ? and permission_name like ? order by permission_id
+    	select * from t_permission where (permission_pid=? or ? is null or ? ='') and permission_code like ? and permission_name like ? order by permission_id
     ]]>
 	</sql>
 </custom-sql>

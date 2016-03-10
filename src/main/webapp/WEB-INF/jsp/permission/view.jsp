@@ -47,7 +47,7 @@
 		permissionObj.attr("value", v);
 		
 		var permissionIdObj = $("#permissionPid");
-		permissionIdObj.attr("value", i);
+		permissionIdObj.attr("value", ids);
 		hideMenu();
 	}
 

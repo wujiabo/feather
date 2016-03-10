@@ -23,7 +23,7 @@ public class PermissionMgmtServiceImpl implements PermissionMgmtService {
 
 	@Autowired
 	private CustomizedDao customizedDao;
-	
+
 	@Resource
 	private TPermissionMapper tPermissionMapper;
 
@@ -50,9 +50,8 @@ public class PermissionMgmtServiceImpl implements PermissionMgmtService {
 	@Override
 	public PageBean getPermissions(String permissionPid, String permissionCode, String permissionName,
 			Integer currentPage) {
-		return customizedDao.queryForListPage(SqlConstants.GET_PERMISSIONS_BY_LIKE_COND,
-				new Object[] { permissionPid, permissionPid, "%" + permissionCode + "%", "%" + permissionName + "%" },
-				currentPage);
+		return customizedDao.queryForListPage(SqlConstants.GET_PERMISSIONS_BY_LIKE_COND, new Object[] { permissionPid,
+				permissionPid, permissionPid, "%" + permissionCode + "%", "%" + permissionName + "%" }, currentPage);
 	}
 
 	@Override

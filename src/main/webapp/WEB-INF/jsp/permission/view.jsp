@@ -52,7 +52,7 @@
 		hideMenu();
 	}
 
-	function showMenu() {
+	function showPermission() {
 		var permissionObj = $("#permissionParentName");
 		var permissionOffset = $("#permissionParentName").offset();
 		$("#permissionContent").css({
@@ -126,7 +126,7 @@ ul.ztree {
 							<span class="input-group-addon">Parent Permission</span> <input
 								name="permissionParentName" value="${permissionParentName}"
 								type="text" readonly="readonly" id="permissionParentName"
-								onclick="showMenu(); return false;" class="form-control"
+								onclick="showPermission(); return false;" class="form-control"
 								placeholder="Parent Permission">
 						</div>
 						<div class="input-group">

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,14 +61,21 @@ public class PermissionMgmtServiceImpl implements PermissionMgmtService {
 	}
 
 	@Override
-	public void addPermission(Integer permissionPid, String permissionCode, String permissionName, String state) {
-		// TODO Auto-generated method stub
-
+	public void addPermission(String permissionPid, String permissionCode, String permissionName, String state) {
+		TPermission permission = new TPermission();
+		permission.setPermissionPid(StringUtils.isBlank(permissionPid) ? null : Integer.valueOf(permissionPid));
+		permission.setPermissionCode(permissionCode);
+		permission.setPermissionName(permissionName);
+		permission.setState(state);
+		tPermissionMapper.insertSelective(permission);
 	}
 
 	@Override
 	public void editPermission(String permissionId, String permissionCode, String permissionName, String state) {
-		// TODO Auto-generated method stub
-
+		TPermission permission = tPermissionMapper.selectByPrimaryKey(Integer.valueOf(permissionId));
+		permission.setPermissionCode(permissionCode);
+		permission.setPermissionName(permissionName);
+		permission.setState(state);
+		tPermissionMapper.updateByPrimaryKeySelective(permission);
 	}
 }

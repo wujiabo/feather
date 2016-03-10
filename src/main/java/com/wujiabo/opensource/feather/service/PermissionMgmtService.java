@@ -8,7 +8,7 @@ public interface PermissionMgmtService {
 
 	TPermission getPermissionById(Integer permissionId);
 
-	void addPermission(Integer permissionPid, String permissionCode, String permissionName, String state);
+	void addPermission(String permissionPid, String permissionCode, String permissionName, String state);
 
 	void editPermission(String permissionId, String permissionCode, String permissionName, String state);
 

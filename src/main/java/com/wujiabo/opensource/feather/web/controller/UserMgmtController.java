@@ -1,5 +1,6 @@
 package com.wujiabo.opensource.feather.web.controller;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ public class UserMgmtController {
 	private UserMgmtService userMgmtService;
 
 	@RequestMapping(value = "/view", method = { RequestMethod.POST, RequestMethod.GET })
+    @RequiresPermissions(value = "USER_MGMT_VIEW")
 	public String view(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
 			@RequestParam(value = "userName", defaultValue = "") String userName,
 			@RequestParam(value = "screenName", defaultValue = "") String screenName, Model model) {
@@ -33,6 +35,7 @@ public class UserMgmtController {
 	}
 
 	@RequestMapping(value = "edit/{userId}", method = RequestMethod.GET)
+    @RequiresPermissions(value = "USER_MGMT_UPDATE")
 	public String editForm(@PathVariable("userId") String userId, Model model) {
 		TUser user = userMgmtService.getUserById(Integer.valueOf(userId));
 		model.addAttribute("user", user);
@@ -41,12 +44,14 @@ public class UserMgmtController {
 	}
 
 	@RequestMapping(value = "add", method = RequestMethod.GET)
+    @RequiresPermissions(value = "USER_MGMT_UPDATE")
 	public String addForm(Model model) {
 		model.addAttribute("updateType", "add");
 		return "user/edit";
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
+    @RequiresPermissions(value = "USER_MGMT_UPDATE")
 	public String update(@RequestParam(value = "userId", defaultValue = "") String userId,
 			@RequestParam(value = "userName", defaultValue = "") String userName,
 			@RequestParam(value = "screenName", defaultValue = "") String screenName,

@@ -1,5 +1,6 @@
 package com.wujiabo.opensource.feather.web.controller;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ public class RoleMgmtController {
 	private RoleMgmtService roleMgmtService;
 
 	@RequestMapping(value = "/view", method = { RequestMethod.POST, RequestMethod.GET })
+    @RequiresPermissions(value = "ROLE_MGMT_VIEW")
 	public String view(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
 			@RequestParam(value = "roleCode", defaultValue = "") String roleCode,
 			@RequestParam(value = "roleName", defaultValue = "") String roleName, Model model) {
@@ -33,6 +35,7 @@ public class RoleMgmtController {
 	}
 
 	@RequestMapping(value = "edit/{roleId}", method = RequestMethod.GET)
+    @RequiresPermissions(value = "ROLE_MGMT_UPDATE")
 	public String editForm(@PathVariable("roleId") String roleId, Model model) {
 		TRole role = roleMgmtService.getRoleById(Integer.valueOf(roleId));
 		model.addAttribute("role", role);
@@ -41,12 +44,14 @@ public class RoleMgmtController {
 	}
 
 	@RequestMapping(value = "add", method = RequestMethod.GET)
+    @RequiresPermissions(value = "ROLE_MGMT_UPDATE")
 	public String addForm(Model model) {
 		model.addAttribute("updateType", "add");
 		return "role/edit";
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
+    @RequiresPermissions(value = "ROLE_MGMT_UPDATE")
 	public String update(@RequestParam(value = "roleId", defaultValue = "") String roleId,
 			@RequestParam(value = "roleCode", defaultValue = "") String roleCode,
 			@RequestParam(value = "roleName", defaultValue = "") String roleName,

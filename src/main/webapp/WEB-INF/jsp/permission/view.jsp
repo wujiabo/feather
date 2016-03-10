@@ -7,7 +7,8 @@
 <script type="text/javascript">
 	var setting = {
 		view : {
-			dblClickExpand : false
+			dblClickExpand : false,
+			showIcon : false
 		},
 		data : {
 			simpleData : {
@@ -78,6 +79,26 @@
 		
 		$.fn.zTree.getZTreeObj("permissionTree").selectNode($.fn.zTree.getZTreeObj("permissionTree").getNodeByParam("id", '${permissionPid}'));
 	});
+
+	function pagination(pageValue) {
+		var currentPage = $("input[name='currentPage']").val();
+		if (pageValue == 'F') {
+			$("input[name='currentPage']").val('1');
+		} else if (pageValue == 'P') {
+			$("input[name='currentPage']").val(parseInt(currentPage) - 1);
+		} else if (pageValue == 'N') {
+			$("input[name='currentPage']").val(parseInt(currentPage) + 1);
+		} else if (pageValue == 'L') {
+			$("input[name='currentPage']").val('${pageBean.totalPage}');
+		}
+		$("#form").submit();
+	}
+	function toEdit(permissionId) {
+		window.location.href = "${CONTEXT_PATH}/permissionMgmt/edit/" + permissionId;
+	}
+	function toAdd() {
+		window.location.href = "${CONTEXT_PATH}/permissionMgmt/add";
+	}
 </script>
 <style type="text/css">
 ul.ztree {

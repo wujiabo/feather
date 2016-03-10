@@ -7,9 +7,13 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
+import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
+import com.wujiabo.opensource.feather.customized.sql.SqlConstants;
 import com.wujiabo.opensource.feather.mybatis.dao.TPermissionMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TPermission;
 import com.wujiabo.opensource.feather.mybatis.model.TPermissionExample;
@@ -17,6 +21,9 @@ import com.wujiabo.opensource.feather.mybatis.model.TPermissionExample;
 @Service
 public class PermissionMgmtServiceImpl implements PermissionMgmtService {
 
+	@Autowired
+	private CustomizedDao customizedDao;
+	
 	@Resource
 	private TPermissionMapper tPermissionMapper;
 
@@ -38,6 +45,14 @@ public class PermissionMgmtServiceImpl implements PermissionMgmtService {
 		}
 		String permissionJson = JSON.toJSONString(permissionMapList);
 		return permissionJson;
+	}
+
+	@Override
+	public PageBean getPermissions(String permissionPid, String permissionCode, String permissionName,
+			Integer currentPage) {
+		return customizedDao.queryForListPage(SqlConstants.GET_PERMISSIONS_BY_LIKE_COND,
+				new Object[] { permissionPid, permissionPid, "%" + permissionCode + "%", "%" + permissionName + "%" },
+				currentPage);
 	}
 
 	@Override

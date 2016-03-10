@@ -5,9 +5,9 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wujiabo.opensource.feather.constants.SqlConstants;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
+import com.wujiabo.opensource.feather.customized.sql.SqlConstants;
 import com.wujiabo.opensource.feather.mybatis.dao.TRoleMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TRole;
 
@@ -23,7 +23,7 @@ public class RoleMgmtServiceImpl implements RoleMgmtService {
 
 	@Override
 	public PageBean getRoles(String roleCode, String roleName, Integer currentPage) {
-		return customizedDao.queryForListPage(SqlConstants.GET_ROLES_BY_ROLENAME,
+		return customizedDao.queryForListPage(SqlConstants.GET_ROLES_BY_LIKE_COND,
 				new Object[] { "%" + roleCode + "%", "%" + roleName + "%" }, currentPage);
 	}
 

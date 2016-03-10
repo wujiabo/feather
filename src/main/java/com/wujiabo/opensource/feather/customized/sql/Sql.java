@@ -14,8 +14,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.wujiabo.opensource.feather.constants.SqlConstants;
-
 public class Sql {
 	private static Logger log = Logger.getLogger(Sql.class);
 	private static final String XML_SQL = "sql";
@@ -67,7 +65,7 @@ public class Sql {
 
 	public static void main(String[] args) {
 		// getInstance()是一个静态方法，不需要实例化
-		String sql = Sql.getInstance().getSqlConfig(SqlConstants.GET_USERS_BY_USERNAME);
+		String sql = Sql.getInstance().getSqlConfig(SqlConstants.GET_USERS_BY_LIKE_COND);
 		System.out.println(sql);
 	}
 

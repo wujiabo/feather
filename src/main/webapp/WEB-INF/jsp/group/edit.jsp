@@ -21,7 +21,7 @@
 		}
 	};
 
-	var zNodes = eval('${userGroupJson}');
+	var zNodes = eval('${groupJson}');
 
 	function beforeClick(treeId, treeNode) {
 		var check = (treeNode && !treeNode.isParent);
@@ -29,7 +29,7 @@
 	}
 
 	function onClick(e, treeId, treeNode) {
-		var zTree = $.fn.zTree.getZTreeObj("userGroupTree"), nodes = zTree
+		var zTree = $.fn.zTree.getZTreeObj("groupTree"), nodes = zTree
 				.getSelectedNodes(), v = "", ids = "";
 		nodes.sort(function compare(a, b) {
 			return a.id - b.id;
@@ -43,32 +43,32 @@
 		if (ids.length > 0)
 			ids = ids.substring(0, ids.length - 1);
 
-		var userGroupObj = $("#userGroupParentName");
-		userGroupObj.attr("value", v);
+		var groupObj = $("#groupParentName");
+		groupObj.attr("value", v);
 
-		var userGroupIdObj = $("#userGroupPid");
-		userGroupIdObj.attr("value", ids);
+		var groupIdObj = $("#groupPid");
+		groupIdObj.attr("value", ids);
 		hideMenu();
 	}
 
-	function showUserGroup() {
-		var userGroupObj = $("#userGroupParentName");
-		var userGroupOffset = $("#userGroupParentName").offset();
-		$("#userGroupContent").css({
-			left : userGroupOffset.left + "px",
-			top : userGroupOffset.top + userGroupObj.outerHeight() + "px"
+	function showGroup() {
+		var groupObj = $("#groupParentName");
+		var groupOffset = $("#groupParentName").offset();
+		$("#groupContent").css({
+			left : groupOffset.left + "px",
+			top : groupOffset.top + groupObj.outerHeight() + "px"
 		}).slideDown("fast");
 
 		$("body").bind("mousedown", onBodyDown);
 	}
 	function hideMenu() {
-		$("#userGroupContent").fadeOut("fast");
+		$("#groupContent").fadeOut("fast");
 		$("body").unbind("mousedown", onBodyDown);
 	}
 	function onBodyDown(event) {
-		if (!(event.target.id == "userGroupParentName"
-				|| event.target.id == "userGroupContent" || $(event.target)
-				.parents("#userGroupContent").length > 0)) {
+		if (!(event.target.id == "groupParentName"
+				|| event.target.id == "groupContent" || $(event.target)
+				.parents("#groupContent").length > 0)) {
 			hideMenu();
 		}
 	}
@@ -76,42 +76,42 @@
 	$(document)
 			.ready(
 					function() {
-						$.fn.zTree.init($("#userGroupTree"), setting, zNodes);
+						$.fn.zTree.init($("#groupTree"), setting, zNodes);
 
-						$.fn.zTree.getZTreeObj("userGroupTree").selectNode(
-								$.fn.zTree.getZTreeObj("userGroupTree")
+						$.fn.zTree.getZTreeObj("groupTree").selectNode(
+								$.fn.zTree.getZTreeObj("groupTree")
 										.getNodeByParam("id",
-												'${userGroupPid}'));
+												'${groupPid}'));
 
 						$("#form")
 								.validate(
 										{
 											rules : {
-												userGroupCode : {
+												groupCode : {
 													required : true,
 													minlength : 2
 												},
-												userGroupName : {
+												groupName : {
 													required : true,
 													minlength : 2
 												},
 												state : "required"
 											},
 											messages : {
-												userGroupCode : {
-													required : "Please provide a userGroup code",
+												groupCode : {
+													required : "Please provide a group code",
 													minlength : "Your screen name must be at least 2 characters long"
 												},
-												userGroupName : {
-													required : "Please enter a userGroup name",
-													minlength : "Your userGroup name must consist of at least 2 characters"
+												groupName : {
+													required : "Please enter a group name",
+													minlength : "Your group name must consist of at least 2 characters"
 												},
 												state : "Please select at least 1 state"
 											}
 										});
 					});
 	function back() {
-		window.location.href = "${CONTEXT_PATH}/userGroupMgmt/view";
+		window.location.href = "${CONTEXT_PATH}/groupMgmt/view";
 	}
 </script>
 <style type="text/css">
@@ -127,38 +127,38 @@ ul.ztree {
 </style>
 </head>
 <body>
-	<form action="${CONTEXT_PATH}/userGroupMgmt/update" method="post"
+	<form action="${CONTEXT_PATH}/groupMgmt/update" method="post"
 		id="form">
-		<input type="hidden" name="userGroupId"
-			value="${userGroup.userGroupId}" /> <input type="hidden"
-			name="updateType" value="${updateType}" /> <input type="hidden" id="userGroupPid"
-			name="userGroupPid" />
+		<input type="hidden" name="groupId"
+			value="${group.groupId}" /> <input type="hidden"
+			name="updateType" value="${updateType}" /> <input type="hidden" id="groupPid"
+			name="groupPid" />
 		<div class="form-horizontal">
 			<c:if test="${updateType=='add'}">
 				<div class="form-group">
-					<label for="parentUserGroupName" class="col-sm-2 control-label">Parent
-						UserGroup</label>
+					<label for="parentGroupName" class="col-sm-2 control-label">Parent
+						Group</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" id="userGroupParentName" readonly="readonly"
-							onclick="showUserGroup(); return false;" name="userGroupParentName"
-							placeholder="Parent UserGroup" />
+						<input type="text" class="form-control" id="groupParentName" readonly="readonly"
+							onclick="showGroup(); return false;" name="groupParentName"
+							placeholder="Parent Group" />
 					</div>
 				</div>
 			</c:if>
 			<div class="form-group">
-				<label for="userGroupCode" class="col-sm-2 control-label">UserGroup
+				<label for="groupCode" class="col-sm-2 control-label">Group
 					Code</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" name="userGroupCode"
-						value="${userGroup.userGroupCode}" placeholder="UserGroup Code" />
+					<input type="text" class="form-control" name="groupCode"
+						value="${group.groupCode}" placeholder="Group Code" />
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="userGroupName" class="col-sm-2 control-label">UserGroup
+				<label for="groupName" class="col-sm-2 control-label">Group
 					Name</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" name="userGroupName"
-						value="${userGroup.userGroupName}" placeholder="UserGroup Name" />
+					<input type="text" class="form-control" name="groupName"
+						value="${group.groupName}" placeholder="Group Name" />
 				</div>
 			</div>
 			<div class="form-group">
@@ -166,8 +166,8 @@ ul.ztree {
 				<div class="col-sm-10">
 					<select class="form-control" name="state">
 						<option value="">请选择</option>
-						<option value="0" ${userGroup.state=='0'?'selected':''}>有效</option>
-						<option value="1" ${userGroup.state=='1'?'selected':''}>无效</option>
+						<option value="0" ${group.state=='0'?'selected':''}>有效</option>
+						<option value="1" ${group.state=='1'?'selected':''}>无效</option>
 					</select>
 				</div>
 			</div>
@@ -180,9 +180,9 @@ ul.ztree {
 				</div>
 			</div>
 		</div>
-		<div id="userGroupContent" class="userGroupContent"
+		<div id="groupContent" class="groupContent"
 			style="display: none; position: absolute;">
-			<ul id="userGroupTree" class="ztree" style="margin-top: 0; width: 160px;"></ul>
+			<ul id="groupTree" class="ztree" style="margin-top: 0; width: 160px;"></ul>
 		</div>
 	</form>
 </body>

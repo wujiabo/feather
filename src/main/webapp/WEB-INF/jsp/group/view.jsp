@@ -21,7 +21,7 @@
 		}
 	};
 
-	var zNodes = eval('${userGroupJson}');
+	var zNodes = eval('${groupJson}');
 
 	function beforeClick(treeId, treeNode) {
 		var check = (treeNode && !treeNode.isParent);
@@ -29,7 +29,7 @@
 	}
 
 	function onClick(e, treeId, treeNode) {
-		var zTree = $.fn.zTree.getZTreeObj("userGroupTree"), nodes = zTree
+		var zTree = $.fn.zTree.getZTreeObj("groupTree"), nodes = zTree
 				.getSelectedNodes(), v = "",ids = "";
 		nodes.sort(function compare(a, b) {
 			return a.id - b.id;
@@ -44,40 +44,40 @@
 			ids = ids.substring(0, ids.length - 1);
 		
 
-		var userGroupObj = $("#userGroupParentName");
-		userGroupObj.attr("value", v);
+		var groupObj = $("#groupParentName");
+		groupObj.attr("value", v);
 		
-		var userGroupIdObj = $("#userGroupPid");
-		userGroupIdObj.attr("value", ids);
+		var groupIdObj = $("#groupPid");
+		groupIdObj.attr("value", ids);
 		hideMenu();
 	}
 
-	function showUserGroup() {
-		var userGroupObj = $("#userGroupParentName");
-		var userGroupOffset = $("#userGroupParentName").offset();
-		$("#userGroupContent").css({
-			left : userGroupOffset.left + "px",
-			top : userGroupOffset.top + userGroupObj.outerHeight() + "px"
+	function showGroup() {
+		var groupObj = $("#groupParentName");
+		var groupOffset = $("#groupParentName").offset();
+		$("#groupContent").css({
+			left : groupOffset.left + "px",
+			top : groupOffset.top + groupObj.outerHeight() + "px"
 		}).slideDown("fast");
 
 		$("body").bind("mousedown", onBodyDown);
 	}
 	function hideMenu() {
-		$("#userGroupContent").fadeOut("fast");
+		$("#groupContent").fadeOut("fast");
 		$("body").unbind("mousedown", onBodyDown);
 	}
 	function onBodyDown(event) {
-		if (!(event.target.id == "userGroupParentName"
-				|| event.target.id == "userGroupContent" || $(event.target).parents(
-				"#userGroupContent").length > 0)) {
+		if (!(event.target.id == "groupParentName"
+				|| event.target.id == "groupContent" || $(event.target).parents(
+				"#groupContent").length > 0)) {
 			hideMenu();
 		}
 	}
 
 	$(document).ready(function() {
-		$.fn.zTree.init($("#userGroupTree"), setting, zNodes);
+		$.fn.zTree.init($("#groupTree"), setting, zNodes);
 		
-		$.fn.zTree.getZTreeObj("userGroupTree").selectNode($.fn.zTree.getZTreeObj("userGroupTree").getNodeByParam("id", '${userGroupPid}'));
+		$.fn.zTree.getZTreeObj("groupTree").selectNode($.fn.zTree.getZTreeObj("groupTree").getNodeByParam("id", '${groupPid}'));
 	});
 
 	function pagination(pageValue) {
@@ -93,11 +93,11 @@
 		}
 		$("#form").submit();
 	}
-	function toEdit(userGroupId) {
-		window.location.href = "${CONTEXT_PATH}/userGroupMgmt/edit/" + userGroupId;
+	function toEdit(groupId) {
+		window.location.href = "${CONTEXT_PATH}/groupMgmt/edit/" + groupId;
 	}
 	function toAdd() {
-		window.location.href = "${CONTEXT_PATH}/userGroupMgmt/add";
+		window.location.href = "${CONTEXT_PATH}/groupMgmt/add";
 	}
 </script>
 <style type="text/css">
@@ -114,30 +114,30 @@ ul.ztree {
 </head>
 <body>
 
-	<form action="${CONTEXT_PATH}/userGroupMgmt/view" method="post"
+	<form action="${CONTEXT_PATH}/groupMgmt/view" method="post"
 		id="form">
 		<input type="hidden" name="currentPage" value="${currentPage}" />
-		<input type="hidden" id="userGroupPid" name="userGroupPid" value="${userGroupPid}" />
+		<input type="hidden" id="groupPid" name="groupPid" value="${groupPid}" />
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="collapse navbar-collapse">
 					<div class="navbar-form navbar-left">
 						<div class="input-group">
-							<span class="input-group-addon">Parent UserGroup</span> <input
-								name="userGroupParentName" value="${userGroupParentName}"
-								type="text" readonly="readonly" id="userGroupParentName"
-								onclick="showUserGroup(); return false;" class="form-control"
-								placeholder="Parent UserGroup">
+							<span class="input-group-addon">Parent Group</span> <input
+								name="groupParentName" value="${groupParentName}"
+								type="text" readonly="readonly" id="groupParentName"
+								onclick="showGroup(); return false;" class="form-control"
+								placeholder="Parent Group">
 						</div>
 						<div class="input-group">
-							<span class="input-group-addon">UserGroup Code</span> <input
-								name="userGroupCode" value="${userGroupCode}" type="text"
-								class="form-control" placeholder="UserGroup Code">
+							<span class="input-group-addon">Group Code</span> <input
+								name="groupCode" value="${groupCode}" type="text"
+								class="form-control" placeholder="Group Code">
 						</div>
 						<div class="input-group">
-							<span class="input-group-addon">UserGroup Name</span> <input
-								name="userGroupName" value="${userGroupName}" type="text"
-								class="form-control" placeholder="UserGroup Name">
+							<span class="input-group-addon">Group Name</span> <input
+								name="groupName" value="${groupName}" type="text"
+								class="form-control" placeholder="Group Name">
 						</div>
 					</div>
 					<div class="navbar-form navbar-right">
@@ -152,8 +152,8 @@ ul.ztree {
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>UserGroup Code</th>
-					<th>UserGroup Name</th>
+					<th>Group Code</th>
+					<th>Group Name</th>
 					<th>State</th>
 					<th>Operation</th>
 				</tr>
@@ -163,12 +163,12 @@ ul.ztree {
 					varStatus="status">
 					<tr>
 						<th scope="row">${status.index + 1}</th>
-						<td>${bean.userGroup_code}</td>
-						<td>${bean.userGroup_name}</td>
+						<td>${bean.group_code}</td>
+						<td>${bean.group_name}</td>
 						<td>${bean.state=='0'?'有效':'无效'}</td>
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
-								onclick="toEdit('${bean.userGroup_id}')">Edit</button>
+								onclick="toEdit('${bean.group_id}')">Edit</button>
 						</td>
 					</tr>
 				</c:forEach>
@@ -194,9 +194,9 @@ ul.ztree {
 			</div>
 		</div>
 
-		<div id="userGroupContent" class="userGroupContent"
+		<div id="groupContent" class="groupContent"
 			style="display: none; position: absolute;">
-			<ul id="userGroupTree" class="ztree" style="margin-top: 0; width: 160px;"></ul>
+			<ul id="groupTree" class="ztree" style="margin-top: 0; width: 160px;"></ul>
 		</div>
 
 	</form>

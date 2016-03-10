@@ -130,9 +130,9 @@ ul.ztree {
 								placeholder="Parent Menu">
 						</div>
 						<div class="input-group">
-							<span class="input-group-addon">Menu Code</span> <input
-								name="menuCode" value="${menuCode}" type="text"
-								class="form-control" placeholder="Menu Code">
+							<span class="input-group-addon">Menu Url</span> <input
+								name="menuUrl" value="${menuUrl}" type="text"
+								class="form-control" placeholder="Menu Url">
 						</div>
 						<div class="input-group">
 							<span class="input-group-addon">Menu Name</span> <input
@@ -152,7 +152,7 @@ ul.ztree {
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Menu Code</th>
+					<th>Menu Url</th>
 					<th>Menu Name</th>
 					<th>State</th>
 					<th>Operation</th>
@@ -163,7 +163,7 @@ ul.ztree {
 					varStatus="status">
 					<tr>
 						<th scope="row">${status.index + 1}</th>
-						<td>${bean.menu_code}</td>
+						<td>${bean.menu_url}</td>
 						<td>${bean.menu_name}</td>
 						<td>${bean.state=='0'?'有效':'无效'}</td>
 						<td>

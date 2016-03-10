@@ -87,7 +87,7 @@
 								.validate(
 										{
 											rules : {
-												menuCode : {
+												menuUrl : {
 													required : true,
 													minlength : 2
 												},
@@ -98,8 +98,8 @@
 												state : "required"
 											},
 											messages : {
-												menuCode : {
-													required : "Please provide a menu code",
+												menuUrl : {
+													required : "Please provide a menu url",
 													minlength : "Your screen name must be at least 2 characters long"
 												},
 												menuName : {
@@ -146,11 +146,11 @@ ul.ztree {
 				</div>
 			</c:if>
 			<div class="form-group">
-				<label for="menuCode" class="col-sm-2 control-label">Menu
-					Code</label>
+				<label for="menuUrl" class="col-sm-2 control-label">Menu
+					Url</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" name="menuCode"
-						value="${menu.menuCode}" placeholder="Menu Code" />
+					<input type="text" class="form-control" name="menuUrl"
+						value="${menu.menuUrl}" placeholder="Menu Url" />
 				</div>
 			</div>
 			<div class="form-group">

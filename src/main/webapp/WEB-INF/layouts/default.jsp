@@ -83,6 +83,15 @@ label.error {
 	<div class="container">
 		<shiro:user>
 			<sitemesh:body />
+			
+		<c:if test="${not empty message}">
+			<div class="alert alert-success">
+				<button data-dismiss="alert" class="close">×</button>${message}</div>
+		</c:if>
+		<c:if test="${not empty error}">
+			<div class="alert alert-danger">
+				<button data-dismiss="alert" class="close">×</button>${error}</div>
+		</c:if>
 		</shiro:user>
 	</div>
 

@@ -199,10 +199,6 @@ ul.ztree {
 			<ul id="permissionTree" class="ztree" style="margin-top: 0; width: 160px;"></ul>
 		</div>
 
-		<c:if test="${not empty message}">
-			<div class="alert alert-success">
-				<button data-dismiss="alert" class="close">×</button>${message}</div>
-		</c:if>
 	</form>
 </body>
 </html>

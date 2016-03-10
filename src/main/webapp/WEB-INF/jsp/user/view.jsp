@@ -97,10 +97,6 @@
 				</ul>
 			</div>
 		</div>
-		<c:if test="${not empty message}">
-			<div class="alert alert-success">
-				<button data-dismiss="alert" class="close">×</button>${message}</div>
-		</c:if>
 	</form>
 </body>
 </html>

@@ -15,4 +15,14 @@
     	select * from t_permission where (permission_pid=? or ? is null or ? ='') and permission_code like ? and permission_name like ? order by permission_id
     ]]>
 	</sql>
+	<sql id="GET_MENUS_BY_LIKE_COND">
+    <![CDATA[
+    	select * from t_menu where (menu_pid=? or ? is null or ? ='') and menu_url like ? and menu_name like ? order by menu_id
+    ]]>
+	</sql>
+	<sql id="GET_GROUPS_BY_LIKE_COND">
+    <![CDATA[
+    	select * from t_group where (group_pid=? or ? is null or ? ='') and group_code like ? and group_name like ? order by group_id
+    ]]>
+	</sql>
 </custom-sql>

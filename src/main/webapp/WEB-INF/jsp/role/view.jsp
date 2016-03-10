@@ -21,6 +21,12 @@
 	function toEdit(roleId) {
 		window.location.href = "${CONTEXT_PATH}/roleMgmt/edit/" + roleId;
 	}
+	function toPermission(roleId) {
+		window.location.href = "${CONTEXT_PATH}/roleMgmt/permission/" + roleId;
+	}
+	function toMenu(roleId) {
+		window.location.href = "${CONTEXT_PATH}/roleMgmt/menu/" + roleId;
+	}
 	function toAdd() {
 		window.location.href = "${CONTEXT_PATH}/roleMgmt/add";
 	}
@@ -73,6 +79,10 @@
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
 								onclick="toEdit('${bean.role_id}')">Edit</button>
+							<button type="button" class="btn btn-default btn-xs"
+								onclick="toPermission('${bean.role_id}')">Permission</button>
+							<button type="button" class="btn btn-default btn-xs"
+								onclick="toMenu('${bean.role_id}')">Menu</button>
 						</td>
 					</tr>
 				</c:forEach>

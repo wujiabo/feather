@@ -96,6 +96,9 @@
 	function toEdit(groupId) {
 		window.location.href = "${CONTEXT_PATH}/groupMgmt/edit/" + groupId;
 	}
+	function toRole(groupId) {
+		window.location.href = "${CONTEXT_PATH}/groupMgmt/role/" + groupId;
+	}
 	function toAdd() {
 		window.location.href = "${CONTEXT_PATH}/groupMgmt/add";
 	}
@@ -169,6 +172,8 @@ ul.ztree {
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
 								onclick="toEdit('${bean.group_id}')">Edit</button>
+							<button type="button" class="btn btn-default btn-xs"
+								onclick="toRole('${bean.group_id}')">Role</button>
 						</td>
 					</tr>
 				</c:forEach>

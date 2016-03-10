@@ -21,6 +21,12 @@
 	function toEdit(userId) {
 		window.location.href = "${CONTEXT_PATH}/userMgmt/edit/" + userId;
 	}
+	function toGroup(userId) {
+		window.location.href = "${CONTEXT_PATH}/userMgmt/group/" + userId;
+	}
+	function toRole(userId) {
+		window.location.href = "${CONTEXT_PATH}/userMgmt/role/" + userId;
+	}
 	function toAdd() {
 		window.location.href = "${CONTEXT_PATH}/userMgmt/add";
 	}
@@ -73,6 +79,10 @@
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
 								onclick="toEdit('${bean.user_id}')">Edit</button>
+							<button type="button" class="btn btn-default btn-xs"
+								onclick="toGroup('${bean.user_id}')">Group</button>
+							<button type="button" class="btn btn-default btn-xs"
+								onclick="toRole('${bean.user_id}')">Role</button>
 						</td>
 					</tr>
 				</c:forEach>

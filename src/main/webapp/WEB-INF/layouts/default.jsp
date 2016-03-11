@@ -26,7 +26,8 @@
 <script src="${ctx}/static/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="${ctx}/static/zTree/js/jquery.ztree.all-3.5.min.js"
 	type="text/javascript"></script>
-<script src="${ctx}/static/js/jquery.validate.min.js" type="text/javascript"></script>
+<script src="${ctx}/static/js/jquery.validate.min.js"
+	type="text/javascript"></script>
 <script src="${ctx}/static/js/rest.js" type="text/javascript"></script>
 <style type="text/css">
 /* Sticky footer styles
@@ -71,8 +72,8 @@ code {
 }
 
 label.error {
-		color: red;
-	}
+	color: red;
+}
 </style>
 <sitemesh:head />
 </head>
@@ -83,16 +84,15 @@ label.error {
 	<!-- Begin page content -->
 	<div class="container">
 		<shiro:user>
+			<c:if test="${not empty message}">
+				<div class="alert alert-success">
+					<button data-dismiss="alert" class="close">×</button>${message}</div>
+			</c:if>
+			<c:if test="${not empty error}">
+				<div class="alert alert-danger">
+					<button data-dismiss="alert" class="close">×</button>${error}</div>
+			</c:if>
 			<sitemesh:body />
-			
-		<c:if test="${not empty message}">
-			<div class="alert alert-success">
-				<button data-dismiss="alert" class="close">×</button>${message}</div>
-		</c:if>
-		<c:if test="${not empty error}">
-			<div class="alert alert-danger">
-				<button data-dismiss="alert" class="close">×</button>${error}</div>
-		</c:if>
 		</shiro:user>
 	</div>
 

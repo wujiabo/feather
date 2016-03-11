@@ -23,6 +23,17 @@
 		}
 	};
 
+	function save() {
+		var groupIds = "";
+		var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+		var selectedNode = zTree.getCheckedNodes();
+		for (var i = 0; i < selectedNode.length; i++) {
+			groupIds = groupIds + selectedNode[i].id + ",";
+		}
+		$("#groupIds").val(groupIds);
+		$("#form").submit();
+	}
+
 	$(document).ready(function() {
 		var zNodes = eval('${groupJson}');
 		$.fn.zTree.init($("#treeDemo"), setting, zNodes);
@@ -33,15 +44,15 @@
 </head>
 <body>
 	<form action="${CONTEXT_PATH}/userMgmt/group" method="post" id="form">
-		<input type="hidden" name="userId" value="${userId}" />
-		<input type="hidden" name="groupIds" />
+		<input type="hidden" name="userId" value="${userId}" /> <input
+			type="hidden" id="groupIds" name="groupIds" />
 		<div class="form-horizontal">
 			<div class="form-group">
 				<ul id="treeDemo" class="ztree"></ul>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-primary">Save</button>
+					<button type="button" class="btn btn-primary" onclick="save()">Save</button>
 					<button type="button" class="btn btn-default" onclick="back()">Back</button>
 				</div>
 			</div>

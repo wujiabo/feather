@@ -1,5 +1,10 @@
 package com.wujiabo.opensource.feather.web.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alibaba.fastjson.JSON;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.mybatis.model.TRole;
 import com.wujiabo.opensource.feather.service.RoleMgmtService;
@@ -72,6 +78,43 @@ public class RoleMgmtController {
 			redirectAttributes.addFlashAttribute("error", "操作失败");
 		}
 
+		return "redirect:/roleMgmt/view";
+	}
+	
+
+	@RequestMapping(value = "menu/{roleId}", method = RequestMethod.GET)
+	@RequiresPermissions(value = "ROLE_MGMT_MENU")
+	public String menuForm(@PathVariable("roleId") String roleId, Model model) {
+		List<Map<String, Object>> list = roleMgmtService.getMenuByRoleId(Integer.valueOf(roleId));
+		List<Map<String, Object>> jsonList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> map : list) {
+			Map<String, Object> jsonMap = new HashMap<String, Object>();
+			jsonMap.put("id", map.get("menu_id"));
+			jsonMap.put("pId", map.get("menu_pid"));
+			jsonMap.put("name", map.get("menu_name"));
+			if ("0".equals(map.get("flag").toString())) {
+				jsonMap.put("checked", true);
+			}
+			jsonList.add(jsonMap);
+		}
+		model.addAttribute("roleId", roleId);
+		model.addAttribute("roleJson", JSON.toJSONString(jsonList));
+		return "role/role";
+	}
+
+
+	@RequestMapping(value = "menu", method = RequestMethod.POST)
+	@RequiresPermissions(value = "ROLE_MGMT_MENU")
+	public String menu(@RequestParam(value = "roleId", defaultValue = "") String roleId,
+			@RequestParam(value = "menuIds", defaultValue = "") String menuIds,
+			RedirectAttributes redirectAttributes) {
+		try {
+			roleMgmtService.saveMenus(roleId, menuIds);
+			redirectAttributes.addFlashAttribute("message", "操作成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("error", "操作失败");
+		}
 		return "redirect:/roleMgmt/view";
 	}
 }

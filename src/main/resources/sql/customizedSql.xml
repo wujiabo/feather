@@ -40,4 +40,14 @@
 		select a.*,d.role_id is null as flag from t_role a left join (select b.role_id from t_group_role b,t_group c where b.group_id=c.group_id and c.group_id=?) d on a.role_id=d.role_id where a.state='0' order by a.role_id
     ]]>
 	</sql>
+	<sql id="GET_MENUS_BY_ROLEID">
+    <![CDATA[
+		select a.*,d.menu_id is null as flag from t_menu a left join (select b.menu_id from t_role_menu b,t_role c where b.role_id=c.role_id and c.role_id=?) d on a.menu_id=d.menu_id where a.state='0' order by a.menu_id
+    ]]>
+	</sql>
+	<sql id="GET_PERMISSIONS_BY_ROLEID">
+    <![CDATA[
+		select a.*,d.permission_id is null as flag from t_permission a left join (select b.permission_id from t_role_permission b,t_role c where b.role_id=c.role_id and c.role_id=?) d on a.permission_id=d.permission_id where a.state='0' order by a.permission_id
+    ]]>
+	</sql>
 </custom-sql>

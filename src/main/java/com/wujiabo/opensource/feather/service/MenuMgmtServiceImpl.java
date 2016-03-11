@@ -40,7 +40,6 @@ public class MenuMgmtServiceImpl implements MenuMgmtService {
 			menuMap.put("id", menu.getMenuId());
 			menuMap.put("pId", menu.getMenuPid());
 			menuMap.put("name", menu.getMenuName());
-			menuMap.put("url", menu.getMenuUrl());
 			menuMap.put("seq", menu.getSeq());
 			menuMap.put("state", menu.getState());
 			menuMapList.add(menuMap);

@@ -6,14 +6,21 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.customized.sql.SqlConstants;
+import com.wujiabo.opensource.feather.mybatis.dao.TUserGroupMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TUserMapper;
+import com.wujiabo.opensource.feather.mybatis.dao.TUserRoleMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TUser;
+import com.wujiabo.opensource.feather.mybatis.model.TUserGroupExample;
+import com.wujiabo.opensource.feather.mybatis.model.TUserGroupKey;
+import com.wujiabo.opensource.feather.mybatis.model.TUserRoleExample;
+import com.wujiabo.opensource.feather.mybatis.model.TUserRoleKey;
 
 @Service
 public class UserMgmtServiceImpl implements UserMgmtService {
@@ -23,6 +30,12 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 	@Resource
 	private TUserMapper tUserMapper;
+
+	@Resource
+	private TUserRoleMapper tUserRoleMapper;
+
+	@Resource
+	private TUserGroupMapper tUserGroupMapper;
 
 	@Autowired
 	private RbacService rbacService;
@@ -61,11 +74,43 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 
 	@Override
 	public List<Map<String, Object>> getGroupByUserId(Integer userId) {
-		return customizedDao.queryForList(SqlConstants.GET_GROUPS_BY_USERID, new Object[]{userId});
+		return customizedDao.queryForList(SqlConstants.GET_GROUPS_BY_USERID, new Object[] { userId });
 	}
-	
+
 	@Override
 	public List<Map<String, Object>> getRoleByUserId(String userId) {
-		return customizedDao.queryForList(SqlConstants.GET_ROLES_BY_USERID, new Object[]{userId});
+		return customizedDao.queryForList(SqlConstants.GET_ROLES_BY_USERID, new Object[] { userId });
+	}
+
+	@Override
+	public void saveGroups(String userId, String groupIds) {
+		TUserGroupExample example = new TUserGroupExample();
+		example.createCriteria().andUserIdEqualTo(Integer.valueOf(userId));
+		tUserGroupMapper.deleteByExample(example);
+		String[] groupIds_ = groupIds.split(",");
+		if (StringUtils.isNotBlank(groupIds) && groupIds_.length > 0) {
+			for (String groupId : groupIds_) {
+				TUserGroupKey record = new TUserGroupKey();
+				record.setUserId(Integer.valueOf(userId));
+				record.setGroupId(Integer.valueOf(groupId));
+				tUserGroupMapper.insertSelective(record);
+			}
+		}
+	}
+
+	@Override
+	public void saveRoles(String userId, String roleIds) {
+		TUserRoleExample example = new TUserRoleExample();
+		example.createCriteria().andUserIdEqualTo(Integer.valueOf(userId));
+		tUserRoleMapper.deleteByExample(example);
+		String[] roleIds_ = roleIds.split(",");
+		if (StringUtils.isNotBlank(roleIds) && roleIds_.length > 0) {
+			for (String roleId : roleIds_) {
+				TUserRoleKey record = new TUserRoleKey();
+				record.setUserId(Integer.valueOf(userId));
+				record.setRoleId(Integer.valueOf(roleId));
+				tUserRoleMapper.insertSelective(record);
+			}
+		}
 	}
 }

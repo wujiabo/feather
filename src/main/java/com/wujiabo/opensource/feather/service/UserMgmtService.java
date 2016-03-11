@@ -19,4 +19,8 @@ public interface UserMgmtService {
 	List<Map<String, Object>> getGroupByUserId(Integer userId);
 
 	List<Map<String, Object>> getRoleByUserId(String userId);
+
+	void saveGroups(String userId, String groupIds);
+
+	void saveRoles(String userId, String roleIds);
 }

@@ -96,6 +96,7 @@ public class UserMgmtController {
 			}
 			jsonList.add(jsonMap);
 		}
+		model.addAttribute("userId", userId);
 		model.addAttribute("groupJson", JSON.toJSONString(jsonList));
 		return "user/group";
 	}
@@ -105,7 +106,36 @@ public class UserMgmtController {
 	public String roleForm(@PathVariable("userId") String userId, Model model) {
 		List<Map<String, Object>> roleList = userMgmtService.getRoleByUserId(userId);
 		model.addAttribute("roleList", roleList);
-		model.addAttribute("userId", "userId");
+		model.addAttribute("userId", userId);
 		return "user/role";
+	}
+
+	@RequestMapping(value = "group", method = RequestMethod.POST)
+	@RequiresPermissions(value = "USER_MGMT_GROUP")
+	public String group(@RequestParam(value = "userId", defaultValue = "") String userId,
+			@RequestParam(value = "groupIds", defaultValue = "") String groupIds,
+			RedirectAttributes redirectAttributes) {
+		try {
+			userMgmtService.saveGroups(userId, groupIds);
+			redirectAttributes.addFlashAttribute("message", "操作成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("error", "操作失败");
+		}
+		return "redirect:/userMgmt/view";
+	}
+
+	@RequestMapping(value = "role", method = RequestMethod.POST)
+	@RequiresPermissions(value = "USER_MGMT_ROLE")
+	public String role(@RequestParam(value = "userId", defaultValue = "") String userId,
+			@RequestParam(value = "roleIds", defaultValue = "") String roleIds, RedirectAttributes redirectAttributes) {
+		try {
+			userMgmtService.saveRoles(userId, roleIds);
+			redirectAttributes.addFlashAttribute("message", "操作成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("error", "操作失败");
+		}
+		return "redirect:/userMgmt/view";
 	}
 }

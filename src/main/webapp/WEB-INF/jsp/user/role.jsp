@@ -12,11 +12,14 @@
 </head>
 <body>
 	<form action="${CONTEXT_PATH}/userMgmt/role" method="post" id="form">
+		<input type="hidden" name="userId" value="${userId}" />
+		<input type="hidden" name="roleIds" />
 		<div class="form-horizontal">
 			<div class="form-group">
 				<select multiple class="form-control" size="10">
 					<c:forEach items="${roleList}" var="bean">
-						<option id="${bean.role_id}"  ${bean.flag=='0'?'selected="selected"':''}>${bean.role_name}</option>
+						<option id="${bean.role_id}"
+							${bean.flag=='0'?'selected="selected"':''}>${bean.role_name}</option>
 					</c:forEach>
 				</select>
 			</div>

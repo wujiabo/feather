@@ -5,6 +5,9 @@
 <head>
 <title>用户管理</title>
 <script type="text/javascript">
+	function back() {
+		window.location.href = "${CONTEXT_PATH}/userMgmt/view";
+	}
 	var setting = {
 		check : {
 			enable : true,
@@ -29,6 +32,20 @@
 </script>
 </head>
 <body>
-	<ul id="treeDemo" class="ztree"></ul>
+	<form action="${CONTEXT_PATH}/userMgmt/group" method="post" id="form">
+		<input type="hidden" name="userId" value="${userId}" />
+		<input type="hidden" name="groupIds" />
+		<div class="form-horizontal">
+			<div class="form-group">
+				<ul id="treeDemo" class="ztree"></ul>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-primary">Save</button>
+					<button type="button" class="btn btn-default" onclick="back()">Back</button>
+				</div>
+			</div>
+		</div>
+	</form>
 </body>
 </html>

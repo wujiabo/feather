@@ -14,9 +14,12 @@ import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.customized.sql.SqlConstants;
 import com.wujiabo.opensource.feather.mybatis.dao.TRoleMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TRoleMenuMapper;
+import com.wujiabo.opensource.feather.mybatis.dao.TRolePermissionMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TRole;
 import com.wujiabo.opensource.feather.mybatis.model.TRoleMenuExample;
 import com.wujiabo.opensource.feather.mybatis.model.TRoleMenuKey;
+import com.wujiabo.opensource.feather.mybatis.model.TRolePermissionExample;
+import com.wujiabo.opensource.feather.mybatis.model.TRolePermissionKey;
 
 @Service
 public class RoleMgmtServiceImpl implements RoleMgmtService {
@@ -29,6 +32,9 @@ public class RoleMgmtServiceImpl implements RoleMgmtService {
 
 	@Resource
 	private TRoleMenuMapper tRoleMenuMapper;
+
+	@Resource
+	private TRolePermissionMapper tRolePermissionMapper;
 
 	@Override
 	public PageBean getRoles(String roleCode, String roleName, Integer currentPage) {
@@ -77,5 +83,27 @@ public class RoleMgmtServiceImpl implements RoleMgmtService {
 				tRoleMenuMapper.insertSelective(record);
 			}
 		}
+	}
+
+	@Override
+	public List<Map<String, Object>> getPermissionByRoleId(Integer roleId) {
+		return customizedDao.queryForList(SqlConstants.GET_PERMISSIONS_BY_ROLEID, new Object[] { roleId });
+	}
+
+	@Override
+	public void savePermissions(String roleId, String permissionIds) {
+		TRolePermissionExample example = new TRolePermissionExample();
+		example.createCriteria().andRoleIdEqualTo(Integer.valueOf(roleId));
+		tRolePermissionMapper.deleteByExample(example);
+		String[] permissionIds_ = permissionIds.split(",");
+		if (StringUtils.isNotBlank(permissionIds) && permissionIds_.length > 0) {
+			for (String permissionId : permissionIds_) {
+				TRolePermissionKey record = new TRolePermissionKey();
+				record.setRoleId(Integer.valueOf(roleId));
+				record.setPermissionId(Integer.valueOf(permissionId));
+				tRolePermissionMapper.insertSelective(record);
+			}
+		}
+
 	}
 }

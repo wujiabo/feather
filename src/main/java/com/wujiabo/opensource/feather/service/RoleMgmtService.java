@@ -19,4 +19,8 @@ public interface RoleMgmtService {
 	List<Map<String, Object>> getMenuByRoleId(Integer roleId);
 
 	void saveMenus(String roleId, String menuIds);
+
+	List<Map<String, Object>> getPermissionByRoleId(Integer roleId);
+
+	void savePermissions(String roleId, String permissionIds);
 }

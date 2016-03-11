@@ -98,8 +98,8 @@ public class RoleMgmtController {
 			jsonList.add(jsonMap);
 		}
 		model.addAttribute("roleId", roleId);
-		model.addAttribute("roleJson", JSON.toJSONString(jsonList));
-		return "role/role";
+		model.addAttribute("menuJson", JSON.toJSONString(jsonList));
+		return "role/menu";
 	}
 
 

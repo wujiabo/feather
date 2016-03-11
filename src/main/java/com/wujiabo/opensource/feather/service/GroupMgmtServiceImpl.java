@@ -16,8 +16,13 @@ import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.customized.sql.SqlConstants;
 import com.wujiabo.opensource.feather.mybatis.dao.TGroupMapper;
+import com.wujiabo.opensource.feather.mybatis.dao.TGroupRoleMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TGroup;
 import com.wujiabo.opensource.feather.mybatis.model.TGroupExample;
+import com.wujiabo.opensource.feather.mybatis.model.TGroupRoleExample;
+import com.wujiabo.opensource.feather.mybatis.model.TGroupRoleKey;
+import com.wujiabo.opensource.feather.mybatis.model.TUserRoleExample;
+import com.wujiabo.opensource.feather.mybatis.model.TUserRoleKey;
 
 @Service
 public class GroupMgmtServiceImpl implements GroupMgmtService {
@@ -27,6 +32,9 @@ public class GroupMgmtServiceImpl implements GroupMgmtService {
 
 	@Resource
 	private TGroupMapper tGroupMapper;
+
+	@Resource
+	private TGroupRoleMapper tGroupRoleMapper;
 
 	@Override
 	public String getGroupJson() {
@@ -77,5 +85,26 @@ public class GroupMgmtServiceImpl implements GroupMgmtService {
 		group.setGroupName(groupName);
 		group.setState(state);
 		tGroupMapper.updateByPrimaryKeySelective(group);
+	}
+
+	@Override
+	public List<Map<String, Object>> getRoleByGroupId(String groupId) {
+		return customizedDao.queryForList(SqlConstants.GET_ROLES_BY_GROUPID, new Object[] { groupId });
+	}
+
+	@Override
+	public void saveRoles(String groupId, String roleIds) {
+		TGroupRoleExample example = new TGroupRoleExample();
+		example.createCriteria().andGroupIdEqualTo(Integer.valueOf(groupId));
+		tGroupRoleMapper.deleteByExample(example);
+		String[] roleIds_ = roleIds.split(",");
+		if (StringUtils.isNotBlank(roleIds) && roleIds_.length > 0) {
+			for (String roleId : roleIds_) {
+				TGroupRoleKey record = new TGroupRoleKey();
+				record.setGroupId(Integer.valueOf(groupId));
+				record.setRoleId(Integer.valueOf(roleId));
+				tGroupRoleMapper.insertSelective(record);
+			}
+		}
 	}
 }

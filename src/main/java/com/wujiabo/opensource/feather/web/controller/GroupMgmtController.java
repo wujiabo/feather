@@ -1,5 +1,8 @@
 package com.wujiabo.opensource.feather.web.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +88,29 @@ public class GroupMgmtController {
 			redirectAttributes.addFlashAttribute("error", "操作失败");
 		}
 
+		return "redirect:/groupMgmt/view";
+	}
+
+	@RequestMapping(value = "role/{groupId}", method = RequestMethod.GET)
+	@RequiresPermissions(value = "GROUP_MGMT_ROLE")
+	public String roleForm(@PathVariable("groupId") String groupId, Model model) {
+		List<Map<String, Object>> roleList = groupMgmtService.getRoleByGroupId(groupId);
+		model.addAttribute("roleList", roleList);
+		model.addAttribute("groupId", groupId);
+		return "group/role";
+	}
+
+	@RequestMapping(value = "role", method = RequestMethod.POST)
+	@RequiresPermissions(value = "GROUP_MGMT_ROLE")
+	public String role(@RequestParam(value = "groupId", defaultValue = "") String groupId,
+			@RequestParam(value = "roleIds", defaultValue = "") String roleIds, RedirectAttributes redirectAttributes) {
+		try {
+			groupMgmtService.saveRoles(groupId, roleIds);
+			redirectAttributes.addFlashAttribute("message", "操作成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("error", "操作失败");
+		}
 		return "redirect:/groupMgmt/view";
 	}
 }

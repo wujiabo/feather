@@ -35,4 +35,9 @@
 		select a.*,d.role_id is null as flag from t_role a left join (select b.role_id from t_user_role b,t_user c where b.user_id=c.user_id and c.user_id=?) d on a.role_id=d.role_id where a.state='0' order by a.role_id
     ]]>
 	</sql>
+	<sql id="GET_ROLES_BY_GROUPID">
+    <![CDATA[
+		select a.*,d.role_id is null as flag from t_role a left join (select b.role_id from t_group_role b,t_group c where b.group_id=c.group_id and c.group_id=?) d on a.role_id=d.role_id where a.state='0' order by a.role_id
+    ]]>
+	</sql>
 </custom-sql>

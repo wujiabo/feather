@@ -63,4 +63,9 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 	public List<Map<String, Object>> getGroupByUserId(Integer userId) {
 		return customizedDao.queryForList(SqlConstants.GET_GROUPS_BY_USERID, new Object[]{userId});
 	}
+	
+	@Override
+	public List<Map<String, Object>> getRoleByUserId(String userId) {
+		return customizedDao.queryForList(SqlConstants.GET_ROLES_BY_USERID, new Object[]{userId});
+	}
 }

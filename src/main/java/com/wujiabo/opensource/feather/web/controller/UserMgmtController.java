@@ -28,7 +28,7 @@ public class UserMgmtController {
 	private UserMgmtService userMgmtService;
 
 	@RequestMapping(value = "/view", method = { RequestMethod.POST, RequestMethod.GET })
-    @RequiresPermissions(value = "USER_MGMT_VIEW")
+	@RequiresPermissions(value = "USER_MGMT_VIEW")
 	public String view(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
 			@RequestParam(value = "userName", defaultValue = "") String userName,
 			@RequestParam(value = "screenName", defaultValue = "") String screenName, Model model) {
@@ -41,7 +41,7 @@ public class UserMgmtController {
 	}
 
 	@RequestMapping(value = "edit/{userId}", method = RequestMethod.GET)
-    @RequiresPermissions(value = "USER_MGMT_UPDATE")
+	@RequiresPermissions(value = "USER_MGMT_UPDATE")
 	public String editForm(@PathVariable("userId") String userId, Model model) {
 		TUser user = userMgmtService.getUserById(Integer.valueOf(userId));
 		model.addAttribute("user", user);
@@ -50,14 +50,14 @@ public class UserMgmtController {
 	}
 
 	@RequestMapping(value = "add", method = RequestMethod.GET)
-    @RequiresPermissions(value = "USER_MGMT_UPDATE")
+	@RequiresPermissions(value = "USER_MGMT_UPDATE")
 	public String addForm(Model model) {
 		model.addAttribute("updateType", "add");
 		return "user/edit";
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
-    @RequiresPermissions(value = "USER_MGMT_UPDATE")
+	@RequiresPermissions(value = "USER_MGMT_UPDATE")
 	public String update(@RequestParam(value = "userId", defaultValue = "") String userId,
 			@RequestParam(value = "userName", defaultValue = "") String userName,
 			@RequestParam(value = "screenName", defaultValue = "") String screenName,
@@ -65,15 +65,15 @@ public class UserMgmtController {
 			@RequestParam(value = "updateType", defaultValue = "") String updateType,
 			RedirectAttributes redirectAttributes) {
 
-		try{
+		try {
 
 			if ("add".equals(updateType)) {
 				userMgmtService.addUser(userName, screenName, state);
 			} else if ("edit".equals(updateType)) {
-				userMgmtService.editUser(userId,  screenName, state);
+				userMgmtService.editUser(userId, screenName, state);
 			}
 			redirectAttributes.addFlashAttribute("message", "操作成功");
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("error", "操作失败");
 		}
@@ -82,7 +82,7 @@ public class UserMgmtController {
 	}
 
 	@RequestMapping(value = "group/{userId}", method = RequestMethod.GET)
-    @RequiresPermissions(value = "USER_MGMT_GROUP")
+	@RequiresPermissions(value = "USER_MGMT_GROUP")
 	public String groupForm(@PathVariable("userId") String userId, Model model) {
 		List<Map<String, Object>> list = userMgmtService.getGroupByUserId(Integer.valueOf(userId));
 		List<Map<String, Object>> jsonList = new ArrayList<Map<String, Object>>();
@@ -98,5 +98,14 @@ public class UserMgmtController {
 		}
 		model.addAttribute("groupJson", JSON.toJSONString(jsonList));
 		return "user/group";
+	}
+
+	@RequestMapping(value = "role/{userId}", method = RequestMethod.GET)
+	@RequiresPermissions(value = "USER_MGMT_ROLE")
+	public String roleForm(@PathVariable("userId") String userId, Model model) {
+		List<Map<String, Object>> roleList = userMgmtService.getRoleByUserId(userId);
+		model.addAttribute("roleList", roleList);
+		model.addAttribute("userId", "userId");
+		return "user/role";
 	}
 }

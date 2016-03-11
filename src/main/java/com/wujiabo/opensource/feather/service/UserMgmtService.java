@@ -17,4 +17,6 @@ public interface UserMgmtService {
 	void editUser(String userId, String screenName, String state);
 
 	List<Map<String, Object>> getGroupByUserId(Integer userId);
+
+	List<Map<String, Object>> getRoleByUserId(String userId);
 }

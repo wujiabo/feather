@@ -23,6 +23,8 @@
 	$(document).ready(function() {
 		var zNodes = eval('${groupJson}');
 		$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+		var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+		zTree.expandAll(true);
 	});
 </script>
 </head>

@@ -22,8 +22,7 @@
 		window.location.href = "${CONTEXT_PATH}/userMgmt/edit/" + userId;
 	}
 	function toGroup(userId) {
-		new RestServiceJs("${CONTEXT_PATH}/rbacRest/group/" + userId).find();
-	//	window.location.href = "${CONTEXT_PATH}/userMgmt/group/" + userId;
+		window.location.href = "${CONTEXT_PATH}/userMgmt/group/" + userId;
 	}
 	function toRole(userId) {
 		window.location.href = "${CONTEXT_PATH}/userMgmt/role/" + userId;
@@ -80,9 +79,9 @@
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
 								onclick="toEdit('${bean.user_id}')">Edit</button>
-							<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#popupModal"
+							<button type="button" class="btn btn-default btn-xs"
 								onclick="toGroup('${bean.user_id}')">Group</button>
-							<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#popupModal"
+							<button type="button" class="btn btn-default btn-xs"
 								onclick="toRole('${bean.user_id}')">Role</button>
 						</td>
 					</tr>
@@ -106,27 +105,6 @@
 						${pageBean.isLast?'':'onclick=pagination("L")'} aria-label="Next"><span
 							aria-hidden="true">»»</span></a></li>
 				</ul>
-			</div>
-		</div>
-
-		<!-- Modal -->
-		<div class="modal fade" id="popupModal" tabindex="-1" role="dialog"
-			aria-labelledby="popupModalLabel">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h4 class="modal-title" id="popupModalLabel">Config</h4>
-					</div>
-					<div class="modal-body">...</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Save</button>
-					</div>
-				</div>
 			</div>
 		</div>
 	</form>

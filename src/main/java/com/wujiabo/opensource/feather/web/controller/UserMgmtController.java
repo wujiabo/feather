@@ -1,5 +1,10 @@
 package com.wujiabo.opensource.feather.web.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alibaba.fastjson.JSON;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.mybatis.model.TUser;
 import com.wujiabo.opensource.feather.service.UserMgmtService;
@@ -73,5 +79,24 @@ public class UserMgmtController {
 		}
 
 		return "redirect:/userMgmt/view";
+	}
+
+	@RequestMapping(value = "group/{userId}", method = RequestMethod.GET)
+    @RequiresPermissions(value = "USER_MGMT_GROUP")
+	public String groupForm(@PathVariable("userId") String userId, Model model) {
+		List<Map<String, Object>> list = userMgmtService.getGroupByUserId(Integer.valueOf(userId));
+		List<Map<String, Object>> jsonList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> map : list) {
+			Map<String, Object> jsonMap = new HashMap<String, Object>();
+			jsonMap.put("id", map.get("group_id"));
+			jsonMap.put("pId", map.get("group_pid"));
+			jsonMap.put("name", map.get("group_name"));
+			if ("0".equals(map.get("flag").toString())) {
+				jsonMap.put("checked", true);
+			}
+			jsonList.add(jsonMap);
+		}
+		model.addAttribute("groupJson", JSON.toJSONString(jsonList));
+		return "user/group";
 	}
 }

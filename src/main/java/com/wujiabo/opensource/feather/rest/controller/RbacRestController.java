@@ -6,6 +6,8 @@
 package com.wujiabo.opensource.feather.rest.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,35 +53,46 @@ public class RbacRestController {
 	@Autowired
 	private RbacService rbacService;
 
-	@RequestMapping(value = "/group" ,method = RequestMethod.GET, produces = MediaTypes.JSON_UTF_8)
+	@RequestMapping(value = "/group", method = RequestMethod.GET, produces = MediaTypes.JSON_UTF_8)
 	public List<TGroup> getAllGroup() {
 		return rbacService.getAllGroup();
 	}
 
 	@RequestMapping(value = "/group/{userId}", method = RequestMethod.GET, produces = MediaTypes.JSON_UTF_8)
-	public List<Map<String,Object>> get(@PathVariable("userId") Integer userId) {
-		List<Map<String,Object>> list = userMgmtService.getGroupByUserId(userId);
+	public List<Map<String, Object>> get(@PathVariable("userId") Integer userId) {
+		List<Map<String, Object>> list = userMgmtService.getGroupByUserId(userId);
 		if (list == null) {
 			String message = "用户不存在(id:" + userId + ")";
 			logger.warn(message);
 			throw new RestException(HttpStatus.NOT_FOUND, message);
 		}
-		return list;
+		List<Map<String, Object>> jsonList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> map : list) {
+			Map<String, Object> jsonMap = new HashMap<String, Object>();
+			jsonMap.put("id", map.get("group_id"));
+			jsonMap.put("pId", map.get("group_pid"));
+			jsonMap.put("name", map.get("group_name"));
+			if ("0".equals(map.get("flag").toString())) {
+				jsonMap.put("checked", true);
+			}
+			jsonList.add(jsonMap);
+		}
+		return jsonList;
 	}
 
-	@RequestMapping(value = "/group/create",method = RequestMethod.POST, consumes = MediaTypes.JSON)
+	@RequestMapping(value = "/group/create", method = RequestMethod.POST, consumes = MediaTypes.JSON)
 	public ResponseEntity<?> create(@RequestBody TGroup group, UriComponentsBuilder uriBuilder) {
 		// 调用JSR303 Bean Validator进行校验, 异常将由RestExceptionHandler统一处理.
 		RestValidation.validateWithException(validator, group);
 
-//		// 保存任务
-//		taskService.saveTask(group);
-//
-//		// 按照Restful风格约定，创建指向新任务的url, 也可以直接返回id或对象.
-//		Long id = task.getId();
-//		URI uri = uriBuilder.path("/api/v1/task/" + id).build().toUri();
+		// // 保存任务
+		// taskService.saveTask(group);
+		//
+		// // 按照Restful风格约定，创建指向新任务的url, 也可以直接返回id或对象.
+		// Long id = task.getId();
+		// URI uri = uriBuilder.path("/api/v1/task/" + id).build().toUri();
 		HttpHeaders headers = new HttpHeaders();
-//		headers.setLocation(uri);
+		// headers.setLocation(uri);
 
 		return new ResponseEntity(headers, HttpStatus.CREATED);
 	}
@@ -92,12 +105,12 @@ public class RbacRestController {
 		RestValidation.validateWithException(validator, task);
 
 		// 保存任务
-//		taskService.saveTask(task);
+		// taskService.saveTask(task);
 	}
 
 	@RequestMapping(value = "/group/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable("id") Long id) {
-//		taskService.deleteTask(id);
+		// taskService.deleteTask(id);
 	}
 }

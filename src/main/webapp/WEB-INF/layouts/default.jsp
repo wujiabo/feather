@@ -24,7 +24,7 @@
 <script src="${ctx}/static/js/jquery-1.11.0.min.js"
 	type="text/javascript"></script>
 <script src="${ctx}/static/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="${ctx}/static/zTree/js/jquery.ztree.core-3.5.min.js"
+<script src="${ctx}/static/zTree/js/jquery.ztree.all-3.5.min.js"
 	type="text/javascript"></script>
 <script src="${ctx}/static/js/jquery.validate.min.js" type="text/javascript"></script>
 <script src="${ctx}/static/js/rest.js" type="text/javascript"></script>

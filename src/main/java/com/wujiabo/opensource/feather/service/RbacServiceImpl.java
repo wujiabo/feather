@@ -242,7 +242,14 @@ public class RbacServiceImpl implements RbacService {
 				return arg0.getSeq().compareTo(arg1.getSeq());
 			}
 		});
-		
+
 		return menus;
+	}
+
+	@Override
+	public List<TGroup> getAllGroup() {
+		TGroupExample example = new TGroupExample();
+		example.setOrderByClause("GROUP_ID ASC");
+		return tGroupMapper.selectByExample(example);
 	}
 }

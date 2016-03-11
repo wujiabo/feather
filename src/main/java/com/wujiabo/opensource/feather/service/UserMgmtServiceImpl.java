@@ -1,6 +1,8 @@
 package com.wujiabo.opensource.feather.service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -55,5 +57,10 @@ public class UserMgmtServiceImpl implements UserMgmtService {
 		user.setState(state);
 		user.setUpdateTime(new Date());
 		tUserMapper.updateByPrimaryKeySelective(user);
+	}
+
+	@Override
+	public List<Map<String, Object>> getGroupByUserId(Integer userId) {
+		return customizedDao.queryForList(SqlConstants.GET_GROUPS_BY_USERID, new Object[]{userId});
 	}
 }

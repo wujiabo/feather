@@ -25,4 +25,9 @@
     	select * from t_group where (group_pid=? or ? is null or ? ='') and group_code like ? and group_name like ? order by group_id
     ]]>
 	</sql>
+	<sql id="GET_GROUPS_BY_USERID">
+    <![CDATA[
+		select a.*,d.group_id is null as flag from t_group a left join (select b.group_id from t_user_group b,t_user c where b.user_id=c.user_id and c.user_id=?) d on a.group_id=d.group_id where a.state='0' order by a.group_id
+    ]]>
+	</sql>
 </custom-sql>

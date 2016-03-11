@@ -96,6 +96,9 @@
 	</aop:config>
 
 	<bean class="com.wujiabo.opensource.feather.bean.SpringUtils" />
+	
+	<!-- JSR303 Validator定义 -->
+ 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
 	<import resource="classpath:spring-config-cache.xml" />
 	<import resource="classpath:spring-config-shiro.xml" />

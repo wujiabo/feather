@@ -28,7 +28,9 @@
 		var zTree = $.fn.zTree.getZTreeObj("treeDemo");
 		var selectedNode = zTree.getCheckedNodes();
 		for (var i = 0; i < selectedNode.length; i++) {
-			permissionIds = permissionIds + selectedNode[i].id + ",";
+			if(!selectedNode[i].getCheckStatus().half){
+				permissionIds = permissionIds + selectedNode[i].id + ",";
+			}
 		}
 		$("#permissionIds").val(permissionIds);
 		$("#form").submit();

@@ -30,7 +30,7 @@
 
 	function onClick(e, treeId, treeNode) {
 		var zTree = $.fn.zTree.getZTreeObj("permissionTree"), nodes = zTree
-				.getSelectedNodes(), v = "",ids = "";
+				.getSelectedNodes(), v = "", ids = "";
 		nodes.sort(function compare(a, b) {
 			return a.id - b.id;
 		});
@@ -42,11 +42,10 @@
 			v = v.substring(0, v.length - 1);
 		if (ids.length > 0)
 			ids = ids.substring(0, ids.length - 1);
-		
 
 		var permissionObj = $("#permissionParentName");
 		permissionObj.attr("value", v);
-		
+
 		var permissionIdObj = $("#permissionPid");
 		permissionIdObj.attr("value", ids);
 		hideMenu();
@@ -68,17 +67,20 @@
 	}
 	function onBodyDown(event) {
 		if (!(event.target.id == "permissionParentName"
-				|| event.target.id == "permissionContent" || $(event.target).parents(
-				"#permissionContent").length > 0)) {
+				|| event.target.id == "permissionContent" || $(event.target)
+				.parents("#permissionContent").length > 0)) {
 			hideMenu();
 		}
 	}
 
-	$(document).ready(function() {
-		$.fn.zTree.init($("#permissionTree"), setting, zNodes);
-		
-		$.fn.zTree.getZTreeObj("permissionTree").selectNode($.fn.zTree.getZTreeObj("permissionTree").getNodeByParam("id", '${permissionPid}'));
-	});
+	$(document).ready(
+			function() {
+				$.fn.zTree.init($("#permissionTree"), setting, zNodes);
+
+				$.fn.zTree.getZTreeObj("permissionTree").selectNode(
+						$.fn.zTree.getZTreeObj("permissionTree")
+								.getNodeByParam("id", '${permissionPid}'));
+			});
 
 	function pagination(pageValue) {
 		var currentPage = $("input[name='currentPage']").val();
@@ -94,7 +96,8 @@
 		$("#form").submit();
 	}
 	function toEdit(permissionId) {
-		window.location.href = "${CONTEXT_PATH}/permissionMgmt/edit/" + permissionId;
+		window.location.href = "${CONTEXT_PATH}/permissionMgmt/edit/"
+				+ permissionId;
 	}
 	function toAdd() {
 		window.location.href = "${CONTEXT_PATH}/permissionMgmt/add";
@@ -116,37 +119,45 @@ ul.ztree {
 
 	<form action="${CONTEXT_PATH}/permissionMgmt/view" method="post"
 		id="form">
-		<input type="hidden" name="currentPage" value="${currentPage}" />
-		<input type="hidden" id="permissionPid" name="permissionPid" value="${permissionPid}" />
-		<nav class="navbar navbar-default">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse">
-					<div class="navbar-form navbar-left">
-						<div class="input-group">
-							<span class="input-group-addon">Parent Permission</span> <input
-								name="permissionParentName" value="${permissionParentName}"
-								type="text" readonly="readonly" id="permissionParentName"
-								onclick="showPermission(); return false;" class="form-control"
-								placeholder="Parent Permission">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon">Permission Code</span> <input
-								name="permissionCode" value="${permissionCode}" type="text"
-								class="form-control" placeholder="Permission Code">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon">Permission Name</span> <input
-								name="permissionName" value="${permissionName}" type="text"
-								class="form-control" placeholder="Permission Name">
-						</div>
-					</div>
-					<div class="navbar-form navbar-right">
-						<button type="submit" class="btn btn-primary">Search</button>
-						<button type="button" class="btn btn-default" onclick="toAdd()">Add</button>
-					</div>
+		<input type="hidden" name="currentPage" value="${currentPage}" /> <input
+			type="hidden" id="permissionPid" name="permissionPid"
+			value="${permissionPid}" />
+
+
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="input-group">
+					<span class="input-group-addon">Parent Permission</span> <input
+						name="permissionParentName" value="${permissionParentName}"
+						type="text" readonly="readonly" id="permissionParentName"
+						onclick="showPermission(); return false;" class="form-control"
+						placeholder="Parent Permission">
 				</div>
 			</div>
-		</nav>
+			<div class="col-lg-4">
+				<div class="input-group">
+					<span class="input-group-addon">Permission Code</span> <input
+						name="permissionCode" value="${permissionCode}" type="text"
+						class="form-control" placeholder="Permission Code">
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="input-group">
+					<span class="input-group-addon">Permission Name</span> <input
+						name="permissionName" value="${permissionName}" type="text"
+						class="form-control" placeholder="Permission Name">
+				</div>
+			</div>
+		</div>
+		<br>
+
+		<div class="collapse navbar-collapse">
+			<div class="navbar-right">
+				<button type="submit" class="btn btn-primary">Search</button>
+				<button type="button" class="btn btn-default" onclick="toAdd()">Add</button>
+			</div>
+		</div>
+		<br>
 
 		<table class="table table-bordered">
 			<thead>
@@ -196,7 +207,8 @@ ul.ztree {
 
 		<div id="permissionContent" class="permissionContent"
 			style="display: none; position: absolute;">
-			<ul id="permissionTree" class="ztree" style="margin-top: 0; width: 160px;"></ul>
+			<ul id="permissionTree" class="ztree"
+				style="margin-top: 0; width: 160px;"></ul>
 		</div>
 
 	</form>

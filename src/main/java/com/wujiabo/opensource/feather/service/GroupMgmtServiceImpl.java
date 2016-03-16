@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.customized.sql.SqlConstants;
+import com.wujiabo.opensource.feather.enums.State;
 import com.wujiabo.opensource.feather.mybatis.dao.TGroupMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TGroupRoleMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TGroup;
@@ -85,6 +86,29 @@ public class GroupMgmtServiceImpl implements GroupMgmtService {
 		group.setGroupName(groupName);
 		group.setState(state);
 		tGroupMapper.updateByPrimaryKeySelective(group);
+
+		if (State.INACTIVE.getValue().equals(state)) {
+			TGroupExample example = new TGroupExample();
+			example.createCriteria().andGroupPidEqualTo(Integer.valueOf(groupId))
+					.andStateEqualTo(State.ACTIVE.getValue());
+			List<TGroup> groupList = tGroupMapper.selectByExample(example);
+			for (TGroup tGroup : groupList) {
+				tGroup.setState(State.INACTIVE.getValue());
+				tGroupMapper.updateByPrimaryKeySelective(tGroup);
+				updateChildGroup(tGroup.getGroupId());
+			}
+		}
+	}
+
+	private void updateChildGroup(Integer groupId) {
+		TGroupExample example = new TGroupExample();
+		example.createCriteria().andGroupPidEqualTo(groupId).andStateEqualTo(State.ACTIVE.getValue());
+		List<TGroup> groupList = tGroupMapper.selectByExample(example);
+		for (TGroup tGroup : groupList) {
+			tGroup.setState(State.INACTIVE.getValue());
+			tGroupMapper.updateByPrimaryKeySelective(tGroup);
+			updateChildGroup(tGroup.getGroupId());
+		}
 	}
 
 	@Override

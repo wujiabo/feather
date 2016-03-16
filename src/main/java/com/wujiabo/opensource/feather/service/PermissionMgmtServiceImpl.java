@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.customized.sql.SqlConstants;
+import com.wujiabo.opensource.feather.enums.State;
 import com.wujiabo.opensource.feather.mybatis.dao.TPermissionMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TPermission;
 import com.wujiabo.opensource.feather.mybatis.model.TPermissionExample;
@@ -77,5 +78,29 @@ public class PermissionMgmtServiceImpl implements PermissionMgmtService {
 		permission.setPermissionName(permissionName);
 		permission.setState(state);
 		tPermissionMapper.updateByPrimaryKeySelective(permission);
+
+
+		if (State.INACTIVE.getValue().equals(state)) {
+			TPermissionExample example = new TPermissionExample();
+			example.createCriteria().andPermissionPidEqualTo(Integer.valueOf(permissionId))
+					.andStateEqualTo(State.ACTIVE.getValue());
+			List<TPermission> permissionList = tPermissionMapper.selectByExample(example);
+			for (TPermission tPermission : permissionList) {
+				tPermission.setState(State.INACTIVE.getValue());
+				tPermissionMapper.updateByPrimaryKeySelective(tPermission);
+				updateChildPermission(tPermission.getPermissionId());
+			}
+		}
+	}
+
+	private void updateChildPermission(Integer permissionId) {
+		TPermissionExample example = new TPermissionExample();
+		example.createCriteria().andPermissionPidEqualTo(permissionId).andStateEqualTo(State.ACTIVE.getValue());
+		List<TPermission> permissionList = tPermissionMapper.selectByExample(example);
+		for (TPermission tPermission : permissionList) {
+			tPermission.setState(State.INACTIVE.getValue());
+			tPermissionMapper.updateByPrimaryKeySelective(tPermission);
+			updateChildPermission(tPermission.getPermissionId());
+		}
 	}
 }

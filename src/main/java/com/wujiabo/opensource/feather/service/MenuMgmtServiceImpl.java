@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.customized.sql.SqlConstants;
+import com.wujiabo.opensource.feather.enums.State;
 import com.wujiabo.opensource.feather.mybatis.dao.TMenuMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TMenu;
 import com.wujiabo.opensource.feather.mybatis.model.TMenuExample;
@@ -78,5 +79,28 @@ public class MenuMgmtServiceImpl implements MenuMgmtService {
 		menu.setSeq(seq);
 		menu.setState(state);
 		tMenuMapper.updateByPrimaryKeySelective(menu);
+
+		if (State.INACTIVE.getValue().equals(state)) {
+			TMenuExample example = new TMenuExample();
+			example.createCriteria().andMenuPidEqualTo(Integer.valueOf(menuId))
+					.andStateEqualTo(State.ACTIVE.getValue());
+			List<TMenu> menuList = tMenuMapper.selectByExample(example);
+			for (TMenu tMenu : menuList) {
+				tMenu.setState(State.INACTIVE.getValue());
+				tMenuMapper.updateByPrimaryKeySelective(tMenu);
+				updateChildMenu(tMenu.getMenuId());
+			}
+		}
+	}
+
+	private void updateChildMenu(Integer menuId) {
+		TMenuExample example = new TMenuExample();
+		example.createCriteria().andMenuPidEqualTo(menuId).andStateEqualTo(State.ACTIVE.getValue());
+		List<TMenu> menuList = tMenuMapper.selectByExample(example);
+		for (TMenu tMenu : menuList) {
+			tMenu.setState(State.INACTIVE.getValue());
+			tMenuMapper.updateByPrimaryKeySelective(tMenu);
+			updateChildMenu(tMenu.getMenuId());
+		}
 	}
 }

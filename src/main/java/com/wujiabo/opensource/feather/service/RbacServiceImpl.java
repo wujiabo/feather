@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -13,34 +14,15 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
+import com.wujiabo.opensource.feather.customized.sql.Sql;
+import com.wujiabo.opensource.feather.customized.sql.SqlConstants;
 import com.wujiabo.opensource.feather.mybatis.dao.TGroupMapper;
-import com.wujiabo.opensource.feather.mybatis.dao.TGroupRoleMapper;
-import com.wujiabo.opensource.feather.mybatis.dao.TMenuMapper;
-import com.wujiabo.opensource.feather.mybatis.dao.TPermissionMapper;
-import com.wujiabo.opensource.feather.mybatis.dao.TRoleMapper;
-import com.wujiabo.opensource.feather.mybatis.dao.TRoleMenuMapper;
-import com.wujiabo.opensource.feather.mybatis.dao.TRolePermissionMapper;
-import com.wujiabo.opensource.feather.mybatis.dao.TUserGroupMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TUserMapper;
-import com.wujiabo.opensource.feather.mybatis.dao.TUserRoleMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TGroup;
 import com.wujiabo.opensource.feather.mybatis.model.TGroupExample;
-import com.wujiabo.opensource.feather.mybatis.model.TGroupRoleExample;
-import com.wujiabo.opensource.feather.mybatis.model.TGroupRoleKey;
-import com.wujiabo.opensource.feather.mybatis.model.TMenu;
-import com.wujiabo.opensource.feather.mybatis.model.TPermission;
-import com.wujiabo.opensource.feather.mybatis.model.TPermissionExample;
-import com.wujiabo.opensource.feather.mybatis.model.TRole;
-import com.wujiabo.opensource.feather.mybatis.model.TRoleMenuExample;
-import com.wujiabo.opensource.feather.mybatis.model.TRoleMenuKey;
-import com.wujiabo.opensource.feather.mybatis.model.TRolePermissionExample;
-import com.wujiabo.opensource.feather.mybatis.model.TRolePermissionKey;
 import com.wujiabo.opensource.feather.mybatis.model.TUser;
 import com.wujiabo.opensource.feather.mybatis.model.TUserExample;
-import com.wujiabo.opensource.feather.mybatis.model.TUserGroupExample;
-import com.wujiabo.opensource.feather.mybatis.model.TUserGroupKey;
-import com.wujiabo.opensource.feather.mybatis.model.TUserRoleExample;
-import com.wujiabo.opensource.feather.mybatis.model.TUserRoleKey;
 
 @Service
 public class RbacServiceImpl implements RbacService {
@@ -51,143 +33,167 @@ public class RbacServiceImpl implements RbacService {
 	@Resource
 	private TGroupMapper tGroupMapper;
 
-	@Resource
-	private TRoleMapper tRoleMapper;
-
-	@Resource
-	private TPermissionMapper tPermissionMapper;
-
-	@Resource
-	private TUserGroupMapper tUserGroupMapper;
-
-	@Resource
-	private TUserRoleMapper tUserRoleMapper;
-
-	@Resource
-	private TGroupRoleMapper tGroupRoleMapper;
-
-	@Resource
-	private TRolePermissionMapper tRolePermissionMapper;
-
-	@Resource
-	private TMenuMapper tMenuMapper;
-
-	@Resource
-	private TRoleMenuMapper tRoleMenuMapper;
-
 	@Autowired
 	private PasswordHelper passwordHelper;
+
+	@Autowired
+	private CustomizedDao customizedDao;
 
 	@Override
 	public void setAuthorizationInfo(SimpleAuthorizationInfo authorizationInfo, String username) {
 
 		TUser user = findByUsername(username);
 
-		List<Integer> roleIds = getAllRoleIdsByUserId(user.getUserId());
+		List<Map<String, Object>> roles = getAllRolesByUserId(user.getUserId());
 
-		List<Integer> permissionIds = new ArrayList<Integer>();
+		List<Map<String, Object>> permissions = getAllPermissionsByRoles(roles);
 
 		Set<String> tRoles = new HashSet<String>();
-		for (Integer roleId : roleIds) {
-			TRole tRole = tRoleMapper.selectByPrimaryKey(roleId);
-			tRoles.add(tRole.getRoleCode());
-
-			TRolePermissionExample tRolePermissionExample = new TRolePermissionExample();
-			tRolePermissionExample.createCriteria().andRoleIdEqualTo(tRole.getRoleId());
-			List<TRolePermissionKey> tRolePermissions = tRolePermissionMapper.selectByExample(tRolePermissionExample);
-			for (TRolePermissionKey tRolePermission : tRolePermissions) {
-				Integer permissionId = tRolePermission.getPermissionId();
-				if (!permissionIds.contains(permissionId)) {
-					permissionIds.add(permissionId);
-
-					List<Integer> permissionCids = new ArrayList<Integer>();
-					getPermissionCidsByPermissionPid(permissionCids, permissionId);
-
-					for (Integer permissionCid : permissionCids) {
-						if (!permissionIds.contains(permissionCid)) {
-							permissionIds.add(permissionCid);
-						}
-					}
-				}
-			}
-
+		for (Map<String, Object> role : roles) {
+			tRoles.add(role.get("role_code") == null ? null : role.get("role_code").toString());
 		}
 
 		Set<String> tPermissions = new HashSet<String>();
-		for (Integer permissionId : permissionIds) {
-			TPermission tPermission = tPermissionMapper.selectByPrimaryKey(permissionId);
-			tPermissions.add(tPermission.getPermissionCode());
+		for (Map<String, Object> permission : permissions) {
+			tPermissions.add(
+					permission.get("permission_code") == null ? null : permission.get("permission_code").toString());
 		}
 
 		authorizationInfo.setRoles(tRoles);
 		authorizationInfo.setStringPermissions(tPermissions);
 	}
 
-	private List<Integer> getAllRoleIdsByUserId(Integer userId) {
+	private List<Map<String, Object>> getAllPermissionsByRoles(List<Map<String, Object>> roles) {
+		List<Integer> permissionIds = new ArrayList<Integer>();
+		List<Map<String, Object>> permissions = new ArrayList<Map<String, Object>>();
 
+		String sqlCond = "";
+		for (Map<String, Object> role : roles) {
+			sqlCond = sqlCond + role.get("role_id") + ",";
+		}
+		if (sqlCond.length() > 0) {
+			sqlCond = sqlCond.substring(0, sqlCond.length() - 1);
+		}
+
+		List<Map<String, Object>> permissionList = customizedDao.queryForListBySql(Sql.getInstance()
+				.getSqlConfig(SqlConstants.GET_ALL_PERMISSIONS_BY_ROLEID).replace("[sqlCond]", sqlCond),
+				new Object[] {});
+		for (Map<String, Object> permissionMap : permissionList) {
+			String permissionId = permissionMap.get("permission_id") == null ? null
+					: permissionMap.get("permission_id").toString();
+			if (!permissionIds.contains(Integer.valueOf(permissionId))) {
+				permissionIds.add(Integer.valueOf(permissionId));
+				permissions.add(permissionMap);
+				setPermissions(permissionIds, permissions, permissionId);
+			}
+		}
+
+		return permissions;
+	}
+
+	private void setPermissions(List<Integer> permissionIds, List<Map<String, Object>> permissions,
+			String permissionId) {
+		List<Map<String, Object>> permissionList = customizedDao.queryForList(SqlConstants.GET_PERMISSIONS_BY_PID,
+				new Object[] { permissionId });
+		for (Map<String, Object> permissionMap : permissionList) {
+			String permissionCId = permissionMap.get("permission_id") == null ? null
+					: permissionMap.get("permission_id").toString();
+			if (!permissionIds.contains(Integer.valueOf(permissionCId))) {
+				permissionIds.add(Integer.valueOf(permissionCId));
+				permissions.add(permissionMap);
+				setPermissions(permissionIds, permissions, permissionCId);
+			}
+		}
+	}
+
+	private List<Map<String, Object>> getAllMenusByRoles(List<Map<String, Object>> roles) {
+
+		List<Integer> menuIds = new ArrayList<Integer>();
+		List<Map<String, Object>> menus = new ArrayList<Map<String, Object>>();
+
+		String sqlCond = "";
+		for (Map<String, Object> role : roles) {
+			sqlCond = sqlCond + role.get("role_id") + ",";
+		}
+		if (sqlCond.length() > 0) {
+			sqlCond = sqlCond.substring(0, sqlCond.length() - 1);
+		}
+
+		List<Map<String, Object>> menuList = customizedDao.queryForListBySql(
+				Sql.getInstance().getSqlConfig(SqlConstants.GET_ALL_MENUS_BY_ROLEID).replace("[sqlCond]", sqlCond),
+				new Object[] {});
+
+		for (Map<String, Object> menuMap : menuList) {
+			String menuId = menuMap.get("menu_id") == null ? null : menuMap.get("menu_id").toString();
+			if (!menuIds.contains(Integer.valueOf(menuId))) {
+				menuIds.add(Integer.valueOf(menuId));
+				menus.add(menuMap);
+
+			}
+		}
+		return menus;
+
+	}
+
+	private List<Map<String, Object>> getAllRolesByUserId(Integer userId) {
 		List<Integer> roleIds = new ArrayList<Integer>();
+		List<Map<String, Object>> roles = new ArrayList<Map<String, Object>>();
 
-		TUserRoleExample tUserRoleExample = new TUserRoleExample();
-		tUserRoleExample.createCriteria().andUserIdEqualTo(userId);
-		List<TUserRoleKey> tUserRoles = tUserRoleMapper.selectByExample(tUserRoleExample);
-		for (TUserRoleKey tUserRole : tUserRoles) {
-			if (!roleIds.contains(tUserRole.getRoleId())) {
-				roleIds.add(tUserRole.getRoleId());
+		List<Map<String, Object>> roleIdList = customizedDao.queryForList(SqlConstants.GET_ROLEIDS_BY_USERID,
+				new Object[] { userId });
+		for (Map<String, Object> roleIdMap : roleIdList) {
+			String roleId = roleIdMap.get("role_id") == null ? null : roleIdMap.get("role_id").toString();
+			if (!roleIds.contains(Integer.valueOf(roleId))) {
+				roleIds.add(Integer.valueOf(roleId));
+				roles.add(roleIdMap);
 			}
 		}
 
-		TUserGroupExample tUserGroupExample = new TUserGroupExample();
-		tUserGroupExample.createCriteria().andUserIdEqualTo(userId);
-		List<TUserGroupKey> tUserGroups = tUserGroupMapper.selectByExample(tUserGroupExample);
-		for (TUserGroupKey tUserGroup : tUserGroups) {
-			Integer groupId = tUserGroup.getGroupId();
+		String sqlCond = "";
+		List<Integer> groupIds = getAllGroupIdsByUserId(userId);
+		for (Integer groupId : groupIds) {
+			sqlCond = sqlCond + groupId + ",";
+		}
+		if (sqlCond.length() > 0) {
+			sqlCond = sqlCond.substring(0, sqlCond.length() - 1);
+		}
 
-			TGroupRoleExample tGroupRoleExample = new TGroupRoleExample();
-			tGroupRoleExample.createCriteria().andGroupIdEqualTo(groupId);
-			List<TGroupRoleKey> tGroupRoles = tGroupRoleMapper.selectByExample(tGroupRoleExample);
-			for (TGroupRoleKey tGroupRole : tGroupRoles) {
-				if (!roleIds.contains(tGroupRole.getRoleId())) {
-					roleIds.add(tGroupRole.getRoleId());
-				}
-			}
-			List<Integer> groupCids = new ArrayList<Integer>();
-			getGroupCidsByGroupPid(groupCids, groupId);
-			for (Integer groupCid : groupCids) {
-				TGroupRoleExample tGroupRoleExample_ = new TGroupRoleExample();
-				tGroupRoleExample_.createCriteria().andGroupIdEqualTo(groupCid);
-				List<TGroupRoleKey> tGroupRoles_ = tGroupRoleMapper.selectByExample(tGroupRoleExample_);
-				for (TGroupRoleKey tGroupRole : tGroupRoles_) {
-					if (!roleIds.contains(tGroupRole.getRoleId())) {
-						roleIds.add(tGroupRole.getRoleId());
-					}
-				}
+		List<Map<String, Object>> roleIdListFromGroup = customizedDao.queryForListBySql(
+				Sql.getInstance().getSqlConfig(SqlConstants.GET_ROLEIDS_BY_GROUPID).replace("[sqlCond]", sqlCond),
+				null);
+		for (Map<String, Object> roleIdMap : roleIdListFromGroup) {
+			String roleId = roleIdMap.get("role_id") == null ? null : roleIdMap.get("role_id").toString();
+			if (!roleIds.contains(Integer.valueOf(roleId))) {
+				roleIds.add(Integer.valueOf(roleId));
+				roles.add(roleIdMap);
 			}
 		}
-		return roleIds;
+
+		return roles;
 	}
 
-	private void getGroupCidsByGroupPid(List<Integer> groupCids, Integer groupId) {
-		TGroupExample tGroupExample = new TGroupExample();
-		tGroupExample.createCriteria().andGroupPidEqualTo(groupId);
-		List<TGroup> tGroups = tGroupMapper.selectByExample(tGroupExample);
-		for (TGroup tGroup : tGroups) {
-			if (!groupCids.contains(tGroup.getGroupId())) {
-				groupCids.add(tGroup.getGroupId());
-				getGroupCidsByGroupPid(groupCids, tGroup.getGroupId());
-			}
+	private List<Integer> getAllGroupIdsByUserId(Integer userId) {
+
+		List<Integer> groupIds = new ArrayList<Integer>();
+
+		List<Map<String, Object>> groupIdList = customizedDao.queryForList(SqlConstants.GET_GROUPIDS_BY_USERID,
+				new Object[] { userId });
+		for (Map<String, Object> groupIdMap : groupIdList) {
+			String groupId = groupIdMap.get("group_id") == null ? null : groupIdMap.get("group_id").toString();
+			setGroupIds(groupIds, groupId);
 		}
+		return groupIds;
 	}
 
-	private void getPermissionCidsByPermissionPid(List<Integer> permissionCids, Integer permissionId) {
-
-		TPermissionExample tPermissionExample = new TPermissionExample();
-		tPermissionExample.createCriteria().andPermissionPidEqualTo(permissionId);
-		List<TPermission> tPermissions = tPermissionMapper.selectByExample(tPermissionExample);
-		for (TPermission tPermission : tPermissions) {
-			if (!permissionCids.contains(tPermission.getPermissionId())) {
-				permissionCids.add(tPermission.getPermissionId());
-				getGroupCidsByGroupPid(permissionCids, tPermission.getPermissionId());
-			}
+	private void setGroupIds(List<Integer> groupIds, String groupId) {
+		if (!groupIds.contains(Integer.valueOf(groupId))) {
+			groupIds.add(Integer.valueOf(groupId));
+		}
+		List<Map<String, Object>> groupIdList = customizedDao.queryForList(SqlConstants.GET_GROUPIDS_BY_PID,
+				new Object[] { groupId });
+		for (Map<String, Object> groupIdMap : groupIdList) {
+			String groupIdTemp = groupIdMap.get("group_id") == null ? null : groupIdMap.get("group_id").toString();
+			setGroupIds(groupIds, groupIdTemp);
 		}
 	}
 
@@ -215,31 +221,14 @@ public class RbacServiceImpl implements RbacService {
 	}
 
 	@Override
-	public List<TMenu> getCurrentMenu(Integer userId) {
+	public List<Map<String, Object>> getCurrentMenu(Integer userId) {
+		List<Map<String, Object>> roles = getAllRolesByUserId(userId);
+		List<Map<String, Object>> menus = getAllMenusByRoles(roles);
 
-		List<Integer> menuIds = new ArrayList<Integer>();
-
-		List<Integer> roleIds = getAllRoleIdsByUserId(userId);
-		for (Integer roleId : roleIds) {
-			TRoleMenuExample example = new TRoleMenuExample();
-			example.createCriteria().andRoleIdEqualTo(roleId);
-			List<TRoleMenuKey> tRoleMenuList = tRoleMenuMapper.selectByExample(example);
-			for (TRoleMenuKey tRoleMenu : tRoleMenuList) {
-				if (!menuIds.contains(tRoleMenu.getMenuId())) {
-					menuIds.add(tRoleMenu.getMenuId());
-				}
-			}
-		}
-
-		List<TMenu> menus = new ArrayList<TMenu>();
-		for (Integer menuId : menuIds) {
-			TMenu tMenu = tMenuMapper.selectByPrimaryKey(menuId);
-			menus.add(tMenu);
-		}
-
-		Collections.sort(menus, new Comparator<TMenu>() {
-			public int compare(TMenu arg0, TMenu arg1) {
-				return arg0.getSeq().compareTo(arg1.getSeq());
+		Collections.sort(menus, new Comparator<Map<String, Object>>() {
+			public int compare(Map<String, Object> arg0, Map<String, Object> arg1) {
+				return Integer.valueOf(arg0.get("seq").toString())
+						.compareTo(Integer.valueOf(arg1.get("seq").toString()));
 			}
 		});
 

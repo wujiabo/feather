@@ -21,7 +21,15 @@ public class CustomizedDaoImpl implements CustomizedDao {
 
 	@Override
 	public List<Map<String, Object>> queryForList(String sqlId, Object[] args) {
-		return jdbcTemplate.queryForList(getSqlInstance().getSqlConfig(sqlId), args);
+		return queryForListBySql(getSqlInstance().getSqlConfig(sqlId), args);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryForListBySql(String sql, Object[] args) {
+		if (args != null) {
+			return jdbcTemplate.queryForList(sql, args);
+		}
+		return jdbcTemplate.queryForList(sql);
 	}
 
 	@Override
@@ -39,8 +47,8 @@ public class CustomizedDaoImpl implements CustomizedDao {
 				+ ") page_table_temp limit ?,?";
 
 		PageBean pageBean = new PageBean();
-		pageBean.setPageList(jdbcTemplate.queryForList(pageSql, objs));
-		pageBean.setTotalCount(Integer.valueOf(jdbcTemplate.queryForMap(countSql, args).get("cnt").toString()));
+		pageBean.setPageList(queryForListBySql(pageSql, objs));
+		pageBean.setTotalCount(Integer.valueOf(queryForMapBySql(countSql, args).get("cnt").toString()));
 		if (currentPage == 1) {
 			pageBean.setIsFirst(true);
 			pageBean.setIsLast(false);
@@ -54,8 +62,15 @@ public class CustomizedDaoImpl implements CustomizedDao {
 
 	@Override
 	public Map<String, Object> queryForMap(String sqlId, Object[] args) {
-		// TODO Auto-generated method stub
-		return jdbcTemplate.queryForMap(getSqlInstance().getSqlConfig(sqlId), args);
+		return queryForMapBySql(getSqlInstance().getSqlConfig(sqlId), args);
+	}
+
+	@Override
+	public Map<String, Object> queryForMapBySql(String sql, Object[] args) {
+		if (args != null) {
+			return jdbcTemplate.queryForMap(sql, args);
+		}
+		return jdbcTemplate.queryForMap(sql);
 	}
 
 	public class PageBean {

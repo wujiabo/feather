@@ -1,7 +1,5 @@
 package com.wujiabo.opensource.feather.web.shiro.filter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,10 +12,7 @@ import org.apache.shiro.web.filter.PathMatchingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import com.alibaba.fastjson.JSON;
 import com.wujiabo.opensource.feather.constants.Constants;
-import com.wujiabo.opensource.feather.enums.State;
-import com.wujiabo.opensource.feather.mybatis.model.TMenu;
 import com.wujiabo.opensource.feather.mybatis.model.TUser;
 import com.wujiabo.opensource.feather.service.RbacService;
 
@@ -49,7 +44,7 @@ public class SysUserFilter extends PathMatchingFilter {
 
 		if (shiroSession.getAttribute(Constants.CURRENT_MENU) == null) {
 
-			List<TMenu> menus = rbacService.getCurrentMenu(user.getUserId());
+			List<Map<String, Object>> menus = rbacService.getCurrentMenu(user.getUserId());
 
 			StringBuffer menuSb = new StringBuffer();
 
@@ -59,22 +54,22 @@ public class SysUserFilter extends PathMatchingFilter {
 					+ "<ul class=\"dropdown-menu\">${cm}$</ul>" + "</li>";
 			String cm = "<li><a href=\"${cmu}$\">${cmn}$</a></li>";
 
-			for (TMenu menu : menus) {
-				if (State.ACTIVE.getValue().equals(menu.getState())) {
-					if (StringUtils.isEmpty(menu.getMenuPid())) {
-						menuSb.append(pm.replace("${pmn}$", menu.getMenuName()));
-						StringBuffer cmSb = new StringBuffer();
-						for (TMenu cmenu : menus) {
-							if (State.ACTIVE.getValue().equals(cmenu.getState())) {
-								if (!StringUtils.isEmpty(cmenu.getMenuPid())
-										&& cmenu.getMenuPid() == menu.getMenuId()) {
-									cmSb.append(cm.replace("${cmu}$", contextPath + cmenu.getMenuUrl())
-											.replace("${cmn}$", cmenu.getMenuName()));
-								}
-							}
+			for (Map<String, Object> menu : menus) {
+				String id = menu.get("menu_id") == null ? null : menu.get("menu_id").toString();
+				String pid = menu.get("menu_pid") == null ? null : menu.get("menu_pid").toString();
+				String name = menu.get("menu_name") == null ? null : menu.get("menu_name").toString();
+				if (StringUtils.isEmpty(pid)) {
+					menuSb.append(pm.replace("${pmn}$", name));
+					StringBuffer cmSb = new StringBuffer();
+					for (Map<String, Object> cmenu : menus) {
+						String cpid = cmenu.get("menu_pid") == null ? null : cmenu.get("menu_pid").toString();
+						String url = cmenu.get("menu_url") == null ? null : cmenu.get("menu_url").toString();
+						String cname = cmenu.get("menu_name") == null ? null : cmenu.get("menu_name").toString();
+						if (!StringUtils.isEmpty(cpid) && cpid.equals(id)) {
+							cmSb.append(cm.replace("${cmu}$", contextPath + url).replace("${cmn}$", cname));
 						}
-						menuSb = new StringBuffer(menuSb.toString().replace("${cm}$", cmSb.toString()));
 					}
+					menuSb = new StringBuffer(menuSb.toString().replace("${cm}$", cmSb.toString()));
 				}
 			}
 

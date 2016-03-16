@@ -50,4 +50,50 @@
 		select a.*,d.permission_id is null as flag from t_permission a left join (select b.permission_id from t_role_permission b,t_role c where b.role_id=c.role_id and c.role_id=?) d on a.permission_id=d.permission_id where a.state='0' order by a.permission_id
     ]]>
 	</sql>
+	
+	
+	<sql id="GET_GROUPIDS_BY_USERID">
+    <![CDATA[
+    	select c.group_id from t_user a, t_user_group b , t_group c where a.user_id=b.user_id and b.group_id=c.group_id and c.state='0' and a.user_id=?
+    ]]>
+	</sql>
+	
+	<sql id="GET_GROUPIDS_BY_PID">
+    <![CDATA[
+    	select group_id from t_group where group_pid=? and state='0'
+    ]]>
+	</sql>
+	
+	<sql id="GET_ROLEIDS_BY_USERID">
+    <![CDATA[
+    	select c.role_id,c.role_code from t_user a,t_user_role b, t_role c where a.user_id=b.user_id and b.role_id=c.role_id and c.state='0' and a.user_id=?
+    ]]>
+	</sql>
+	
+	
+	<sql id="GET_ROLEIDS_BY_GROUPID">
+    <![CDATA[
+    	select c.role_id,c.role_code from t_group a,t_group_role b,t_role c where a.group_id=b.group_id and b.role_id=c.role_id and c.state='0' and a.group_id in ([sqlCond])
+    ]]>
+	</sql>
+	
+	
+	<sql id="GET_ALL_PERMISSIONS_BY_ROLEID">
+    <![CDATA[
+		select c.permission_id,c.permission_code from t_role a,t_role_permission b,t_permission c where a.role_id=b.role_id and b.permission_id=c.permission_id and c.state='0' and a.role_id in ([sqlCond])
+    ]]>
+	</sql>
+	
+	
+	<sql id="GET_PERMISSIONS_BY_PID">
+    <![CDATA[
+    	select permission_id,permission_code from t_permission where permission_pid=? and state='0'
+    ]]>
+	</sql>
+	
+	<sql id="GET_ALL_MENUS_BY_ROLEID">
+    <![CDATA[
+    	select c.menu_id,c.menu_pid,c.menu_name,c.menu_url,c.seq from t_role a, t_role_menu b, t_menu c where a.role_id=b.role_id and b.menu_id=c.menu_id and c.state='0' and a.role_id in ([sqlCond]) order by c.seq
+    ]]>
+	</sql>
 </custom-sql>

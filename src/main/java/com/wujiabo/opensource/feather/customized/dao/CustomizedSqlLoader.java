@@ -1,4 +1,4 @@
-package com.wujiabo.opensource.feather.customized.sql;
+package com.wujiabo.opensource.feather.customized.dao;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,13 +14,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class Sql {
-	private static Logger log = Logger.getLogger(Sql.class);
+import com.wujiabo.opensource.feather.constants.SqlConstants;
+
+public class CustomizedSqlLoader {
+	private static Logger log = Logger.getLogger(CustomizedSqlLoader.class);
 	private static final String XML_SQL = "sql";
-	private static Sql instance = null;
+	private static CustomizedSqlLoader instance = null;
 	private Map<String, String> sqlConfig = new HashMap<String, String>();
 
-	private Sql() {
+	private CustomizedSqlLoader() {
 		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("sql/customizedSql.xml");
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); // 返回documentBuilderFactory对象
@@ -50,11 +52,11 @@ public class Sql {
 	}
 
 	// 静态方法访问时，直接访问不需要实例化
-	public static synchronized Sql getInstance() {
+	public static synchronized CustomizedSqlLoader getInstance() {
 		// synchronized表示同时只能一个线程进行实例化
 		if (instance == null) {
 			// 如果两个进程同时进入时，同时创建很多实例，不符合单例
-			instance = new Sql();
+			instance = new CustomizedSqlLoader();
 		}
 		return instance;
 	}
@@ -65,7 +67,7 @@ public class Sql {
 
 	public static void main(String[] args) {
 		// getInstance()是一个静态方法，不需要实例化
-		String sql = Sql.getInstance().getSqlConfig(SqlConstants.GET_USERS_BY_LIKE_COND);
+		String sql = CustomizedSqlLoader.getInstance().getSqlConfig(SqlConstants.GET_USERS_BY_LIKE_COND);
 		System.out.println(sql);
 	}
 

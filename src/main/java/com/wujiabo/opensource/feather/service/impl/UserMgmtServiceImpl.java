@@ -10,9 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wujiabo.opensource.feather.constants.SqlConstants;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
-import com.wujiabo.opensource.feather.customized.sql.SqlConstants;
 import com.wujiabo.opensource.feather.mybatis.dao.TUserGroupMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TUserMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TUserRoleMapper;

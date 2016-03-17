@@ -1,4 +1,4 @@
-package com.wujiabo.opensource.feather.customized.sql;
+package com.wujiabo.opensource.feather.constants;
 
 public class SqlConstants {
 	public static final String GET_USERS_BY_LIKE_COND = "GET_USERS_BY_LIKE_COND";

@@ -15,9 +15,9 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wujiabo.opensource.feather.constants.SqlConstants;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
-import com.wujiabo.opensource.feather.customized.sql.Sql;
-import com.wujiabo.opensource.feather.customized.sql.SqlConstants;
+import com.wujiabo.opensource.feather.customized.dao.CustomizedSqlLoader;
 import com.wujiabo.opensource.feather.mybatis.dao.TGroupMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TUserMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TGroup;
@@ -77,7 +77,7 @@ public class RbacServiceImpl implements RbacService {
 			sqlCond = sqlCond.substring(0, sqlCond.length() - 1);
 		}
 
-		List<Map<String, Object>> permissionList = customizedDao.queryForListBySql(Sql.getInstance()
+		List<Map<String, Object>> permissionList = customizedDao.queryForListBySql(CustomizedSqlLoader.getInstance()
 				.getSqlConfig(SqlConstants.GET_ALL_PERMISSIONS_BY_ROLEID).replace("[sqlCond]", sqlCond),
 				new Object[] {});
 		for (Map<String, Object> permissionMap : permissionList) {
@@ -120,7 +120,7 @@ public class RbacServiceImpl implements RbacService {
 		}
 
 		List<Map<String, Object>> menuList = customizedDao.queryForListBySql(
-				Sql.getInstance().getSqlConfig(SqlConstants.GET_ALL_MENUS_BY_ROLEID).replace("[sqlCond]", sqlCond),
+				CustomizedSqlLoader.getInstance().getSqlConfig(SqlConstants.GET_ALL_MENUS_BY_ROLEID).replace("[sqlCond]", sqlCond),
 				new Object[] {});
 
 		for (Map<String, Object> menuMap : menuList) {
@@ -159,7 +159,7 @@ public class RbacServiceImpl implements RbacService {
 		}
 
 		List<Map<String, Object>> roleIdListFromGroup = customizedDao.queryForListBySql(
-				Sql.getInstance().getSqlConfig(SqlConstants.GET_ROLEIDS_BY_GROUPID).replace("[sqlCond]", sqlCond),
+				CustomizedSqlLoader.getInstance().getSqlConfig(SqlConstants.GET_ROLEIDS_BY_GROUPID).replace("[sqlCond]", sqlCond),
 				null);
 		for (Map<String, Object> roleIdMap : roleIdListFromGroup) {
 			String roleId = MapUtils.getString(roleIdMap, "role_id");

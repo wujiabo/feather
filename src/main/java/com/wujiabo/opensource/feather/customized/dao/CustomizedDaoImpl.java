@@ -8,15 +8,13 @@ import javax.annotation.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.wujiabo.opensource.feather.customized.sql.Sql;
-
 @Repository
 public class CustomizedDaoImpl implements CustomizedDao {
 	@Resource
 	private JdbcTemplate jdbcTemplate;
 
-	private Sql getSqlInstance() {
-		return Sql.getInstance();
+	private CustomizedSqlLoader getSqlInstance() {
+		return CustomizedSqlLoader.getInstance();
 	}
 
 	@Override

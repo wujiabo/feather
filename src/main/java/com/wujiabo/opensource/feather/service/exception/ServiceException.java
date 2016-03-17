@@ -1,4 +1,4 @@
-package com.wujiabo.opensource.feather.service;
+package com.wujiabo.opensource.feather.service.exception;
 
 public class ServiceException extends RuntimeException {
 

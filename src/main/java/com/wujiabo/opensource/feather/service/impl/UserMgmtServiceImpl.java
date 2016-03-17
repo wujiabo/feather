@@ -1,4 +1,4 @@
-package com.wujiabo.opensource.feather.service;
+package com.wujiabo.opensource.feather.service.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -21,6 +21,8 @@ import com.wujiabo.opensource.feather.mybatis.model.TUserGroupExample;
 import com.wujiabo.opensource.feather.mybatis.model.TUserGroupKey;
 import com.wujiabo.opensource.feather.mybatis.model.TUserRoleExample;
 import com.wujiabo.opensource.feather.mybatis.model.TUserRoleKey;
+import com.wujiabo.opensource.feather.service.RbacService;
+import com.wujiabo.opensource.feather.service.UserMgmtService;
 
 @Service
 public class UserMgmtServiceImpl implements UserMgmtService {

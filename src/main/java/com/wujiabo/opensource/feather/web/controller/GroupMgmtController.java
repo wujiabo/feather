@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.mybatis.model.TGroup;
 import com.wujiabo.opensource.feather.service.GroupMgmtService;
-import com.wujiabo.opensource.feather.service.ServiceException;
+import com.wujiabo.opensource.feather.service.exception.ServiceException;
 
 @Controller
 @RequestMapping("/groupMgmt")

@@ -1,4 +1,4 @@
-package com.wujiabo.opensource.feather.service;
+package com.wujiabo.opensource.feather.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +24,8 @@ import com.wujiabo.opensource.feather.mybatis.model.TGroup;
 import com.wujiabo.opensource.feather.mybatis.model.TGroupExample;
 import com.wujiabo.opensource.feather.mybatis.model.TUser;
 import com.wujiabo.opensource.feather.mybatis.model.TUserExample;
+import com.wujiabo.opensource.feather.security.PasswordHelper;
+import com.wujiabo.opensource.feather.service.RbacService;
 
 @Service
 public class RbacServiceImpl implements RbacService {

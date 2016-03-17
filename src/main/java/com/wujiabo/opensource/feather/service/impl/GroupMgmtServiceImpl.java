@@ -1,4 +1,4 @@
-package com.wujiabo.opensource.feather.service;
+package com.wujiabo.opensource.feather.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +22,8 @@ import com.wujiabo.opensource.feather.mybatis.model.TGroup;
 import com.wujiabo.opensource.feather.mybatis.model.TGroupExample;
 import com.wujiabo.opensource.feather.mybatis.model.TGroupRoleExample;
 import com.wujiabo.opensource.feather.mybatis.model.TGroupRoleKey;
+import com.wujiabo.opensource.feather.service.GroupMgmtService;
+import com.wujiabo.opensource.feather.service.exception.ServiceException;
 
 @Service
 public class GroupMgmtServiceImpl implements GroupMgmtService {

@@ -1,4 +1,4 @@
-package com.wujiabo.opensource.feather.realm;
+package com.wujiabo.opensource.feather.security;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;

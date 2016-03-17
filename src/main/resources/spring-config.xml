@@ -95,7 +95,7 @@
 			pointcut-ref="txPointcut" />
 	</aop:config>
 
-	<bean class="com.wujiabo.opensource.feather.bean.SpringUtils" />
+	<bean class="com.wujiabo.opensource.feather.util.SpringUtils" />
 	
 	<!-- JSR303 Validator定义 -->
  	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />

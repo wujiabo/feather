@@ -1,4 +1,4 @@
-package com.wujiabo.opensource.feather.credentials;
+package com.wujiabo.opensource.feather.security;
 
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;

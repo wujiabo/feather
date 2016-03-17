@@ -1,4 +1,4 @@
-package com.wujiabo.opensource.feather.service;
+package com.wujiabo.opensource.feather.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +19,7 @@ import com.wujiabo.opensource.feather.enums.State;
 import com.wujiabo.opensource.feather.mybatis.dao.TPermissionMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TPermission;
 import com.wujiabo.opensource.feather.mybatis.model.TPermissionExample;
+import com.wujiabo.opensource.feather.service.PermissionMgmtService;
 
 @Service
 public class PermissionMgmtServiceImpl implements PermissionMgmtService {

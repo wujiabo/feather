@@ -1,4 +1,4 @@
-package com.wujiabo.opensource.feather.service;
+package com.wujiabo.opensource.feather.service.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +20,7 @@ import com.wujiabo.opensource.feather.mybatis.model.TRoleMenuExample;
 import com.wujiabo.opensource.feather.mybatis.model.TRoleMenuKey;
 import com.wujiabo.opensource.feather.mybatis.model.TRolePermissionExample;
 import com.wujiabo.opensource.feather.mybatis.model.TRolePermissionKey;
+import com.wujiabo.opensource.feather.service.RoleMgmtService;
 
 @Service
 public class RoleMgmtServiceImpl implements RoleMgmtService {

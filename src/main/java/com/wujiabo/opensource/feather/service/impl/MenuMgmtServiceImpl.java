@@ -1,4 +1,4 @@
-package com.wujiabo.opensource.feather.service;
+package com.wujiabo.opensource.feather.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +19,7 @@ import com.wujiabo.opensource.feather.enums.State;
 import com.wujiabo.opensource.feather.mybatis.dao.TMenuMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TMenu;
 import com.wujiabo.opensource.feather.mybatis.model.TMenuExample;
+import com.wujiabo.opensource.feather.service.MenuMgmtService;
 
 @Service
 public class MenuMgmtServiceImpl implements MenuMgmtService {

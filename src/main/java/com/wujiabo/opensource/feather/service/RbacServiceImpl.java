@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,13 +51,12 @@ public class RbacServiceImpl implements RbacService {
 
 		Set<String> tRoles = new HashSet<String>();
 		for (Map<String, Object> role : roles) {
-			tRoles.add(role.get("role_code") == null ? null : role.get("role_code").toString());
+			tRoles.add(MapUtils.getString(role, "role_code"));
 		}
 
 		Set<String> tPermissions = new HashSet<String>();
 		for (Map<String, Object> permission : permissions) {
-			tPermissions.add(
-					permission.get("permission_code") == null ? null : permission.get("permission_code").toString());
+			tPermissions.add(MapUtils.getString(permission, "permission_code"));
 		}
 
 		authorizationInfo.setRoles(tRoles);
@@ -79,8 +79,7 @@ public class RbacServiceImpl implements RbacService {
 				.getSqlConfig(SqlConstants.GET_ALL_PERMISSIONS_BY_ROLEID).replace("[sqlCond]", sqlCond),
 				new Object[] {});
 		for (Map<String, Object> permissionMap : permissionList) {
-			String permissionId = permissionMap.get("permission_id") == null ? null
-					: permissionMap.get("permission_id").toString();
+			String permissionId = MapUtils.getString(permissionMap, "permission_id");
 			if (!permissionIds.contains(Integer.valueOf(permissionId))) {
 				permissionIds.add(Integer.valueOf(permissionId));
 				permissions.add(permissionMap);
@@ -96,8 +95,7 @@ public class RbacServiceImpl implements RbacService {
 		List<Map<String, Object>> permissionList = customizedDao.queryForList(SqlConstants.GET_PERMISSIONS_BY_PID,
 				new Object[] { permissionId });
 		for (Map<String, Object> permissionMap : permissionList) {
-			String permissionCId = permissionMap.get("permission_id") == null ? null
-					: permissionMap.get("permission_id").toString();
+			String permissionCId = MapUtils.getString(permissionMap, "permission_id");
 			if (!permissionIds.contains(Integer.valueOf(permissionCId))) {
 				permissionIds.add(Integer.valueOf(permissionCId));
 				permissions.add(permissionMap);
@@ -124,7 +122,7 @@ public class RbacServiceImpl implements RbacService {
 				new Object[] {});
 
 		for (Map<String, Object> menuMap : menuList) {
-			String menuId = menuMap.get("menu_id") == null ? null : menuMap.get("menu_id").toString();
+			String menuId = MapUtils.getString(menuMap, "menu_id");
 			if (!menuIds.contains(Integer.valueOf(menuId))) {
 				menuIds.add(Integer.valueOf(menuId));
 				menus.add(menuMap);
@@ -142,7 +140,7 @@ public class RbacServiceImpl implements RbacService {
 		List<Map<String, Object>> roleIdList = customizedDao.queryForList(SqlConstants.GET_ROLEIDS_BY_USERID,
 				new Object[] { userId });
 		for (Map<String, Object> roleIdMap : roleIdList) {
-			String roleId = roleIdMap.get("role_id") == null ? null : roleIdMap.get("role_id").toString();
+			String roleId = MapUtils.getString(roleIdMap, "role_id");
 			if (!roleIds.contains(Integer.valueOf(roleId))) {
 				roleIds.add(Integer.valueOf(roleId));
 				roles.add(roleIdMap);
@@ -162,7 +160,7 @@ public class RbacServiceImpl implements RbacService {
 				Sql.getInstance().getSqlConfig(SqlConstants.GET_ROLEIDS_BY_GROUPID).replace("[sqlCond]", sqlCond),
 				null);
 		for (Map<String, Object> roleIdMap : roleIdListFromGroup) {
-			String roleId = roleIdMap.get("role_id") == null ? null : roleIdMap.get("role_id").toString();
+			String roleId = MapUtils.getString(roleIdMap, "role_id");
 			if (!roleIds.contains(Integer.valueOf(roleId))) {
 				roleIds.add(Integer.valueOf(roleId));
 				roles.add(roleIdMap);
@@ -179,7 +177,7 @@ public class RbacServiceImpl implements RbacService {
 		List<Map<String, Object>> groupIdList = customizedDao.queryForList(SqlConstants.GET_GROUPIDS_BY_USERID,
 				new Object[] { userId });
 		for (Map<String, Object> groupIdMap : groupIdList) {
-			String groupId = groupIdMap.get("group_id") == null ? null : groupIdMap.get("group_id").toString();
+			String groupId = MapUtils.getString(groupIdMap, "group_id");
 			setGroupIds(groupIds, groupId);
 		}
 		return groupIds;
@@ -192,7 +190,7 @@ public class RbacServiceImpl implements RbacService {
 		List<Map<String, Object>> groupIdList = customizedDao.queryForList(SqlConstants.GET_GROUPIDS_BY_PID,
 				new Object[] { groupId });
 		for (Map<String, Object> groupIdMap : groupIdList) {
-			String groupIdTemp = groupIdMap.get("group_id") == null ? null : groupIdMap.get("group_id").toString();
+			String groupIdTemp = MapUtils.getString(groupIdMap, "group_id");
 			setGroupIds(groupIds, groupIdTemp);
 		}
 	}

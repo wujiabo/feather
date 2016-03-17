@@ -1,5 +1,7 @@
 package com.wujiabo.opensource.feather.web.controller;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +60,8 @@ public class MenuMgmtController {
 	@RequestMapping(value = "add", method = RequestMethod.GET)
 	@RequiresPermissions(value = "MENU_MGMT_UPDATE")
 	public String addForm(Model model) {
-		String menuJson = menuMgmtService.getMenuJson();
-		model.addAttribute("menuJson", menuJson);
+		List<TMenu> rootMenuList = menuMgmtService.getRootMenu();
+		model.addAttribute("rootMenuList", rootMenuList);
 		model.addAttribute("updateType", "add");
 		return "menu/edit";
 	}

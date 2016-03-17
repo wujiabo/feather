@@ -5,80 +5,9 @@
 <head>
 <title>菜单管理</title>
 <script type="text/javascript">
-	var setting = {
-		view : {
-			dblClickExpand : false,
-			showIcon : false
-		},
-		data : {
-			simpleData : {
-				enable : true
-			}
-		},
-		callback : {
-			beforeClick : beforeClick,
-			onClick : onClick
-		}
-	};
-
-	var zNodes = eval('${menuJson}');
-
-	function beforeClick(treeId, treeNode) {
-		var check = (treeNode && !treeNode.isParent);
-		return true;
-	}
-
-	function onClick(e, treeId, treeNode) {
-		var zTree = $.fn.zTree.getZTreeObj("menuTree"), nodes = zTree
-				.getSelectedNodes(), v = "", ids = "";
-		nodes.sort(function compare(a, b) {
-			return a.id - b.id;
-		});
-		for (var i = 0, l = nodes.length; i < l; i++) {
-			v += nodes[i].name + ",";
-			ids += nodes[i].id + ",";
-		}
-		if (v.length > 0)
-			v = v.substring(0, v.length - 1);
-		if (ids.length > 0)
-			ids = ids.substring(0, ids.length - 1);
-
-		var menuObj = $("#menuParentName");
-		menuObj.attr("value", v);
-
-		var menuIdObj = $("#menuPid");
-		menuIdObj.attr("value", ids);
-		hideMenu();
-	}
-
-	function showMenu() {
-		var menuObj = $("#menuParentName");
-		var menuOffset = $("#menuParentName").offset();
-		$("#menuContent").css({
-			left : menuOffset.left + "px",
-			top : menuOffset.top + menuObj.outerHeight() + "px"
-		}).slideDown("fast");
-
-		$("body").bind("mousedown", onBodyDown);
-	}
-	function hideMenu() {
-		$("#menuContent").fadeOut("fast");
-		$("body").unbind("mousedown", onBodyDown);
-	}
-	function onBodyDown(event) {
-		if (!(event.target.id == "menuParentName"
-				|| event.target.id == "menuContent" || $(event.target)
-				.parents("#menuContent").length > 0)) {
-			hideMenu();
-		}
-	}
-
 	$(document)
 			.ready(
 					function() {
-						$.fn.zTree.init($("#menuTree"), setting, zNodes);
-						var zTree = $.fn.zTree.getZTreeObj("menuTree");
-						zTree.expandAll(true);
 
 						$("#form")
 								.validate(
@@ -124,27 +53,26 @@ ul.ztree {
 </style>
 </head>
 <body>
-	<form action="${CONTEXT_PATH}/menuMgmt/update" method="post"
-		id="form">
-		<input type="hidden" name="menuId"
-			value="${menu.menuId}" /> <input type="hidden"
-			name="updateType" value="${updateType}" /> <input type="hidden" id="menuPid"
-			name="menuPid" />
+	<form action="${CONTEXT_PATH}/menuMgmt/update" method="post" id="form">
+		<input type="hidden" name="menuId" value="${menu.menuId}" /> <input
+			type="hidden" name="updateType" value="${updateType}" />
 		<div class="form-horizontal">
 			<c:if test="${updateType=='add'}">
 				<div class="form-group">
-					<label for="parentMenuName" class="col-sm-2 control-label">Parent
+					<label for="menuPid" class="col-sm-2 control-label">Parent
 						Menu</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" id="menuParentName" readonly="readonly"
-							onclick="showMenu(); return false;" name="menuParentName"
-							placeholder="Parent Menu" />
+						<select class="form-control" name="menuPid">
+							<option value="">请选择</option>
+							<c:forEach items="${rootMenuList}" var="bean">
+								<option value="${bean.menuId}" >${bean.menuName}</option>
+							</c:forEach>
+						</select>
 					</div>
 				</div>
 			</c:if>
 			<div class="form-group">
-				<label for="menuUrl" class="col-sm-2 control-label">Menu
-					Url</label>
+				<label for="menuUrl" class="col-sm-2 control-label">Menu Url</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" name="menuUrl"
 						value="${menu.menuUrl}" placeholder="Menu Url" />

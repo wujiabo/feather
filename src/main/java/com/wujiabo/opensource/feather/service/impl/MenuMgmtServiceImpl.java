@@ -119,4 +119,12 @@ public class MenuMgmtServiceImpl implements MenuMgmtService {
 			updateChildMenu(tMenu.getMenuId());
 		}
 	}
+	
+	@Override
+	public List<TMenu> getRootMenu() {
+		TMenuExample example = new TMenuExample();
+		example.createCriteria().andMenuPidIsNull().andStateEqualTo(State.ACTIVE.getValue());
+		example.setOrderByClause("SEQ ASC");
+		return tMenuMapper.selectByExample(example);
+	}
 }

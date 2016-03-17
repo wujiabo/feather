@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wujiabo.opensource.feather.mybatis.model.TUser;
-import com.wujiabo.opensource.feather.web.bind.annotation.CurrentUser;
+import com.wujiabo.opensource.feather.web.bind.CurrentUser;
 
 @Controller
 public class IndexController {

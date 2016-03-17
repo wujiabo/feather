@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wujiabo.opensource.feather.web.bind.annotation;
+package com.wujiabo.opensource.feather.web.bind;
 
 import java.lang.annotation.*;
 

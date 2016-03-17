@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.mybatis.model.TPermission;
 import com.wujiabo.opensource.feather.service.PermissionMgmtService;
+import com.wujiabo.opensource.feather.service.exception.ServiceException;
 
 @Controller
 @RequestMapping("/permissionMgmt")
@@ -23,7 +24,7 @@ public class PermissionMgmtController {
 	private PermissionMgmtService permissionMgmtService;
 
 	@RequestMapping(value = "/view", method = { RequestMethod.POST, RequestMethod.GET })
-    @RequiresPermissions(value = "PERMISSION_MGMT_VIEW")
+	@RequiresPermissions(value = "PERMISSION_MGMT_VIEW")
 	public String view(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
 			@RequestParam(value = "permissionPid", defaultValue = "") String permissionPid,
 			@RequestParam(value = "permissionCode", defaultValue = "") String permissionCode,
@@ -47,7 +48,7 @@ public class PermissionMgmtController {
 	}
 
 	@RequestMapping(value = "edit/{permissionId}", method = RequestMethod.GET)
-    @RequiresPermissions(value = "PERMISSION_MGMT_UPDATE")
+	@RequiresPermissions(value = "PERMISSION_MGMT_UPDATE")
 	public String editForm(@PathVariable("permissionId") String permissionId, Model model) {
 		TPermission permission = permissionMgmtService.getPermissionById(Integer.valueOf(permissionId));
 		model.addAttribute("permission", permission);
@@ -56,7 +57,7 @@ public class PermissionMgmtController {
 	}
 
 	@RequestMapping(value = "add", method = RequestMethod.GET)
-    @RequiresPermissions(value = "PERMISSION_MGMT_UPDATE")
+	@RequiresPermissions(value = "PERMISSION_MGMT_UPDATE")
 	public String addForm(Model model) {
 		String permissionJson = permissionMgmtService.getPermissionJson();
 		model.addAttribute("permissionJson", permissionJson);
@@ -65,7 +66,7 @@ public class PermissionMgmtController {
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
-    @RequiresPermissions(value = "PERMISSION_MGMT_UPDATE")
+	@RequiresPermissions(value = "PERMISSION_MGMT_UPDATE")
 	public String update(@RequestParam(value = "permissionId", defaultValue = "") String permissionId,
 			@RequestParam(value = "permissionPid", defaultValue = "") String permissionPid,
 			@RequestParam(value = "permissionCode", defaultValue = "") String permissionCode,
@@ -80,9 +81,13 @@ public class PermissionMgmtController {
 				permissionMgmtService.editPermission(permissionId, permissionCode, permissionName, state);
 			}
 			redirectAttributes.addFlashAttribute("message", "操作成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "操作失败");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			if ("add".equals(updateType)) {
+				return "redirect:/permissionMgmt/add";
+			} else if ("edit".equals(updateType)) {
+				return "redirect:/permissionMgmt/edit/" + permissionId;
+			}
 		}
 
 		return "redirect:/permissionMgmt/view";

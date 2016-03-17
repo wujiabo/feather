@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.mybatis.model.TRole;
 import com.wujiabo.opensource.feather.service.RoleMgmtService;
+import com.wujiabo.opensource.feather.service.exception.ServiceException;
 
 @Controller
 @RequestMapping("/roleMgmt")
@@ -73,9 +74,13 @@ public class RoleMgmtController {
 				roleMgmtService.editRole(roleId, roleName, state);
 			}
 			redirectAttributes.addFlashAttribute("message", "操作成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "操作失败");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			if ("add".equals(updateType)) {
+				return "redirect:/roleMgmt/add";
+			} else if ("edit".equals(updateType)) {
+				return "redirect:/roleMgmt/edit/" + roleId;
+			}
 		}
 
 		return "redirect:/roleMgmt/view";
@@ -109,9 +114,9 @@ public class RoleMgmtController {
 		try {
 			roleMgmtService.savePermissions(roleId, permissionIds);
 			redirectAttributes.addFlashAttribute("message", "操作成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "操作失败");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/roleMgmt/permission/" + roleId;
 		}
 		return "redirect:/roleMgmt/view";
 	}
@@ -143,9 +148,9 @@ public class RoleMgmtController {
 		try {
 			roleMgmtService.saveMenus(roleId, menuIds);
 			redirectAttributes.addFlashAttribute("message", "操作成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "操作失败");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/roleMgmt/menu/" + roleId;
 		}
 		return "redirect:/roleMgmt/view";
 	}

@@ -20,6 +20,7 @@ import com.wujiabo.opensource.feather.mybatis.dao.TMenuMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TMenu;
 import com.wujiabo.opensource.feather.mybatis.model.TMenuExample;
 import com.wujiabo.opensource.feather.service.MenuMgmtService;
+import com.wujiabo.opensource.feather.service.exception.ServiceException;
 
 @Service
 public class MenuMgmtServiceImpl implements MenuMgmtService {
@@ -63,6 +64,13 @@ public class MenuMgmtServiceImpl implements MenuMgmtService {
 
 	@Override
 	public void addMenu(String menuPid, String menuUrl, String menuName, Integer seq, String state) {
+		if (StringUtils.isNotBlank(menuPid)) {
+			TMenu pMenu = tMenuMapper.selectByPrimaryKey(Integer.valueOf(menuPid));
+			if (State.INACTIVE.getValue().equals(pMenu.getState())) {
+				throw new ServiceException("父节点处于无效状态，请先将父节点改为有效状态。");
+			}
+		}
+
 		TMenu menu = new TMenu();
 		menu.setMenuPid(StringUtils.isBlank(menuPid) ? null : Integer.valueOf(menuPid));
 		menu.setMenuUrl(menuUrl);
@@ -75,6 +83,13 @@ public class MenuMgmtServiceImpl implements MenuMgmtService {
 	@Override
 	public void editMenu(String menuId, String menuUrl, String menuName, Integer seq, String state) {
 		TMenu menu = tMenuMapper.selectByPrimaryKey(Integer.valueOf(menuId));
+		if (menu.getMenuPid() != null) {
+			TMenu pMenu = tMenuMapper.selectByPrimaryKey(menu.getMenuPid());
+			if (State.INACTIVE.getValue().equals(pMenu.getState())) {
+				throw new ServiceException("父节点处于无效状态，请先将父节点改为有效状态。");
+			}
+		}
+
 		menu.setMenuUrl(menuUrl);
 		menu.setMenuName(menuName);
 		menu.setSeq(seq);

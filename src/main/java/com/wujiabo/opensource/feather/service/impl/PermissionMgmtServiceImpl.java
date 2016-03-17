@@ -20,6 +20,7 @@ import com.wujiabo.opensource.feather.mybatis.dao.TPermissionMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TPermission;
 import com.wujiabo.opensource.feather.mybatis.model.TPermissionExample;
 import com.wujiabo.opensource.feather.service.PermissionMgmtService;
+import com.wujiabo.opensource.feather.service.exception.ServiceException;
 
 @Service
 public class PermissionMgmtServiceImpl implements PermissionMgmtService {
@@ -64,6 +65,12 @@ public class PermissionMgmtServiceImpl implements PermissionMgmtService {
 
 	@Override
 	public void addPermission(String permissionPid, String permissionCode, String permissionName, String state) {
+		if (StringUtils.isNotBlank(permissionPid)) {
+			TPermission pPermission = tPermissionMapper.selectByPrimaryKey(Integer.valueOf(permissionPid));
+			if (State.INACTIVE.getValue().equals(pPermission.getState())) {
+				throw new ServiceException("父节点处于无效状态，请先将父节点改为有效状态。");
+			}
+		}
 		TPermission permission = new TPermission();
 		permission.setPermissionPid(StringUtils.isBlank(permissionPid) ? null : Integer.valueOf(permissionPid));
 		permission.setPermissionCode(permissionCode);
@@ -75,11 +82,17 @@ public class PermissionMgmtServiceImpl implements PermissionMgmtService {
 	@Override
 	public void editPermission(String permissionId, String permissionCode, String permissionName, String state) {
 		TPermission permission = tPermissionMapper.selectByPrimaryKey(Integer.valueOf(permissionId));
+		if (permission.getPermissionPid() != null) {
+			TPermission pPermission = tPermissionMapper.selectByPrimaryKey(permission.getPermissionPid());
+			if (State.INACTIVE.getValue().equals(pPermission.getState())) {
+				throw new ServiceException("父节点处于无效状态，请先将父节点改为有效状态。");
+			}
+		}
+
 		permission.setPermissionCode(permissionCode);
 		permission.setPermissionName(permissionName);
 		permission.setState(state);
 		tPermissionMapper.updateByPrimaryKeySelective(permission);
-
 
 		if (State.INACTIVE.getValue().equals(state)) {
 			TPermissionExample example = new TPermissionExample();

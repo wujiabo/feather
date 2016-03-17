@@ -86,11 +86,11 @@ public class GroupMgmtController {
 			redirectAttributes.addFlashAttribute("message", "操作成功");
 		} catch (ServiceException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
-			return "redirect:/groupMgmt/edit/" + groupId;
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "操作失败");
-			return "redirect:/groupMgmt/edit/" + groupId;
+			if ("add".equals(updateType)) {
+				return "redirect:/groupMgmt/add";
+			} else if ("edit".equals(updateType)) {
+				return "redirect:/groupMgmt/edit/" + groupId;
+			}
 		}
 
 		return "redirect:/groupMgmt/view";
@@ -114,11 +114,7 @@ public class GroupMgmtController {
 			redirectAttributes.addFlashAttribute("message", "操作成功");
 		} catch (ServiceException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
-			return "redirect:/groupMgmt/edit/" + groupId;
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "操作失败");
-			return "redirect:/groupMgmt/edit/" + groupId;
+			return "redirect:/groupMgmt/role/" + groupId;
 		}
 		return "redirect:/groupMgmt/view";
 	}

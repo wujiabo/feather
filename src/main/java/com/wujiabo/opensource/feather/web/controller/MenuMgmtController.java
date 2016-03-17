@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.mybatis.model.TMenu;
 import com.wujiabo.opensource.feather.service.MenuMgmtService;
+import com.wujiabo.opensource.feather.service.exception.ServiceException;
 
 @Controller
 @RequestMapping("/menuMgmt")
@@ -80,9 +81,13 @@ public class MenuMgmtController {
 				menuMgmtService.editMenu(menuId, menuUrl, menuName, seq, state);
 			}
 			redirectAttributes.addFlashAttribute("message", "操作成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "操作失败");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			if ("add".equals(updateType)) {
+				return "redirect:/menuMgmt/add";
+			} else if ("edit".equals(updateType)) {
+				return "redirect:/menuMgmt/edit/" + menuId;
+			}
 		}
 
 		return "redirect:/menuMgmt/view";

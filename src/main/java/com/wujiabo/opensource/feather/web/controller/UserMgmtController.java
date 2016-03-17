@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.mybatis.model.TUser;
 import com.wujiabo.opensource.feather.service.UserMgmtService;
+import com.wujiabo.opensource.feather.service.exception.ServiceException;
 
 @Controller
 @RequestMapping("/userMgmt")
@@ -73,9 +74,13 @@ public class UserMgmtController {
 				userMgmtService.editUser(userId, screenName, state);
 			}
 			redirectAttributes.addFlashAttribute("message", "操作成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "操作失败");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			if ("add".equals(updateType)) {
+				return "redirect:/userMgmt/add";
+			} else if ("edit".equals(updateType)) {
+				return "redirect:/userMgmt/edit/" + userId;
+			}
 		}
 
 		return "redirect:/userMgmt/view";
@@ -118,9 +123,9 @@ public class UserMgmtController {
 		try {
 			userMgmtService.saveGroups(userId, groupIds);
 			redirectAttributes.addFlashAttribute("message", "操作成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "操作失败");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/userMgmt/group/" + userId;
 		}
 		return "redirect:/userMgmt/view";
 	}
@@ -132,9 +137,9 @@ public class UserMgmtController {
 		try {
 			userMgmtService.saveRoles(userId, roleIds);
 			redirectAttributes.addFlashAttribute("message", "操作成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "操作失败");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/userMgmt/role/" + userId;
 		}
 		return "redirect:/userMgmt/view";
 	}

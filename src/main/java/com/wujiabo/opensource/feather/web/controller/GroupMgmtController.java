@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDaoImpl.PageBean;
 import com.wujiabo.opensource.feather.mybatis.model.TGroup;
 import com.wujiabo.opensource.feather.service.GroupMgmtService;
+import com.wujiabo.opensource.feather.service.ServiceException;
 
 @Controller
 @RequestMapping("/groupMgmt")
@@ -83,9 +84,13 @@ public class GroupMgmtController {
 				groupMgmtService.editGroup(groupId, groupCode, groupName, state);
 			}
 			redirectAttributes.addFlashAttribute("message", "操作成功");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/groupMgmt/edit/" + groupId;
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("error", "操作失败");
+			return "redirect:/groupMgmt/edit/" + groupId;
 		}
 
 		return "redirect:/groupMgmt/view";
@@ -107,9 +112,13 @@ public class GroupMgmtController {
 		try {
 			groupMgmtService.saveRoles(groupId, roleIds);
 			redirectAttributes.addFlashAttribute("message", "操作成功");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/groupMgmt/edit/" + groupId;
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("error", "操作失败");
+			return "redirect:/groupMgmt/edit/" + groupId;
 		}
 		return "redirect:/groupMgmt/view";
 	}

@@ -22,8 +22,6 @@ import com.wujiabo.opensource.feather.mybatis.model.TGroup;
 import com.wujiabo.opensource.feather.mybatis.model.TGroupExample;
 import com.wujiabo.opensource.feather.mybatis.model.TGroupRoleExample;
 import com.wujiabo.opensource.feather.mybatis.model.TGroupRoleKey;
-import com.wujiabo.opensource.feather.mybatis.model.TUserRoleExample;
-import com.wujiabo.opensource.feather.mybatis.model.TUserRoleKey;
 
 @Service
 public class GroupMgmtServiceImpl implements GroupMgmtService {
@@ -71,6 +69,13 @@ public class GroupMgmtServiceImpl implements GroupMgmtService {
 
 	@Override
 	public void addGroup(String groupPid, String groupCode, String groupName, String state) {
+		if (StringUtils.isNotBlank(groupPid)) {
+			TGroup pGroup = tGroupMapper.selectByPrimaryKey(Integer.valueOf(groupPid));
+			if (State.INACTIVE.getValue().equals(pGroup.getState())) {
+				throw new ServiceException("父节点处于无效状态，请先将父节点改为有效状态。");
+			}
+		}
+
 		TGroup group = new TGroup();
 		group.setGroupPid(StringUtils.isBlank(groupPid) ? null : Integer.valueOf(groupPid));
 		group.setGroupCode(groupCode);
@@ -82,6 +87,14 @@ public class GroupMgmtServiceImpl implements GroupMgmtService {
 	@Override
 	public void editGroup(String groupId, String groupCode, String groupName, String state) {
 		TGroup group = tGroupMapper.selectByPrimaryKey(Integer.valueOf(groupId));
+
+		if (group.getGroupPid() != null) {
+			TGroup pGroup = tGroupMapper.selectByPrimaryKey(Integer.valueOf(group.getGroupPid()));
+			if (State.INACTIVE.getValue().equals(pGroup.getState())) {
+				throw new ServiceException("父节点处于无效状态，请先将父节点改为有效状态。");
+			}
+		}
+
 		group.setGroupCode(groupCode);
 		group.setGroupName(groupName);
 		group.setState(state);

@@ -77,11 +77,8 @@
 			.ready(
 					function() {
 						$.fn.zTree.init($("#permissionTree"), setting, zNodes);
-
-						$.fn.zTree.getZTreeObj("permissionTree").selectNode(
-								$.fn.zTree.getZTreeObj("permissionTree")
-										.getNodeByParam("id",
-												'${permissionPid}'));
+						var zTree = $.fn.zTree.getZTreeObj("permissionTree");
+						zTree.expandAll(true);
 
 						$("#form")
 								.validate(

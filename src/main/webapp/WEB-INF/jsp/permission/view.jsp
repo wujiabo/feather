@@ -73,14 +73,13 @@
 		}
 	}
 
-	$(document).ready(
-			function() {
-				$.fn.zTree.init($("#permissionTree"), setting, zNodes);
+	$(document).ready(function() {
+		$.fn.zTree.init($("#permissionTree"), setting, zNodes);
+		var zTree = $.fn.zTree.getZTreeObj("permissionTree");
 
-				$.fn.zTree.getZTreeObj("permissionTree").selectNode(
-						$.fn.zTree.getZTreeObj("permissionTree")
-								.getNodeByParam("id", '${permissionPid}'));
-			});
+		zTree.selectNode(zTree.getNodeByParam("id", '${permissionPid}'));
+		zTree.expandAll(true);
+	});
 
 	function pagination(pageValue) {
 		var currentPage = $("input[name='currentPage']").val();

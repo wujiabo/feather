@@ -36,28 +36,36 @@
 
 	<form action="${CONTEXT_PATH}/roleMgmt/view" method="post" id="form">
 		<input type="hidden" name="currentPage" value="${currentPage}" />
-		<nav class="navbar navbar-default">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse">
-					<div class="navbar-form navbar-left">
-						<div class="input-group">
-							<span class="input-group-addon">Role Code</span> <input
-								name="roleCode" value="${roleCode}" type="text"
-								class="form-control" placeholder="Role Code">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon">Role Name</span> <input
-								name="roleName" value="${roleName}" type="text"
-								class="form-control" placeholder="Role Name">
-						</div>
-					</div>
-					<div class="navbar-form navbar-right">
-						<button type="submit" class="btn btn-primary">Search</button>
-						<button type="button" class="btn btn-default" onclick="toAdd()">Add</button>
-					</div>
+
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="input-group">
+					<span class="input-group-addon">Role Code</span> <input
+						name="roleCode" value="${roleCode}" type="text"
+						class="form-control" placeholder="Role Code">
 				</div>
 			</div>
-		</nav>
+			<div class="col-lg-4">
+				<div class="input-group">
+					<span class="input-group-addon">Role Name</span> <input
+						name="roleName" value="${roleName}" type="text"
+						class="form-control" placeholder="Role Name">
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="input-group"></div>
+			</div>
+		</div>
+		<br>
+
+		<div class="collapse navbar-collapse">
+			<div class="navbar-right">
+				<button type="submit" class="btn btn-primary">Search</button>
+				<button type="button" class="btn btn-default" onclick="toAdd()">Add</button>
+			</div>
+		</div>
+		<br>
+
 		<table class="table table-bordered">
 			<thead>
 				<tr>

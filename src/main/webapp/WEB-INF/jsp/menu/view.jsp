@@ -30,7 +30,7 @@
 
 	function onClick(e, treeId, treeNode) {
 		var zTree = $.fn.zTree.getZTreeObj("menuTree"), nodes = zTree
-				.getSelectedNodes(), v = "",ids = "";
+				.getSelectedNodes(), v = "", ids = "";
 		nodes.sort(function compare(a, b) {
 			return a.id - b.id;
 		});
@@ -42,11 +42,10 @@
 			v = v.substring(0, v.length - 1);
 		if (ids.length > 0)
 			ids = ids.substring(0, ids.length - 1);
-		
 
 		var menuObj = $("#menuParentName");
 		menuObj.attr("value", v);
-		
+
 		var menuIdObj = $("#menuPid");
 		menuIdObj.attr("value", ids);
 		hideMenu();
@@ -76,8 +75,10 @@
 
 	$(document).ready(function() {
 		$.fn.zTree.init($("#menuTree"), setting, zNodes);
-		
-		$.fn.zTree.getZTreeObj("menuTree").selectNode($.fn.zTree.getZTreeObj("menuTree").getNodeByParam("id", '${menuPid}'));
+
+		var zTree = $.fn.zTree.getZTreeObj("menuTree");
+		zTree.selectNode(zTree.getNodeByParam("id", '${menuPid}'));
+		zTree.expandAll(true);
 	});
 
 	function pagination(pageValue) {
@@ -114,39 +115,44 @@ ul.ztree {
 </head>
 <body>
 
-	<form action="${CONTEXT_PATH}/menuMgmt/view" method="post"
-		id="form">
-		<input type="hidden" name="currentPage" value="${currentPage}" />
-		<input type="hidden" id="menuPid" name="menuPid" value="${menuPid}" />
-		<nav class="navbar navbar-default">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse">
-					<div class="navbar-form navbar-left">
-						<div class="input-group">
-							<span class="input-group-addon">Parent Menu</span> <input
-								name="menuParentName" value="${menuParentName}"
-								type="text" readonly="readonly" id="menuParentName"
-								onclick="showMenu(); return false;" class="form-control"
-								placeholder="Parent Menu">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon">Menu Url</span> <input
-								name="menuUrl" value="${menuUrl}" type="text"
-								class="form-control" placeholder="Menu Url">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon">Menu Name</span> <input
-								name="menuName" value="${menuName}" type="text"
-								class="form-control" placeholder="Menu Name">
-						</div>
-					</div>
-					<div class="navbar-form navbar-right">
-						<button type="submit" class="btn btn-primary">Search</button>
-						<button type="button" class="btn btn-default" onclick="toAdd()">Add</button>
-					</div>
+	<form action="${CONTEXT_PATH}/menuMgmt/view" method="post" id="form">
+		<input type="hidden" name="currentPage" value="${currentPage}" /> <input
+			type="hidden" id="menuPid" name="menuPid" value="${menuPid}" />
+
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="input-group">
+					<span class="input-group-addon">Parent Menu</span> <input
+						name="menuParentName" value="${menuParentName}" type="text"
+						readonly="readonly" id="menuParentName"
+						onclick="showMenu(); return false;" class="form-control"
+						placeholder="Parent Menu">
 				</div>
 			</div>
-		</nav>
+			<div class="col-lg-4">
+				<div class="input-group">
+					<span class="input-group-addon">Menu Url</span> <input
+						name="menuUrl" value="${menuUrl}" type="text" class="form-control"
+						placeholder="Menu Url">
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="input-group">
+					<span class="input-group-addon">Menu Name</span> <input
+						name="menuName" value="${menuName}" type="text"
+						class="form-control" placeholder="Menu Name">
+				</div>
+			</div>
+		</div>
+		<br>
+
+		<div class="collapse navbar-collapse">
+			<div class="navbar-right">
+				<button type="submit" class="btn btn-primary">Search</button>
+				<button type="button" class="btn btn-default" onclick="toAdd()">Add</button>
+			</div>
+		</div>
+		<br>
 
 		<table class="table table-bordered">
 			<thead>

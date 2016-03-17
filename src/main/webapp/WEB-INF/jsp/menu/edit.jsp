@@ -77,11 +77,8 @@
 			.ready(
 					function() {
 						$.fn.zTree.init($("#menuTree"), setting, zNodes);
-
-						$.fn.zTree.getZTreeObj("menuTree").selectNode(
-								$.fn.zTree.getZTreeObj("menuTree")
-										.getNodeByParam("id",
-												'${menuPid}'));
+						var zTree = $.fn.zTree.getZTreeObj("menuTree");
+						zTree.expandAll(true);
 
 						$("#form")
 								.validate(

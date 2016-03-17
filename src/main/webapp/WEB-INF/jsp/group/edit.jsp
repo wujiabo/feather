@@ -78,10 +78,8 @@
 					function() {
 						$.fn.zTree.init($("#groupTree"), setting, zNodes);
 
-						$.fn.zTree.getZTreeObj("groupTree").selectNode(
-								$.fn.zTree.getZTreeObj("groupTree")
-										.getNodeByParam("id",
-												'${groupPid}'));
+						var zTree = $.fn.zTree.getZTreeObj("groupTree");
+						zTree.expandAll(true);
 
 						$("#form")
 								.validate(

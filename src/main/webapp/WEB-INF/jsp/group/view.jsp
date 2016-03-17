@@ -30,7 +30,7 @@
 
 	function onClick(e, treeId, treeNode) {
 		var zTree = $.fn.zTree.getZTreeObj("groupTree"), nodes = zTree
-				.getSelectedNodes(), v = "",ids = "";
+				.getSelectedNodes(), v = "", ids = "";
 		nodes.sort(function compare(a, b) {
 			return a.id - b.id;
 		});
@@ -42,11 +42,10 @@
 			v = v.substring(0, v.length - 1);
 		if (ids.length > 0)
 			ids = ids.substring(0, ids.length - 1);
-		
 
 		var groupObj = $("#groupParentName");
 		groupObj.attr("value", v);
-		
+
 		var groupIdObj = $("#groupPid");
 		groupIdObj.attr("value", ids);
 		hideMenu();
@@ -68,16 +67,18 @@
 	}
 	function onBodyDown(event) {
 		if (!(event.target.id == "groupParentName"
-				|| event.target.id == "groupContent" || $(event.target).parents(
-				"#groupContent").length > 0)) {
+				|| event.target.id == "groupContent" || $(event.target)
+				.parents("#groupContent").length > 0)) {
 			hideMenu();
 		}
 	}
 
 	$(document).ready(function() {
 		$.fn.zTree.init($("#groupTree"), setting, zNodes);
-		
-		$.fn.zTree.getZTreeObj("groupTree").selectNode($.fn.zTree.getZTreeObj("groupTree").getNodeByParam("id", '${groupPid}'));
+
+		var zTree = $.fn.zTree.getZTreeObj("groupTree");
+		zTree.selectNode(zTree.getNodeByParam("id", '${groupPid}'));
+		zTree.expandAll(true);
 	});
 
 	function pagination(pageValue) {
@@ -117,39 +118,44 @@ ul.ztree {
 </head>
 <body>
 
-	<form action="${CONTEXT_PATH}/groupMgmt/view" method="post"
-		id="form">
-		<input type="hidden" name="currentPage" value="${currentPage}" />
-		<input type="hidden" id="groupPid" name="groupPid" value="${groupPid}" />
-		<nav class="navbar navbar-default">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse">
-					<div class="navbar-form navbar-left">
-						<div class="input-group">
-							<span class="input-group-addon">Parent Group</span> <input
-								name="groupParentName" value="${groupParentName}"
-								type="text" readonly="readonly" id="groupParentName"
-								onclick="showGroup(); return false;" class="form-control"
-								placeholder="Parent Group">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon">Group Code</span> <input
-								name="groupCode" value="${groupCode}" type="text"
-								class="form-control" placeholder="Group Code">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon">Group Name</span> <input
-								name="groupName" value="${groupName}" type="text"
-								class="form-control" placeholder="Group Name">
-						</div>
-					</div>
-					<div class="navbar-form navbar-right">
-						<button type="submit" class="btn btn-primary">Search</button>
-						<button type="button" class="btn btn-default" onclick="toAdd()">Add</button>
-					</div>
+	<form action="${CONTEXT_PATH}/groupMgmt/view" method="post" id="form">
+		<input type="hidden" name="currentPage" value="${currentPage}" /> <input
+			type="hidden" id="groupPid" name="groupPid" value="${groupPid}" />
+
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="input-group">
+					<span class="input-group-addon">Parent Group</span> <input
+						name="groupParentName" value="${groupParentName}" type="text"
+						readonly="readonly" id="groupParentName"
+						onclick="showGroup(); return false;" class="form-control"
+						placeholder="Parent Group">
 				</div>
 			</div>
-		</nav>
+			<div class="col-lg-4">
+				<div class="input-group">
+					<span class="input-group-addon">Group Code</span> <input
+						name="groupCode" value="${groupCode}" type="text"
+						class="form-control" placeholder="Group Code">
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="input-group">
+					<span class="input-group-addon">Group Name</span> <input
+						name="groupName" value="${groupName}" type="text"
+						class="form-control" placeholder="Group Name">
+				</div>
+			</div>
+		</div>
+		<br>
+
+		<div class="collapse navbar-collapse">
+			<div class="navbar-right">
+				<button type="submit" class="btn btn-primary">Search</button>
+				<button type="button" class="btn btn-default" onclick="toAdd()">Add</button>
+			</div>
+		</div>
+		<br>
 
 		<table class="table table-bordered">
 			<thead>

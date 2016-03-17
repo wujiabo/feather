@@ -70,15 +70,20 @@ public class MenuMgmtController {
 			@RequestParam(value = "menuPid", defaultValue = "") String menuPid,
 			@RequestParam(value = "menuUrl", defaultValue = "") String menuUrl,
 			@RequestParam(value = "menuName", defaultValue = "") String menuName,
-			@RequestParam(value = "seq", defaultValue = "0") Integer seq,
+			@RequestParam(value = "seq", defaultValue = "0") String seq,
 			@RequestParam(value = "state", defaultValue = "") String state,
 			@RequestParam(value = "updateType", defaultValue = "") String updateType,
 			RedirectAttributes redirectAttributes) {
 		try {
+			Integer sequence = 0;
+			if (StringUtils.isNumeric(seq)) {
+				sequence = Integer.valueOf(seq);
+			}
+
 			if ("add".equals(updateType)) {
-				menuMgmtService.addMenu(menuPid, menuUrl, menuName, seq, state);
+				menuMgmtService.addMenu(menuPid, menuUrl, menuName, sequence, state);
 			} else if ("edit".equals(updateType)) {
-				menuMgmtService.editMenu(menuId, menuUrl, menuName, seq, state);
+				menuMgmtService.editMenu(menuId, menuUrl, menuName, sequence, state);
 			}
 			redirectAttributes.addFlashAttribute("message", "操作成功");
 		} catch (ServiceException e) {

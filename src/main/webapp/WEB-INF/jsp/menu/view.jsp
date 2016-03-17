@@ -160,6 +160,7 @@ ul.ztree {
 					<th>#</th>
 					<th>Menu Url</th>
 					<th>Menu Name</th>
+					<th>Seq</th>
 					<th>State</th>
 					<th>Operation</th>
 				</tr>
@@ -171,6 +172,7 @@ ul.ztree {
 						<th scope="row">${status.index + 1}</th>
 						<td>${bean.menu_url}</td>
 						<td>${bean.menu_name}</td>
+						<td>${bean.seq}</td>
 						<td>${bean.state=='0'?'有效':'无效'}</td>
 						<td>
 							<button type="button" class="btn btn-default btn-xs"

@@ -159,6 +159,13 @@ ul.ztree {
 				</div>
 			</div>
 			<div class="form-group">
+				<label for="seq" class="col-sm-2 control-label">Seq</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" name="seq"
+						value="${menu.seq}" placeholder="Seq" />
+				</div>
+			</div>
+			<div class="form-group">
 				<label for="state" class="col-sm-2 control-label">State</label>
 				<div class="col-sm-10">
 					<select class="form-control" name="state">

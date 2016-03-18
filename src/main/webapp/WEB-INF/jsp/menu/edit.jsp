@@ -13,9 +13,9 @@
 								.validate(
 										{
 											rules : {
-												menuUrl : {
+												seq : {
 													required : true,
-													minlength : 2
+													minlength : 1
 												},
 												menuName : {
 													required : true,
@@ -24,9 +24,9 @@
 												state : "required"
 											},
 											messages : {
-												menuUrl : {
-													required : "Please provide a menu url",
-													minlength : "Your screen name must be at least 2 characters long"
+												seq : {
+													required : "Please provide a seq",
+													minlength : "Your seq must be at least 1 characters long"
 												},
 												menuName : {
 													required : "Please enter a menu name",

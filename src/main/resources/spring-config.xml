@@ -102,4 +102,5 @@
 
 	<import resource="classpath:spring-config-cache.xml" />
 	<import resource="classpath:spring-config-shiro.xml" />
+    <import resource="classpath:activiti.cgf.xml"/>
 </beans>

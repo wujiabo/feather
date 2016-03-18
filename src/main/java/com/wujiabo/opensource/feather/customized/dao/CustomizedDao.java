@@ -14,8 +14,6 @@ public interface CustomizedDao {
 
 	PageBean queryForListPage(String sqlId, Object[] args, int currentPage);
 
-	List<Map<String, Object>> queryForListBySql(String sql, Object[] args);
-
-	Map<String, Object> queryForMapBySql(String sql, Object[] args);
+	List<Map<String, Object>> queryForListByReplaceCond(String getRoleidsByGroupid, List<Condition> conds, Object[] args);
 
 }

@@ -22,12 +22,32 @@ public class CustomizedDaoImpl implements CustomizedDao {
 		return queryForListBySql(getSqlInstance().getSqlConfig(sqlId), args);
 	}
 
-	@Override
-	public List<Map<String, Object>> queryForListBySql(String sql, Object[] args) {
+	private List<Map<String, Object>> queryForListBySql(String sql, Object[] args) {
 		if (args != null) {
 			return jdbcTemplate.queryForList(sql, args);
 		}
 		return jdbcTemplate.queryForList(sql);
+	}
+
+	@Override
+	public Map<String, Object> queryForMap(String sqlId, Object[] args) {
+		return queryForMapBySql(getSqlInstance().getSqlConfig(sqlId), args);
+	}
+
+	private Map<String, Object> queryForMapBySql(String sql, Object[] args) {
+		if (args != null) {
+			return jdbcTemplate.queryForMap(sql, args);
+		}
+		return jdbcTemplate.queryForMap(sql);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryForListByReplaceCond(String sqlId, List<Condition> conds, Object[] args) {
+		String sql = getSqlInstance().getSqlConfig(sqlId);
+		for (Condition cond : conds) {
+			sql = sql.replace(cond.getKey(), cond.getValue());
+		}
+		return queryForListBySql(sql, args);
 	}
 
 	@Override
@@ -56,19 +76,6 @@ public class CustomizedDaoImpl implements CustomizedDao {
 		}
 		pageBean.setTotalPage(pageBean.getTotalCount() / 10 + (pageBean.getTotalCount() % 10 > 0 ? 1 : 0));
 		return pageBean;
-	}
-
-	@Override
-	public Map<String, Object> queryForMap(String sqlId, Object[] args) {
-		return queryForMapBySql(getSqlInstance().getSqlConfig(sqlId), args);
-	}
-
-	@Override
-	public Map<String, Object> queryForMapBySql(String sql, Object[] args) {
-		if (args != null) {
-			return jdbcTemplate.queryForMap(sql, args);
-		}
-		return jdbcTemplate.queryForMap(sql);
 	}
 
 	public class PageBean {

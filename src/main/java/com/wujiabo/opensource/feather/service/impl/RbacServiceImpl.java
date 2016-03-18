@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wujiabo.opensource.feather.constants.SqlConstants;
+import com.wujiabo.opensource.feather.customized.dao.Condition;
 import com.wujiabo.opensource.feather.customized.dao.CustomizedDao;
-import com.wujiabo.opensource.feather.customized.dao.CustomizedSqlLoader;
 import com.wujiabo.opensource.feather.mybatis.dao.TGroupMapper;
 import com.wujiabo.opensource.feather.mybatis.dao.TUserMapper;
 import com.wujiabo.opensource.feather.mybatis.model.TGroup;
@@ -69,17 +69,24 @@ public class RbacServiceImpl implements RbacService {
 		List<Integer> permissionIds = new ArrayList<Integer>();
 		List<Map<String, Object>> permissions = new ArrayList<Map<String, Object>>();
 
-		String sqlCond = "";
-		for (Map<String, Object> role : roles) {
-			sqlCond = sqlCond + role.get("role_id") + ",";
-		}
-		if (sqlCond.length() > 0) {
-			sqlCond = sqlCond.substring(0, sqlCond.length() - 1);
+		roles.add(null);
+		StringBuffer sb = new StringBuffer();
+		if (roles != null && roles.size() > 0) {
+			for (int i = 0; i < roles.size(); i++) {
+				if (i == roles.size() - 1) {
+					sb.append("'").append(roles.get(i) == null ? "" : roles.get(i).get("role_id")).append("'");
+				} else {
+					sb.append("'").append(roles.get(i) == null ? "" : roles.get(i).get("role_id")).append("'")
+							.append(",");
+				}
+			}
 		}
 
-		List<Map<String, Object>> permissionList = customizedDao.queryForListBySql(CustomizedSqlLoader.getInstance()
-				.getSqlConfig(SqlConstants.GET_ALL_PERMISSIONS_BY_ROLEID).replace("[sqlCond]", sqlCond),
-				new Object[] {});
+		List<Condition> conds = new ArrayList<Condition>();
+		conds.add(new Condition("[sqlCond]", sb.toString()));
+
+		List<Map<String, Object>> permissionList = customizedDao
+				.queryForListByReplaceCond(SqlConstants.GET_ALL_PERMISSIONS_BY_ROLEID, conds, new Object[] {});
 		for (Map<String, Object> permissionMap : permissionList) {
 			String permissionId = MapUtils.getString(permissionMap, "permission_id");
 			if (!permissionIds.contains(Integer.valueOf(permissionId))) {
@@ -111,17 +118,24 @@ public class RbacServiceImpl implements RbacService {
 		List<Integer> menuIds = new ArrayList<Integer>();
 		List<Map<String, Object>> menus = new ArrayList<Map<String, Object>>();
 
-		String sqlCond = "";
-		for (Map<String, Object> role : roles) {
-			sqlCond = sqlCond + role.get("role_id") + ",";
-		}
-		if (sqlCond.length() > 0) {
-			sqlCond = sqlCond.substring(0, sqlCond.length() - 1);
+		roles.add(null);
+		StringBuffer sb = new StringBuffer();
+		if (roles != null && roles.size() > 0) {
+			for (int i = 0; i < roles.size(); i++) {
+				if (i == roles.size() - 1) {
+					sb.append("'").append(roles.get(i) == null ? "" : roles.get(i).get("role_id")).append("'");
+				} else {
+					sb.append("'").append(roles.get(i) == null ? "" : roles.get(i).get("role_id")).append("'")
+							.append(",");
+				}
+			}
 		}
 
-		List<Map<String, Object>> menuList = customizedDao.queryForListBySql(
-				CustomizedSqlLoader.getInstance().getSqlConfig(SqlConstants.GET_ALL_MENUS_BY_ROLEID).replace("[sqlCond]", sqlCond),
-				new Object[] {});
+		List<Condition> conds = new ArrayList<Condition>();
+		conds.add(new Condition("[sqlCond]", sb.toString()));
+
+		List<Map<String, Object>> menuList = customizedDao
+				.queryForListByReplaceCond(SqlConstants.GET_ALL_MENUS_BY_ROLEID, conds, new Object[] {});
 
 		for (Map<String, Object> menuMap : menuList) {
 			String menuId = MapUtils.getString(menuMap, "menu_id");
@@ -149,18 +163,25 @@ public class RbacServiceImpl implements RbacService {
 			}
 		}
 
-		String sqlCond = "";
 		List<Integer> groupIds = getAllGroupIdsByUserId(userId);
-		for (Integer groupId : groupIds) {
-			sqlCond = sqlCond + groupId + ",";
-		}
-		if (sqlCond.length() > 0) {
-			sqlCond = sqlCond.substring(0, sqlCond.length() - 1);
+
+		groupIds.add(null);
+		StringBuffer sb = new StringBuffer();
+		if (groupIds != null && groupIds.size() > 0) {
+			for (int i = 0; i < groupIds.size(); i++) {
+				if (i == groupIds.size() - 1) {
+					sb.append("'").append(groupIds.get(i) == null ? "" : groupIds.get(i)).append("'");
+				} else {
+					sb.append("'").append(groupIds.get(i) == null ? "" : groupIds.get(i)).append("'").append(",");
+				}
+			}
 		}
 
-		List<Map<String, Object>> roleIdListFromGroup = customizedDao.queryForListBySql(
-				CustomizedSqlLoader.getInstance().getSqlConfig(SqlConstants.GET_ROLEIDS_BY_GROUPID).replace("[sqlCond]", sqlCond),
-				null);
+		List<Condition> conds = new ArrayList<Condition>();
+		conds.add(new Condition("[sqlCond]", sb.toString()));
+
+		List<Map<String, Object>> roleIdListFromGroup = customizedDao
+				.queryForListByReplaceCond(SqlConstants.GET_ROLEIDS_BY_GROUPID, conds, new Object[] {});
 		for (Map<String, Object> roleIdMap : roleIdListFromGroup) {
 			String roleId = MapUtils.getString(roleIdMap, "role_id");
 			if (!roleIds.contains(Integer.valueOf(roleId))) {

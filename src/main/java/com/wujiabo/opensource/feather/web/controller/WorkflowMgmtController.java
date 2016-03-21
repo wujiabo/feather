@@ -40,7 +40,7 @@ public class WorkflowMgmtController {
 			isFirst = true;
 			isLast = false;
 		}
-		if (totalCount <= currentPage * 10 && totalCount > (currentPage - 1) * 10) {
+		if (totalCount <= currentPage * 10 && totalCount >= (currentPage - 1) * 10) {
 			isLast = true;
 		}
 		int totalPage = (int) totalCount / 10 + (totalCount % 10 > 0 ? 1 : 0);

@@ -71,7 +71,7 @@ public class CustomizedDaoImpl implements CustomizedDao {
 			pageBean.setIsFirst(true);
 			pageBean.setIsLast(false);
 		}
-		if (pageBean.getTotalCount() <= currentPage * 10 && pageBean.getTotalCount() > (currentPage - 1) * 10) {
+		if (pageBean.getTotalCount() <= currentPage * 10 && pageBean.getTotalCount() >= (currentPage - 1) * 10) {
 			pageBean.setIsLast(true);
 		}
 		pageBean.setTotalPage(pageBean.getTotalCount() / 10 + (pageBean.getTotalCount() % 10 > 0 ? 1 : 0));

@@ -45,7 +45,7 @@
 		<div class="collapse navbar-collapse">
 			<div class="navbar-right">
 				<button type="submit" class="btn btn-primary">Search</button>
-				<button type="button" class="btn btn-default" onclick="toAdd()">Add</button>
+				<button type="button" class="btn btn-default" onclick="toAdd()">Deploy</button>
 			</div>
 		</div>
 		<br>
@@ -54,27 +54,23 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>User Name</th>
-					<th>Screen Name</th>
-					<th>State</th>
+					<th>Key</th>
+					<th>Name</th>
+					<th>Version</th>
 					<th>Operation</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${list}" var="bean"
+				<c:forEach items="${processDefList}" var="bean"
 					varStatus="status">
 					<tr>
 						<th scope="row">${status.index + 1}</th>
-						<td>${bean.user_name}</td>
-						<td>${bean.screen_name}</td>
-						<td>${bean.state=='0'?'有效':'无效'}</td>
+						<td>${bean.key}</td>
+						<td>${bean.name}</td>
+						<td>${bean.version}</td>
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
-								onclick="toEdit('${bean.user_id}')">Edit</button>
-							<button type="button" class="btn btn-default btn-xs"
-								onclick="toGroup('${bean.user_id}')">Group</button>
-							<button type="button" class="btn btn-default btn-xs"
-								onclick="toRole('${bean.user_id}')">Role</button>
+								onclick="toEdit('${bean.id}')">Edit</button>
 						</td>
 					</tr>
 				</c:forEach>

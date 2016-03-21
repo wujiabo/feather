@@ -1,5 +1,7 @@
 package com.wujiabo.opensource.feather.service.impl;
 
+import java.io.IOException;
+
 import javax.annotation.Resource;
 
 import org.activiti.engine.FormService;
@@ -11,8 +13,10 @@ import org.activiti.engine.TaskService;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.wujiabo.opensource.feather.service.WorkflowMgmtService;
+import com.wujiabo.opensource.feather.service.exception.ServiceException;
 
 @Service
 public class WorkflowMgmtServiceImpl implements WorkflowMgmtService {
@@ -38,4 +42,13 @@ public class WorkflowMgmtServiceImpl implements WorkflowMgmtService {
 	@Autowired
 	protected ProcessEngineFactoryBean processEngine;
 
+	@Override
+	public void deployProcessDef(MultipartFile processFile) {
+		try {
+			repositoryService.createDeployment()
+					.addInputStream(processFile.getOriginalFilename(), processFile.getInputStream()).deploy();
+		} catch (IOException e) {
+			throw new ServiceException("发布异常");
+		}
+	}
 }

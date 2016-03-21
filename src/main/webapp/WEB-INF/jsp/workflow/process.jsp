@@ -18,22 +18,27 @@
 		}
 		$("#form").submit();
 	}
-	function toAdd() {
+	function toViewPicture(processDefId) {
+		window.location.href = "${CONTEXT_PATH}/workflowMgmt/viewPicture/"
+				+ processDefId;
+	}
+	function toDeploy() {
 		window.location.href = "${CONTEXT_PATH}/workflowMgmt/deploy";
 	}
 </script>
 </head>
 <body>
 
-	<form action="${CONTEXT_PATH}/workflowMgmt/process" method="post" id="form">
+	<form action="${CONTEXT_PATH}/workflowMgmt/process" method="post"
+		id="form">
 		<input type="hidden" name="currentPage" value="${currentPage}" />
 
 		<div class="row">
 			<div class="col-lg-4">
 				<div class="input-group">
 					<span class="input-group-addon">Process Def</span> <input
-						name="processDefinitionKey" value="${processDefinitionKey}" type="text"
-						class="form-control" placeholder="Process Def">
+						name="processDefinitionKey" value="${processDefinitionKey}"
+						type="text" class="form-control" placeholder="Process Def">
 				</div>
 			</div>
 			<div class="col-lg-4">
@@ -45,7 +50,7 @@
 		<div class="collapse navbar-collapse">
 			<div class="navbar-right">
 				<button type="submit" class="btn btn-primary">Search</button>
-				<button type="button" class="btn btn-default" onclick="toAdd()">Deploy</button>
+				<button type="button" class="btn btn-default" onclick="toDeploy()">Deploy</button>
 			</div>
 		</div>
 		<br>
@@ -61,8 +66,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${processDefList}" var="bean"
-					varStatus="status">
+				<c:forEach items="${processDefList}" var="bean" varStatus="status">
 					<tr>
 						<th scope="row">${status.index + 1}</th>
 						<td>${bean.key}</td>
@@ -70,7 +74,7 @@
 						<td>${bean.version}</td>
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
-								onclick="toEdit('${bean.id}')">Edit</button>
+								onclick="toViewPicture('${bean.id}')">View</button>
 						</td>
 					</tr>
 				</c:forEach>
@@ -81,8 +85,8 @@
 			<div class="navbar-right">
 				<ul class="pagination">
 					<li><a href="javascript:void(0)"
-						${isFirst?'':'onclick=pagination("F")'}
-						aria-label="Previous"><span aria-hidden="true">««</span></a></li>
+						${isFirst?'':'onclick=pagination("F")'} aria-label="Previous"><span
+							aria-hidden="true">««</span></a></li>
 					<li><a href="javascript:void(0)"
 						${isFirst?'':'onclick=pagination("P")'}>«</a></li>
 					<li><a href="javascript:void(0)">共${totalCount}条

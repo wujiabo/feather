@@ -1,6 +1,7 @@
 package com.wujiabo.opensource.feather.service.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.annotation.Resource;
 
@@ -10,6 +11,7 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,5 +52,23 @@ public class WorkflowMgmtServiceImpl implements WorkflowMgmtService {
 		} catch (IOException e) {
 			throw new ServiceException("发布异常");
 		}
+	}
+
+	@Override
+	public InputStream getProcessViewPicture(String processDefId, String viewType) {
+
+		ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+				.processDefinitionId(processDefId).singleResult();
+
+		InputStream inputStream = null;
+		if ("xml".equals(viewType)) {
+			inputStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),
+					processDefinition.getResourceName());
+		} else if ("picture".equals(viewType)) {
+			inputStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),
+					processDefinition.getDiagramResourceName());
+		}
+		return inputStream;
+
 	}
 }

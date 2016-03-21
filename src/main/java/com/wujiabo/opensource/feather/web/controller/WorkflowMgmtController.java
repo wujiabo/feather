@@ -1,15 +1,20 @@
 package com.wujiabo.opensource.feather.web.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.impl.util.IoUtil;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,5 +83,26 @@ public class WorkflowMgmtController {
 			return "redirect:/workflowMgmt/deploy";
 		}
 		return "redirect:/workflowMgmt/process";
+	}
+
+	@RequestMapping(value = "viewPicture/{processDefId}", method = RequestMethod.GET)
+	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
+	public String viewPicture(@PathVariable("processDefId") String processDefId, Model model) {
+		model.addAttribute("processDefId", processDefId);
+		return "workflow/view";
+	}
+
+	@RequestMapping(value = "picture/{processDefId}/{viewType}", method = RequestMethod.GET)
+	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
+	public String picture(@PathVariable("processDefId") String processDefId, @PathVariable("viewType") String viewType,
+			HttpServletResponse response) {
+		InputStream processDefInputStream = workflowMgmtService.getProcessViewPicture(processDefId,viewType);
+		try {
+			response.getOutputStream().write(IoUtil.readInputStream(processDefInputStream, "processDefInputStream"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

@@ -166,4 +166,23 @@ public class WorkflowMgmtController {
 		return "redirect:/workflowMgmt/instance";
 	}
 
+	@RequestMapping(value = "viewInstance/{instanceId}", method = RequestMethod.GET)
+	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
+	public String viewInstance(@PathVariable("instanceId") String instanceId, Model model) {
+		model.addAttribute("instanceId", instanceId);
+		return "workflow/viewInstance";
+	}
+
+	@RequestMapping(value = "pictureInstance/{instanceId}", method = RequestMethod.GET)
+	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
+	public String pictureInstance(@PathVariable("instanceId") String instanceId, HttpServletResponse response) {
+		InputStream processDefInputStream = workflowMgmtService.getProcessInstanceViewPicture(instanceId);
+		try {
+			response.getOutputStream().write(IoUtil.readInputStream(processDefInputStream, "processDefInputStream"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

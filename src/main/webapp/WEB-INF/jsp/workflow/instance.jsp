@@ -18,9 +18,9 @@
 		}
 		$("#form").submit();
 	}
-	function toViewPicture(processDefId) {
-		window.location.href = "${CONTEXT_PATH}/workflowMgmt/viewPicture/"
-				+ processDefId;
+	function toViewPicture(instanceId) {
+		window.location.href = "${CONTEXT_PATH}/workflowMgmt/viewInstance/"
+				+ instanceId;
 	}
 	function toStart() {
 		window.location.href = "${CONTEXT_PATH}/workflowMgmt/start";
@@ -59,9 +59,10 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Key</th>
-					<th>Name</th>
-					<th>Version</th>
+					<th>Instance Id</th>
+					<th>Process Def Id</th>
+					<th>Start Time</th>
+					<th>End Time</th>
 					<th>Operation</th>
 				</tr>
 			</thead>
@@ -71,7 +72,8 @@
 						<th scope="row">${status.index + 1}</th>
 						<td>${bean.id}</td>
 						<td>${bean.processDefinitionId}</td>
-						<td>${bean.name}</td>
+						<td>${bean.startTime}</td>
+						<td>${bean.endTime}</td>
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
 								onclick="toViewPicture('${bean.id}')">View</button>

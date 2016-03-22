@@ -10,4 +10,6 @@ public interface WorkflowMgmtService {
 
 	InputStream getProcessViewPicture(String processDefId, String viewType);
 
+	void startProcess(String processDefId, String variables);
+
 }

@@ -2,6 +2,8 @@ package com.wujiabo.opensource.feather.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -70,5 +72,12 @@ public class WorkflowMgmtServiceImpl implements WorkflowMgmtService {
 		}
 		return inputStream;
 
+	}
+
+	@Override
+	public void startProcess(String processDefId, String variables) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("owner", "admin");
+		runtimeService.startProcessInstanceById(processDefId, map);
 	}
 }

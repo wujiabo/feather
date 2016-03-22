@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.util.IoUtil;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.task.Task;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,8 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.wujiabo.opensource.feather.mybatis.model.TUser;
 import com.wujiabo.opensource.feather.service.WorkflowMgmtService;
 import com.wujiabo.opensource.feather.service.exception.ServiceException;
+import com.wujiabo.opensource.feather.web.bind.CurrentUser;
 
 @Controller
 @RequestMapping("/workflowMgmt")
@@ -38,6 +42,9 @@ public class WorkflowMgmtController {
 
 	@Resource
 	protected HistoryService historyService;
+
+	@Resource
+	protected TaskService taskService;
 
 	@RequestMapping(value = "/process", method = { RequestMethod.POST, RequestMethod.GET })
 	@RequiresPermissions(value = "WORKFLOW_MGMT_PROCESS")
@@ -184,5 +191,67 @@ public class WorkflowMgmtController {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@RequestMapping(value = "/todoTask", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequiresPermissions(value = "WORKFLOW_MGMT_PROCESS")
+	public String todoTask(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
+			@RequestParam(value = "orderId", defaultValue = "") String orderId, @CurrentUser TUser loginUser,
+			Model model) {
+
+		long totalCount = taskService.createTaskQuery().taskAssignee(loginUser.getUserId().toString()).count();
+		List<Task> taskList = taskService.createTaskQuery().taskAssignee(loginUser.getUserId().toString())
+				.orderByTaskCreateTime().asc().listPage((currentPage - 1) * 10, 10);
+
+		Boolean isFirst = false;
+		Boolean isLast = false;
+		if (currentPage == 1) {
+			isFirst = true;
+			isLast = false;
+		}
+		if (totalCount <= currentPage * 10 && totalCount >= (currentPage - 1) * 10) {
+			isLast = true;
+		}
+		int totalPage = (int) totalCount / 10 + (totalCount % 10 > 0 ? 1 : 0);
+
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("isFirst", isFirst);
+		model.addAttribute("isLast", isLast);
+		model.addAttribute("taskList", taskList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("orderId", orderId);
+		return "workflow/todoTask";
+	}
+
+	@RequestMapping(value = "/candoTask", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequiresPermissions(value = "WORKFLOW_MGMT_PROCESS")
+	public String candoTask(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
+			@RequestParam(value = "orderId", defaultValue = "") String orderId, @CurrentUser TUser loginUser,
+			Model model) {
+
+		long totalCount = taskService.createTaskQuery().taskCandidateUser(loginUser.getUserId().toString()).count();
+		List<Task> taskList = taskService.createTaskQuery().taskCandidateUser(loginUser.getUserId().toString())
+				.orderByTaskCreateTime().asc().listPage((currentPage - 1) * 10, 10);
+
+		Boolean isFirst = false;
+		Boolean isLast = false;
+		if (currentPage == 1) {
+			isFirst = true;
+			isLast = false;
+		}
+		if (totalCount <= currentPage * 10 && totalCount >= (currentPage - 1) * 10) {
+			isLast = true;
+		}
+		int totalPage = (int) totalCount / 10 + (totalCount % 10 > 0 ? 1 : 0);
+
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("isFirst", isFirst);
+		model.addAttribute("isLast", isLast);
+		model.addAttribute("taskList", taskList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("orderId", orderId);
+		return "workflow/candoTask";
 	}
 }

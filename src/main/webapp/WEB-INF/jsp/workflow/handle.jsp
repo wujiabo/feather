@@ -6,14 +6,14 @@
 <title>流程实例</title>
 <script type="text/javascript">
 	function back() {
-		window.location.href = "${CONTEXT_PATH}/workflowMgmt/todoTask";
+		window.location.href = "${CONTEXT_PATH}/workflowMgmt/todo";
 	}
 	$().ready(function() {
 	});
 </script>
 </head>
 <body>
-	<form action="${CONTEXT_PATH}/workflowMgmt/resolve" method="post"
+	<form action="${CONTEXT_PATH}/workflowMgmt/handle" method="post"
 		id="form">
 		<input type="hidden" name="taskId" value="${taskId}" />
 		<div class="form-horizontal">

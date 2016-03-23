@@ -19,7 +19,7 @@
 		$("#form").submit();
 	}
 	function toResolve(taskId) {
-		window.location.href = "${CONTEXT_PATH}/workflowMgmt/resolve/"
+		window.location.href = "${CONTEXT_PATH}/workflowMgmt/handle/"
 				+ taskId;
 	}
 </script>

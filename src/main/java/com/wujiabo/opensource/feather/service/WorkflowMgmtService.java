@@ -6,13 +6,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface WorkflowMgmtService {
 
-	void deployProcessDef(MultipartFile processFile);
+	void deployProcess(MultipartFile processFile);
 
-	InputStream getProcessViewPicture(String processDefId, String viewType);
+	InputStream getProcessDefDiagram(String processDefId);
 
 	void startProcess(String processDefId, String variables);
 
-	InputStream getProcessInstanceViewPicture(String instanceId);
+	InputStream getProcessInstanceDiagram(String instanceId);
 
 	void claimTask(String taskId, String userId);
 

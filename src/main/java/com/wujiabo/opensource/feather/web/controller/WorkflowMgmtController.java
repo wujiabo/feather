@@ -11,7 +11,6 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.util.IoUtil;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
@@ -90,7 +89,7 @@ public class WorkflowMgmtController {
 	public String deploy(@RequestParam(value = "processFile", required = false) MultipartFile processFile,
 			RedirectAttributes redirectAttributes) {
 		try {
-			workflowMgmtService.deployProcessDef(processFile);
+			workflowMgmtService.deployProcess(processFile);
 			redirectAttributes.addFlashAttribute("message", "操作成功");
 		} catch (ServiceException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -99,20 +98,27 @@ public class WorkflowMgmtController {
 		return "redirect:/workflowMgmt/process";
 	}
 
-	@RequestMapping(value = "viewPicture/{processDefId}", method = RequestMethod.GET)
-	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
-	public String viewPicture(@PathVariable("processDefId") String processDefId, Model model) {
-		model.addAttribute("processDefId", processDefId);
+	@RequestMapping(value = "view/{viewType}/{viewId}", method = RequestMethod.GET)
+	@RequiresPermissions(value = "WORKFLOW_MGMT_PROCESS")
+	public String viewForm(@PathVariable("viewType") String viewType, @PathVariable("viewId") String viewId,
+			Model model) {
+		model.addAttribute("viewType", viewType);
+		model.addAttribute("viewId", viewId);
 		return "workflow/view";
 	}
 
-	@RequestMapping(value = "picture/{processDefId}/{viewType}", method = RequestMethod.GET)
-	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
-	public String picture(@PathVariable("processDefId") String processDefId, @PathVariable("viewType") String viewType,
+	@RequestMapping(value = "diagram/{viewType}/{viewId}", method = RequestMethod.GET)
+	@RequiresPermissions(value = "WORKFLOW_MGMT_PROCESS")
+	public String diagram(@PathVariable("viewType") String viewType, @PathVariable("viewId") String viewId,
 			HttpServletResponse response) {
-		InputStream processDefInputStream = workflowMgmtService.getProcessViewPicture(processDefId, viewType);
+		InputStream diagramInputStream = null;
+		if ("definition".equals(viewType)) {
+			diagramInputStream = workflowMgmtService.getProcessDefDiagram(viewId);
+		} else if ("instance".equals(viewType)) {
+			diagramInputStream = workflowMgmtService.getProcessInstanceDiagram(viewId);
+		}
 		try {
-			response.getOutputStream().write(IoUtil.readInputStream(processDefInputStream, "processDefInputStream"));
+			response.getOutputStream().write(IoUtil.readInputStream(diagramInputStream, "diagramInputStream"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -121,7 +127,7 @@ public class WorkflowMgmtController {
 	}
 
 	@RequestMapping(value = "/instance", method = { RequestMethod.POST, RequestMethod.GET })
-	@RequiresPermissions(value = "WORKFLOW_MGMT_PROCESS")
+	@RequiresPermissions(value = "WORKFLOW_MGMT_INSTANCE")
 	public String instance(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
 			@RequestParam(value = "orderId", defaultValue = "") String orderId, Model model) {
 
@@ -151,7 +157,7 @@ public class WorkflowMgmtController {
 	}
 
 	@RequestMapping(value = "start", method = RequestMethod.GET)
-	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
+	@RequiresPermissions(value = "WORKFLOW_MGMT_START")
 	public String startForm(Model model) {
 		List<ProcessDefinition> processDefList = repositoryService.createProcessDefinitionQuery().latestVersion()
 				.active().orderByProcessDefinitionName().asc().list();
@@ -160,7 +166,7 @@ public class WorkflowMgmtController {
 	}
 
 	@RequestMapping(value = "start", method = RequestMethod.POST)
-	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
+	@RequiresPermissions(value = "WORKFLOW_MGMT_START")
 	public String start(@RequestParam(value = "processDefId", required = false) String processDefId,
 			@RequestParam(value = "variables", required = false) String variables,
 			RedirectAttributes redirectAttributes) {
@@ -172,26 +178,6 @@ public class WorkflowMgmtController {
 			return "redirect:/workflowMgmt/start";
 		}
 		return "redirect:/workflowMgmt/instance";
-	}
-
-	@RequestMapping(value = "viewInstance/{instanceId}", method = RequestMethod.GET)
-	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
-	public String viewInstance(@PathVariable("instanceId") String instanceId, Model model) {
-		model.addAttribute("instanceId", instanceId);
-		return "workflow/viewInstance";
-	}
-
-	@RequestMapping(value = "pictureInstance/{instanceId}", method = RequestMethod.GET)
-	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
-	public String pictureInstance(@PathVariable("instanceId") String instanceId, HttpServletResponse response) {
-		InputStream processDefInputStream = workflowMgmtService.getProcessInstanceViewPicture(instanceId);
-		try {
-			response.getOutputStream().write(IoUtil.readInputStream(processDefInputStream, "processDefInputStream"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@RequestMapping(value = "/todoTask", method = { RequestMethod.POST, RequestMethod.GET })
@@ -261,7 +247,7 @@ public class WorkflowMgmtController {
 	public String claim(@PathVariable("taskId") String taskId, @CurrentUser TUser loginUser,
 			RedirectAttributes redirectAttributes) {
 		try {
-			workflowMgmtService.claimTask(taskId,loginUser.getUserId().toString());
+			workflowMgmtService.claimTask(taskId, loginUser.getUserId().toString());
 			redirectAttributes.addFlashAttribute("message", "操作成功");
 		} catch (ServiceException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -283,7 +269,7 @@ public class WorkflowMgmtController {
 			@RequestParam(value = "variables", required = false) String variables,
 			RedirectAttributes redirectAttributes) {
 		try {
-			workflowMgmtService.completeTask(taskId,variables);
+			workflowMgmtService.completeTask(taskId, variables);
 			redirectAttributes.addFlashAttribute("message", "操作成功");
 		} catch (ServiceException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());

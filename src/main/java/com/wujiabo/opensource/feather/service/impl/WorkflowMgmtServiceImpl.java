@@ -55,7 +55,7 @@ public class WorkflowMgmtServiceImpl implements WorkflowMgmtService {
 	protected ProcessEngineFactoryBean processEngine;
 
 	@Override
-	public void deployProcessDef(MultipartFile processFile) {
+	public void deployProcess(MultipartFile processFile) {
 		try {
 			repositoryService.createDeployment()
 					.addInputStream(processFile.getOriginalFilename(), processFile.getInputStream()).deploy();
@@ -65,19 +65,13 @@ public class WorkflowMgmtServiceImpl implements WorkflowMgmtService {
 	}
 
 	@Override
-	public InputStream getProcessViewPicture(String processDefId, String viewType) {
+	public InputStream getProcessDefDiagram(String processDefId) {
 
 		ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
 				.processDefinitionId(processDefId).singleResult();
 
-		InputStream inputStream = null;
-		if ("xml".equals(viewType)) {
-			inputStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),
-					processDefinition.getResourceName());
-		} else if ("picture".equals(viewType)) {
-			inputStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),
-					processDefinition.getDiagramResourceName());
-		}
+		InputStream inputStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),
+				processDefinition.getDiagramResourceName());
 		return inputStream;
 
 	}
@@ -95,7 +89,7 @@ public class WorkflowMgmtServiceImpl implements WorkflowMgmtService {
 	}
 
 	@Override
-	public InputStream getProcessInstanceViewPicture(String processInstanceId) {
+	public InputStream getProcessInstanceDiagram(String processInstanceId) {
 
 		HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
 				.processInstanceId(processInstanceId).singleResult();

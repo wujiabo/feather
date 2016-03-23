@@ -4,28 +4,29 @@
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <html>
 <head>
-<title>流程管理</title>
+<title>${viewType=='definition'?'流程管理':'流程实例'}</title>
 <script type="text/javascript">
 	function back() {
-		window.location.href = "${CONTEXT_PATH}/workflowMgmt/process";
+		var viewType = "${viewType}";
+		if(viewType == 'definition'){
+			window.location.href = "${CONTEXT_PATH}/workflowMgmt/process";
+		}else if(viewType == 'instance'){
+			window.location.href = "${CONTEXT_PATH}/workflowMgmt/instance";
+		}
 	}
 </script>
 </head>
 <body>
-	<form action="${CONTEXT_PATH}/workflowMgmt/view" method="post"
-		id="form">
-		<div class="form-horizontal">
-			<div class="form-group">
-				<img
-					src="${CONTEXT_PATH}/workflowMgmt/picture/${processDefId}/picture" />
-			</div>
+	<div class="form-horizontal">
+		<div class="form-group">
+			<img src="${CONTEXT_PATH}/workflowMgmt/diagram/${viewType}/${viewId}" />
+		</div>
 
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-					<button type="button" class="btn btn-default" onclick="back()">Back</button>
-				</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="button" class="btn btn-default" onclick="back()">Back</button>
 			</div>
 		</div>
-	</form>
+	</div>
 </body>
 </html>

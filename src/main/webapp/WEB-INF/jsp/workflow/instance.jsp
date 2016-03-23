@@ -19,7 +19,7 @@
 		$("#form").submit();
 	}
 	function toViewPicture(instanceId) {
-		window.location.href = "${CONTEXT_PATH}/workflowMgmt/viewInstance/"
+		window.location.href = "${CONTEXT_PATH}/workflowMgmt/view/instance/"
 				+ instanceId;
 	}
 	function toStart() {
@@ -37,8 +37,8 @@
 			<div class="col-lg-4">
 				<div class="input-group">
 					<span class="input-group-addon">Order Id</span> <input
-						name="orderId" value="${orderId}"
-						type="text" class="form-control" placeholder="Order Id">
+						name="orderId" value="${orderId}" type="text" class="form-control"
+						placeholder="Order Id">
 				</div>
 			</div>
 			<div class="col-lg-4">
@@ -67,7 +67,8 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${processInstanceList}" var="bean" varStatus="status">
+				<c:forEach items="${processInstanceList}" var="bean"
+					varStatus="status">
 					<tr>
 						<th scope="row">${status.index + 1}</th>
 						<td>${bean.id}</td>

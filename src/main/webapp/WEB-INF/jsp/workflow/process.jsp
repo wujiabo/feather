@@ -19,7 +19,7 @@
 		$("#form").submit();
 	}
 	function toViewPicture(processDefId) {
-		window.location.href = "${CONTEXT_PATH}/workflowMgmt/viewPicture/"
+		window.location.href = "${CONTEXT_PATH}/workflowMgmt/view/definition/"
 				+ processDefId;
 	}
 	function toDeploy() {

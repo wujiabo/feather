@@ -29,8 +29,6 @@
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<button type="submit" class="btn btn-primary">Complete</button>
-					<button type="submit" class="btn btn-primary">Reject</button>
-					<button type="submit" class="btn btn-primary">Assign</button>
 					<button type="button" class="btn btn-default" onclick="back()">Back</button>
 				</div>
 			</div>

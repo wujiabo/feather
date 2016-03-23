@@ -55,9 +55,9 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Key</th>
+					<th>Id</th>
 					<th>Name</th>
-					<th>Version</th>
+					<th>Process Instance</th>
 					<th>Operation</th>
 				</tr>
 			</thead>

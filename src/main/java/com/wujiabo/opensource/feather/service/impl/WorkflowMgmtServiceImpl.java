@@ -17,7 +17,6 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -86,7 +85,7 @@ public class WorkflowMgmtServiceImpl implements WorkflowMgmtService {
 	@Override
 	public void startProcess(String processDefId, String variables) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("owner", "admin");
+		map.put("owner", "1");
 		runtimeService.startProcessInstanceById(processDefId, map);
 	}
 

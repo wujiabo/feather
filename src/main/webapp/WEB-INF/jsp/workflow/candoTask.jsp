@@ -18,12 +18,9 @@
 		}
 		$("#form").submit();
 	}
-	function toViewPicture(processDefId) {
-		window.location.href = "${CONTEXT_PATH}/workflowMgmt/viewPicture/"
-				+ processDefId;
-	}
-	function toDeploy() {
-		window.location.href = "${CONTEXT_PATH}/workflowMgmt/deploy";
+	function claim(taskId) {
+		window.location.href = "${CONTEXT_PATH}/workflowMgmt/claim/"
+				+ taskId;
 	}
 </script>
 </head>
@@ -36,9 +33,9 @@
 		<div class="row">
 			<div class="col-lg-4">
 				<div class="input-group">
-					<span class="input-group-addon">Process Def</span> <input
-						name="processDefinitionKey" value="${processDefinitionKey}"
-						type="text" class="form-control" placeholder="Process Def">
+					<span class="input-group-addon">Order Id</span> <input
+						name="orderId" value="${orderId}"
+						type="text" class="form-control" placeholder="Order Id">
 				</div>
 			</div>
 			<div class="col-lg-4">
@@ -50,7 +47,6 @@
 		<div class="collapse navbar-collapse">
 			<div class="navbar-right">
 				<button type="submit" class="btn btn-primary">Search</button>
-				<button type="button" class="btn btn-default" onclick="toDeploy()">Deploy</button>
 			</div>
 		</div>
 		<br>
@@ -59,22 +55,22 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>Key</th>
+					<th>Id</th>
 					<th>Name</th>
-					<th>Version</th>
+					<th>Process Instance</th>
 					<th>Operation</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${processDefList}" var="bean" varStatus="status">
+				<c:forEach items="${taskList}" var="bean" varStatus="status">
 					<tr>
 						<th scope="row">${status.index + 1}</th>
-						<td>${bean.key}</td>
+						<td>${bean.id}</td>
 						<td>${bean.name}</td>
-						<td>${bean.version}</td>
+						<td>${bean.processInstanceId}</td>
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
-								onclick="toViewPicture('${bean.id}')">View</button>
+								onclick="claim('${bean.id}')">Claim</button>
 						</td>
 					</tr>
 				</c:forEach>

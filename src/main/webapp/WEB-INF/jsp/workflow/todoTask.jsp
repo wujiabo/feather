@@ -36,9 +36,9 @@
 		<div class="row">
 			<div class="col-lg-4">
 				<div class="input-group">
-					<span class="input-group-addon">Process Def</span> <input
-						name="processDefinitionKey" value="${processDefinitionKey}"
-						type="text" class="form-control" placeholder="Process Def">
+					<span class="input-group-addon">Order Id</span> <input
+						name="orderId" value="${orderId}"
+						type="text" class="form-control" placeholder="Order Id">
 				</div>
 			</div>
 			<div class="col-lg-4">
@@ -66,12 +66,12 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${processDefList}" var="bean" varStatus="status">
+				<c:forEach items="${taskList}" var="bean" varStatus="status">
 					<tr>
 						<th scope="row">${status.index + 1}</th>
-						<td>${bean.key}</td>
+						<td>${bean.id}</td>
 						<td>${bean.name}</td>
-						<td>${bean.version}</td>
+						<td>${bean.processInstanceId}</td>
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
 								onclick="toViewPicture('${bean.id}')">View</button>

@@ -254,4 +254,18 @@ public class WorkflowMgmtController {
 		model.addAttribute("orderId", orderId);
 		return "workflow/candoTask";
 	}
+
+	@RequestMapping(value = "claim/{taskId}", method = RequestMethod.GET)
+	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
+	public String claim(@PathVariable("taskId") String taskId, @CurrentUser TUser loginUser,
+			RedirectAttributes redirectAttributes) {
+		try {
+			taskService.claim(taskId, loginUser.getUserId().toString());
+			redirectAttributes.addFlashAttribute("message", "操作成功");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/workflowMgmt/start";
+		}
+		return "redirect:/workflowMgmt/candoTask";
+	}
 }

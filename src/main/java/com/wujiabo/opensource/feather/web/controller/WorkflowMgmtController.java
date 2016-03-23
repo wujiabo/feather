@@ -260,7 +260,7 @@ public class WorkflowMgmtController {
 	public String claim(@PathVariable("taskId") String taskId, @CurrentUser TUser loginUser,
 			RedirectAttributes redirectAttributes) {
 		try {
-			taskService.claim(taskId, loginUser.getUserId().toString());
+			workflowMgmtService.claimTask(taskId,loginUser.getUserId().toString());
 			redirectAttributes.addFlashAttribute("message", "操作成功");
 		} catch (ServiceException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -282,6 +282,7 @@ public class WorkflowMgmtController {
 			@RequestParam(value = "variables", required = false) String variables,
 			RedirectAttributes redirectAttributes) {
 		try {
+			workflowMgmtService.completeTask(taskId,variables);
 			redirectAttributes.addFlashAttribute("message", "操作成功");
 		} catch (ServiceException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());

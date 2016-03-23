@@ -14,4 +14,8 @@ public interface WorkflowMgmtService {
 
 	InputStream getProcessInstanceViewPicture(String instanceId);
 
+	void claimTask(String taskId, String userId);
+
+	void completeTask(String taskId, String variables);
+
 }

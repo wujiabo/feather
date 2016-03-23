@@ -16,6 +16,7 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -96,7 +97,8 @@ public class WorkflowMgmtServiceImpl implements WorkflowMgmtService {
 
 	@Override
 	public InputStream getProcessInstanceViewPicture(String processInstanceId) {
-		ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+
+		HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery()
 				.processInstanceId(processInstanceId).singleResult();
 		BpmnModel bpmnModel = repositoryService.getBpmnModel(processInstance.getProcessDefinitionId());
 
@@ -113,5 +115,21 @@ public class WorkflowMgmtServiceImpl implements WorkflowMgmtService {
 				Collections.<String> emptyList(), processEngine.getProcessEngineConfiguration().getActivityFontName(),
 				processEngine.getProcessEngineConfiguration().getLabelFontName(), null, 1.0);
 		return imageStream;
+	}
+
+	@Override
+	public void claimTask(String taskId, String userId) {
+		taskService.claim(taskId, userId);
+	}
+
+	@Override
+	public void completeTask(String taskId, String variables) {
+		Map<String, Object> map = null;
+		try {
+			map = (Map<String, Object>) JSON.parse(variables);
+		} catch (Exception e) {
+			throw new ServiceException("遍历解析失败。");
+		}
+		taskService.complete(taskId, map);
 	}
 }

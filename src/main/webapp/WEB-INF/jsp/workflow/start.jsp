@@ -24,6 +24,13 @@
 	<form action="${CONTEXT_PATH}/workflowMgmt/start" method="post"
 		id="form">
 		<div class="form-horizontal">
+
+			<div class="form-group">
+				<label for="variables" class="col-sm-2 control-label">Variables</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" name="variables" rows="5" placeholder="Variables" >{"owner":"1","day":3}</textarea>
+				</div>
+			</div>
 			<div class="form-group">
 				<label for="processDefId" class="col-sm-2 control-label">Process
 					Def</label>

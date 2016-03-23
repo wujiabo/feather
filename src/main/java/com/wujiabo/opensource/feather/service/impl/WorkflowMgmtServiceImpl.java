@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSON;
 import com.wujiabo.opensource.feather.service.WorkflowMgmtService;
 import com.wujiabo.opensource.feather.service.exception.ServiceException;
 
@@ -84,8 +85,13 @@ public class WorkflowMgmtServiceImpl implements WorkflowMgmtService {
 
 	@Override
 	public void startProcess(String processDefId, String variables) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("owner", "1");
+		Map<String, Object> map = null;
+		try {
+			map = (Map<String, Object>) JSON.parse(variables);
+		} catch (Exception e) {
+			throw new ServiceException("遍历解析失败。");
+		}
+
 		runtimeService.startProcessInstanceById(processDefId, map);
 	}
 

@@ -180,40 +180,9 @@ public class WorkflowMgmtController {
 		return "redirect:/workflowMgmt/instance";
 	}
 
-	@RequestMapping(value = "/todoTask", method = { RequestMethod.POST, RequestMethod.GET })
-	@RequiresPermissions(value = "WORKFLOW_MGMT_PROCESS")
-	public String todoTask(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
-			@RequestParam(value = "orderId", defaultValue = "") String orderId, @CurrentUser TUser loginUser,
-			Model model) {
-
-		long totalCount = taskService.createTaskQuery().taskAssignee(loginUser.getUserId().toString()).count();
-		List<Task> taskList = taskService.createTaskQuery().taskAssignee(loginUser.getUserId().toString())
-				.orderByTaskCreateTime().asc().listPage((currentPage - 1) * 10, 10);
-
-		Boolean isFirst = false;
-		Boolean isLast = false;
-		if (currentPage == 1) {
-			isFirst = true;
-			isLast = false;
-		}
-		if (totalCount <= currentPage * 10 && totalCount >= (currentPage - 1) * 10) {
-			isLast = true;
-		}
-		int totalPage = (int) totalCount / 10 + (totalCount % 10 > 0 ? 1 : 0);
-
-		model.addAttribute("totalPage", totalPage);
-		model.addAttribute("totalCount", totalCount);
-		model.addAttribute("isFirst", isFirst);
-		model.addAttribute("isLast", isLast);
-		model.addAttribute("taskList", taskList);
-		model.addAttribute("currentPage", currentPage);
-		model.addAttribute("orderId", orderId);
-		return "workflow/todoTask";
-	}
-
-	@RequestMapping(value = "/candoTask", method = { RequestMethod.POST, RequestMethod.GET })
-	@RequiresPermissions(value = "WORKFLOW_MGMT_PROCESS")
-	public String candoTask(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
+	@RequestMapping(value = "/claim", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequiresPermissions(value = "WORKFLOW_MGMT_CLAIM")
+	public String claim(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
 			@RequestParam(value = "orderId", defaultValue = "") String orderId, @CurrentUser TUser loginUser,
 			Model model) {
 
@@ -239,33 +208,64 @@ public class WorkflowMgmtController {
 		model.addAttribute("taskList", taskList);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("orderId", orderId);
-		return "workflow/candoTask";
+		return "workflow/claim";
 	}
 
 	@RequestMapping(value = "claim/{taskId}", method = RequestMethod.GET)
-	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
-	public String claim(@PathVariable("taskId") String taskId, @CurrentUser TUser loginUser,
+	@RequiresPermissions(value = "WORKFLOW_MGMT_CLAIM")
+	public String claimTask(@PathVariable("taskId") String taskId, @CurrentUser TUser loginUser,
 			RedirectAttributes redirectAttributes) {
 		try {
 			workflowMgmtService.claimTask(taskId, loginUser.getUserId().toString());
 			redirectAttributes.addFlashAttribute("message", "操作成功");
 		} catch (ServiceException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
-			return "redirect:/workflowMgmt/start";
+			return "redirect:/workflowMgmt/claim";
 		}
-		return "redirect:/workflowMgmt/candoTask";
+		return "redirect:/workflowMgmt/claim";
 	}
 
-	@RequestMapping(value = "resolve/{taskId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/todo", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequiresPermissions(value = "WORKFLOW_MGMT_HANDLE")
+	public String todo(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
+			@RequestParam(value = "orderId", defaultValue = "") String orderId, @CurrentUser TUser loginUser,
+			Model model) {
+
+		long totalCount = taskService.createTaskQuery().taskAssignee(loginUser.getUserId().toString()).count();
+		List<Task> taskList = taskService.createTaskQuery().taskAssignee(loginUser.getUserId().toString())
+				.orderByTaskCreateTime().asc().listPage((currentPage - 1) * 10, 10);
+
+		Boolean isFirst = false;
+		Boolean isLast = false;
+		if (currentPage == 1) {
+			isFirst = true;
+			isLast = false;
+		}
+		if (totalCount <= currentPage * 10 && totalCount >= (currentPage - 1) * 10) {
+			isLast = true;
+		}
+		int totalPage = (int) totalCount / 10 + (totalCount % 10 > 0 ? 1 : 0);
+
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("isFirst", isFirst);
+		model.addAttribute("isLast", isLast);
+		model.addAttribute("taskList", taskList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("orderId", orderId);
+		return "workflow/todo";
+	}
+
+	@RequestMapping(value = "handle/{taskId}", method = RequestMethod.GET)
 	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
-	public String resolveForm(@PathVariable("taskId") String taskId, Model model) {
+	public String handleForm(@PathVariable("taskId") String taskId, Model model) {
 		model.addAttribute("taskId", taskId);
-		return "workflow/resolve";
+		return "workflow/handle";
 	}
 
-	@RequestMapping(value = "resolve", method = RequestMethod.POST)
+	@RequestMapping(value = "handle", method = RequestMethod.POST)
 	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
-	public String resolve(@RequestParam(value = "taskId", required = false) String taskId,
+	public String handle(@RequestParam(value = "taskId", required = false) String taskId,
 			@RequestParam(value = "variables", required = false) String variables,
 			RedirectAttributes redirectAttributes) {
 		try {
@@ -273,8 +273,8 @@ public class WorkflowMgmtController {
 			redirectAttributes.addFlashAttribute("message", "操作成功");
 		} catch (ServiceException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
-			return "redirect:/workflowMgmt/resolve";
+			return "redirect:/workflowMgmt/handle/" + taskId;
 		}
-		return "redirect:/workflowMgmt/todoTask";
+		return "redirect:/workflowMgmt/todo";
 	}
 }

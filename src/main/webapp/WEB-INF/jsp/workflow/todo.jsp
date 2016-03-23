@@ -3,7 +3,7 @@
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <html>
 <head>
-<title>认领任务</title>
+<title>待办任务</title>
 <script type="text/javascript">
 	function pagination(pageValue) {
 		var currentPage = $("input[name='currentPage']").val();
@@ -18,15 +18,15 @@
 		}
 		$("#form").submit();
 	}
-	function claim(taskId) {
-		window.location.href = "${CONTEXT_PATH}/workflowMgmt/claim/"
+	function toResolve(taskId) {
+		window.location.href = "${CONTEXT_PATH}/workflowMgmt/resolve/"
 				+ taskId;
 	}
 </script>
 </head>
 <body>
 
-	<form action="${CONTEXT_PATH}/workflowMgmt/process" method="post"
+	<form action="${CONTEXT_PATH}/workflowMgmt/todo" method="post"
 		id="form">
 		<input type="hidden" name="currentPage" value="${currentPage}" />
 
@@ -70,7 +70,7 @@
 						<td>${bean.processInstanceId}</td>
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
-								onclick="claim('${bean.id}')">Claim</button>
+								onclick="toResolve('${bean.id}')">Resolve</button>
 						</td>
 					</tr>
 				</c:forEach>

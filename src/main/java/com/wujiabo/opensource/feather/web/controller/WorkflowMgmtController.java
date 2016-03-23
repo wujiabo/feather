@@ -268,4 +268,25 @@ public class WorkflowMgmtController {
 		}
 		return "redirect:/workflowMgmt/candoTask";
 	}
+
+	@RequestMapping(value = "resolve/{taskId}", method = RequestMethod.GET)
+	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
+	public String resolveForm(@PathVariable("taskId") String taskId, Model model) {
+		model.addAttribute("taskId", taskId);
+		return "workflow/resolve";
+	}
+
+	@RequestMapping(value = "resolve", method = RequestMethod.POST)
+	@RequiresPermissions(value = "WORKFLOW_MGMT_DEPLOY")
+	public String resolve(@RequestParam(value = "taskId", required = false) String taskId,
+			@RequestParam(value = "variables", required = false) String variables,
+			RedirectAttributes redirectAttributes) {
+		try {
+			redirectAttributes.addFlashAttribute("message", "操作成功");
+		} catch (ServiceException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/workflowMgmt/resolve";
+		}
+		return "redirect:/workflowMgmt/todoTask";
+	}
 }

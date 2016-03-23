@@ -18,12 +18,9 @@
 		}
 		$("#form").submit();
 	}
-	function toViewPicture(processDefId) {
-		window.location.href = "${CONTEXT_PATH}/workflowMgmt/viewPicture/"
-				+ processDefId;
-	}
-	function toDeploy() {
-		window.location.href = "${CONTEXT_PATH}/workflowMgmt/deploy";
+	function toResolve(taskId) {
+		window.location.href = "${CONTEXT_PATH}/workflowMgmt/resolve/"
+				+ taskId;
 	}
 </script>
 </head>
@@ -50,7 +47,6 @@
 		<div class="collapse navbar-collapse">
 			<div class="navbar-right">
 				<button type="submit" class="btn btn-primary">Search</button>
-				<button type="button" class="btn btn-default" onclick="toDeploy()">Deploy</button>
 			</div>
 		</div>
 		<br>
@@ -74,7 +70,7 @@
 						<td>${bean.processInstanceId}</td>
 						<td>
 							<button type="button" class="btn btn-default btn-xs"
-								onclick="toViewPicture('${bean.id}')">View</button>
+								onclick="toResolve('${bean.id}')">Resolve</button>
 						</td>
 					</tr>
 				</c:forEach>

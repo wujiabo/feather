@@ -2,7 +2,8 @@ package com.wujiabo.opensource.feather.security.config;
 
 import com.wujiabo.opensource.feather.security.filter.JWTAuthenticationFilter;
 import com.wujiabo.opensource.feather.security.filter.JWTLoginFilter;
-import com.wujiabo.opensource.feather.security.handler.Http401AuthenticationEntryPoint;
+import com.wujiabo.opensource.feather.security.handler.AuthenticationEntryPointImpl;
+import com.wujiabo.opensource.feather.security.handler.LogoutSuccessHandlerImpl;
 import com.wujiabo.opensource.feather.security.service.CustomAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +13,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -48,42 +48,40 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    /**
+     * 认证失败处理类
+     */
+    @Autowired
+    private AuthenticationEntryPointImpl unauthorizedHandler;
+    /**
+     * 退出处理类
+     */
+    @Autowired
+    private LogoutSuccessHandlerImpl logoutSuccessHandler;
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
 
-    /*@Autowired
-    private CustomAccessDeniedHandler customAccessDeniedHandler;
-
-    @Autowired
-    private CustomLogoutSuccessHandler customLogoutSuccessHandler;
-
-    @Autowired
-    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;*/
-
     // 设置 HTTP 验证规则
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        LogoutConfigurer<HttpSecurity> httpSecurityLogoutConfigurer = http.cors().and().csrf().disable()
+        http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated()  // 所有请求需要身份认证
                 .and()
                 .exceptionHandling()
-                    .authenticationEntryPoint(
-                            new Http401AuthenticationEntryPoint("Basic realm=\"MyApp\""))
-                    .and()
-//                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler) // 自定义访问失败处理器
-//                .and()
+                .authenticationEntryPoint(unauthorizedHandler)
+                .and()
                 .addFilter(new JWTLoginFilter(authenticationManager()))
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .logout() // 默认注销行为为logout，可以通过下面的方式来修改
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")// 设置注销成功后跳转页面，默认是跳转到登录页面;
-//                .logoutSuccessHandler(customLogoutSuccessHandler)
+                .logoutSuccessHandler(logoutSuccessHandler)
                 .permitAll();
     }
 

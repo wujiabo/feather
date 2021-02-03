@@ -1,5 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
-feather-log/
+feather-admin/feather-admin.iml
+feather-common/feather-common.iml
+feather-framework/feather-framework.iml
+feather-generator/feather-generator.iml
+feather-system/feather-system.iml
 feather.iml
 target/

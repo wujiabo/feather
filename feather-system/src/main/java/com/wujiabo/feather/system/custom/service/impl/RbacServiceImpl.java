@@ -30,7 +30,7 @@ public class RbacServiceImpl implements RbacService {
             return null;
         }
         SysUser sysUser = new SysUser();
-        BeanUtils.copyBeanProp(tSysUsers, sysUser);
+        BeanUtils.copyBeanProp(sysUser, tSysUsers.get(0));
         return sysUser;
     }
 

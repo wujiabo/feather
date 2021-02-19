@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.FastByteArrayOutputStream;
@@ -29,6 +31,9 @@ import com.wujiabo.feather.common.utils.uuid.IdUtils;
 @Api("验证码操作处理")
 @RestController
 public class CaptchaController {
+
+    private static Logger logger = LoggerFactory.getLogger(CaptchaController.class);
+
     @Resource(name = "captchaProducer")
     private Producer captchaProducer;
 
@@ -66,6 +71,7 @@ public class CaptchaController {
             image = captchaProducer.createImage(capStr);
         }
 
+        logger.debug("code:{}", code);
         redisCache.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();

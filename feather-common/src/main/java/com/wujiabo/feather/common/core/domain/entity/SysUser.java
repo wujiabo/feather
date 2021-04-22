@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wujiabo.feather.common.annotation.Excel;
 import com.wujiabo.feather.common.annotation.Excel.ColumnType;
 import com.wujiabo.feather.common.annotation.Excel.Type;
+import com.wujiabo.feather.common.constant.UserConstants;
 import com.wujiabo.feather.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -107,7 +108,7 @@ public class SysUser extends BaseEntity {
     }
 
     public static boolean isAdmin(String userId) {
-        return StringUtils.equals("1", userId);
+        return StringUtils.equals(UserConstants.ADMIN_USER_ID, userId);
     }
 
     @NotBlank(message = "用户账号不能为空")
